@@ -96,11 +96,10 @@ class Zume_Coaching {
         $is_rest = dt_is_rest();
 
         if ( $is_rest ) {
-            require_once ('api/queries.php');
-            require_once( 'api/rest-api.php' );
+
         }
 
-        require_once( 'charts/loader.php' );
+        require_once( 'system/custom-tile.php' );
 
         $this->i18n();
 
