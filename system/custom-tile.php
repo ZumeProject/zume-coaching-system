@@ -12,15 +12,16 @@ class Zume_Coaching_Tile
     }
 
     public function __construct(){
-        add_filter( 'dt_details_additional_tiles', [ $this, 'dt_details_additional_tiles' ], 10, 2 );
+        add_filter( 'dt_details_additional_tiles', [ $this, 'dt_details_additional_tiles' ], 99, 2 );
         add_filter( 'dt_custom_fields_settings', [ $this, 'dt_custom_fields_settings' ], 1, 2 );
         add_action( 'dt_details_additional_section', [ $this, 'dt_details_additional_section' ], 30, 2 );
     }
 
     public function dt_details_additional_tiles( $tiles, $post_type = '' ) {
         if ( $post_type === 'contacts' ) {
-            $tiles['user_view_tile'] = [ 'label' => __( 'User View', 'zume-coaching' ) ];
-            $tiles['request_reports_tile'] = [ 'label' => __( 'Request Reports', 'zume-coaching' ) ];
+            $tiles['followup'] = [ 'label' => __( 'Progress', 'zume-coaching' ) ];
+            $tiles['faith'] = [ 'label' => __( 'Activity Profile', 'zume-coaching' ) ];
+            $tiles['other'] = [ 'label' => __( 'Communication Tools', 'zume-coaching' ) ];
         }
         return $tiles;
     }
@@ -35,28 +36,64 @@ class Zume_Coaching_Tile
     }
     public function dt_details_additional_section( $section, $post_type ) {
 
-        if ( $post_type === 'contacts' && $section === 'user_view_tile' ) {
+        if ( $post_type === 'contacts' && $section === 'followup' ) {
 
             $this_post = DT_Posts::get_post( $post_type, get_the_ID() );
             $post_type_fields = DT_Posts::get_post_field_settings( $post_type );
             ?>
 
             <div class="cell small-12 medium-4">
-                <button class="button" data-open="modal-funnel">End to End Funnel</button>
-                <button class="button" data-open="modal-reports">Open User Reports</button>
+                <button class="button expanded">Registration</button>
+                <button class="button expanded hollow">Active Training</button>
+                <button class="button expanded hollow">Post-Training</button>
+                <button class="button expanded hollow">Stage 1 Partial Practitioner</button>
+                <button class="button expanded hollow">Stage 2 Completed Practitioner</button>
+                <button class="button expanded hollow">Stage 3 Multiplying Practitioner</button>
             </div>
-            <div class="reveal full" id="modal-funnel" data-v-offset="0" data-reveal>
-                <h1>End to End Funnel for <?php echo $this_post['title'] ?></h1>
-                <p class="lead">Show funnel progress</p>
-                <p>I'm a cool paragraph that lives inside of an even cooler modal. Wins!</p>
+
+
+        <?php }
+
+        if ( $post_type === 'contacts' && $section === 'faith' ) {
+
+            $this_post = DT_Posts::get_post( $post_type, get_the_ID() );
+            $post_type_fields = DT_Posts::get_post_field_settings( $post_type );
+            ?>
+
+            <div class="cell small-12 medium-4">
+                <button class="button" data-open="modal_checklist">Training Checklist</button>
+                <button class="button" data-open="modal_history">Activity History</button>
+                <button class="button" data-open="modal_reports">Reports History</button>
+                <button class="button" data-open="modal_genmap">Current Genmap</button>
+            </div>
+            <div class="reveal large" id="modal_checklist" data-v-offset="0" data-reveal>
+                <h1>Training Checklist for <?php echo $this_post['title'] ?></h1>
+                <hr>
+                <div style="height: 800px"></div>
                 <button class="close-button" data-close aria-label="Close modal" type="button">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="reveal full" id="modal-reports"  data-v-offset="0" data-reveal>
-                <h1>User Reports for <?php echo $this_post['title'] ?></h1>
-                <p class="lead">Show report history</p>
-                <p>I'm a cool paragraph that lives inside of an even cooler modal. Wins!</p>
+            <div class="reveal large" id="modal_history" data-v-offset="0" data-reveal>
+                <h1>Activity History for <?php echo $this_post['title'] ?></h1>
+                <hr>
+                <div style="height: 800px"></div>
+                <button class="close-button" data-close aria-label="Close modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="reveal large" id="modal_reports" data-v-offset="0" data-reveal>
+                <h1>Report History for <?php echo $this_post['title'] ?></h1>
+                <hr>
+                <div style="height: 800px"></div>
+                <button class="close-button" data-close aria-label="Close modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="reveal full" id="modal_genmap" data-v-offset="0" data-reveal>
+                <h1>Genmap for <?php echo $this_post['title'] ?></h1>
+                <hr>
+                <div style="height: 800px"></div>
                 <button class="close-button" data-close aria-label="Close modal" type="button">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -64,19 +101,22 @@ class Zume_Coaching_Tile
 
         <?php }
 
-        if ( $post_type === 'contacts' && $section === 'request_reports_tile' ) {
+        if ( $post_type === 'contacts' && $section === 'other' ) {
 
             $this_post = DT_Posts::get_post( $post_type, get_the_ID() );
             $post_type_fields = DT_Posts::get_post_field_settings( $post_type );
             ?>
 
             <div class="cell small-12 medium-4">
-                <button class="button" data-open="modal-send-reports">Send Report Request</button>
+                <button class="button" data-open="modal-send-reports">Request Profile Update</button>
+                <button class="button" data-open="modal-send-reports">Request Checklist Review</button>
+                <button class="button" data-open="modal-send-reports">Request Activity Report</button>
+                <button class="button" data-open="modal-send-reports">Request Church Report</button>
             </div>
-            <div class="reveal" id="modal-send-reports" data-v-offset="0" data-reveal>
+            <div class="reveal large" id="modal-send-reports" data-v-offset="0" data-reveal>
                 <h1>Send Reports to <?php echo $this_post['title'] ?></h1>
+                <hr>
                 <p class="lead">Send a report request to this person.</p>
-                <p>I'm a cool paragraph that lives inside of an even cooler modal. Wins!</p>
                 <button class="close-button" data-close aria-label="Close modal" type="button">
                     <span aria-hidden="true">&times;</span>
                 </button>

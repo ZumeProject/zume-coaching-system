@@ -76,14 +76,7 @@ add_filter( 'dt_plugins', function ( $plugins ){
     return $plugins;
 });
 
-/**
- * Singleton class for setting up the plugin.
- *
- * @since  0.1
- * @access public
- */
 class Zume_Coaching {
-
     private static $_instance = null;
     public static function instance() {
         if ( is_null( self::$_instance ) ) {
@@ -93,10 +86,15 @@ class Zume_Coaching {
     }
 
     private function __construct() {
+        /* setup query access to zume.training site reports table */
+        global $wpdb;
+        $wpdb->zume_reports = 'wp_dt_reports';
+        $wpdb->zume_activity = 'wp_dt_activity_log';
+        /* end custom table setup */
+
         $is_rest = dt_is_rest();
-
         if ( $is_rest ) {
-
+            require_once( 'system/rest-api.php' );
         }
 
         require_once( 'system/custom-tile.php' );
@@ -107,72 +105,25 @@ class Zume_Coaching {
             add_filter( 'plugin_row_meta', [ $this, 'plugin_description_links' ], 10, 4 );
         }
     }
-
     public function plugin_description_links( $links_array, $plugin_file_name, $plugin_data, $status ) {
         if ( strpos( $plugin_file_name, basename( __FILE__ ) ) ) {
-            // You can still use `array_unshift()` to add links at the beginning.
-
-            $links_array[] = '<a href="https://disciple.tools">Disciple.Tools Community</a>'; // @todo replace with your links.
-            // @todo add other links here
+            $links_array[] = '<a href="https://disciple.tools">Disciple.Tools Community</a>';
         }
-
         return $links_array;
     }
-
-    /**
-     * Loads the translation files.
-     *
-     * @since  0.1
-     * @access public
-     * @return void
-     */
     public function i18n() {
         $domain = 'zume-coaching';
         load_plugin_textdomain( $domain, false, trailingslashit( dirname( plugin_basename( __FILE__ ) ) ). 'languages' );
     }
-
-    /**
-     * Magic method to output a string if trying to use the object as a string.
-     *
-     * @since  0.1
-     * @access public
-     * @return string
-     */
     public function __toString() {
         return 'zume-coaching';
     }
-
-    /**
-     * Magic method to keep the object from being cloned.
-     *
-     * @since  0.1
-     * @access public
-     * @return void
-     */
     public function __clone() {
         _doing_it_wrong( __FUNCTION__, 'Whoah, partner!', '0.1' );
     }
-
-    /**
-     * Magic method to keep the object from being unserialized.
-     *
-     * @since  0.1
-     * @access public
-     * @return void
-     */
     public function __wakeup() {
         _doing_it_wrong( __FUNCTION__, 'Whoah, partner!', '0.1' );
     }
-
-    /**
-     * Magic method to prevent a fatal error when calling a method that doesn't exist.
-     *
-     * @param string $method
-     * @param array $args
-     * @return null
-     * @since  0.1
-     * @access public
-     */
     public function __call( $method = '', $args = array() ) {
         _doing_it_wrong( 'zume_coaching::' . esc_html( $method ), 'Method does not exist.', '0.1' );
         unset( $method, $args );
