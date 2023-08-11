@@ -21,7 +21,7 @@ class Zume_Coaching_Tile
         if ( $post_type === 'contacts' ) {
             $tiles['followup'] = [ 'label' => __( 'Progress', 'zume-coaching' ) ];
             $tiles['faith'] = [ 'label' => __( 'Activity Profile', 'zume-coaching' ) ];
-            $tiles['other'] = [ 'label' => __( 'Communication Tools', 'zume-coaching' ) ];
+            $tiles['communication'] = [ 'label' => __( 'Communication Tools', 'zume-coaching' ) ];
         }
         return $tiles;
     }
@@ -101,7 +101,7 @@ class Zume_Coaching_Tile
 
         <?php }
 
-        if ( $post_type === 'contacts' && $section === 'other' ) {
+        if ( $post_type === 'contacts' && $section === 'communication' ) {
 
             $this_post = DT_Posts::get_post( $post_type, get_the_ID() );
             $post_type_fields = DT_Posts::get_post_field_settings( $post_type );
