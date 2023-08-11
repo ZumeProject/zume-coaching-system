@@ -37,25 +37,38 @@ class Zume_Coaching_Tile
     public function dt_details_additional_section( $section, $post_type ) {
 
         if ( $post_type === 'contacts' && $section === 'followup' ) {
-
-//            $this_post = DT_Posts::get_post( $post_type, get_the_ID() );
-//            $post_type_fields = DT_Posts::get_post_field_settings( $post_type );
+            $this_post = DT_Posts::get_post( $post_type, get_the_ID() );
+            if ( !isset( $this_post['trainee_user_id'] ) ) {
+                ?>No Training ID Found<?php
+                return;
+            }
+            $funnel_stages = zume_funnel_stages();
+            $funnel_number = zume_get_stage( $this_post['trainee_user_id'], NULL, true );
             ?>
-
             <div class="cell small-12 medium-4">
-                <button class="button expanded success">Registered</button>
-                <button class="button expanded hollow">Active Training</button>
-                <button class="button expanded hollow">Post-Training</button>
-                <button class="button expanded hollow">Partial Practitioner</button>
-                <button class="button expanded hollow">Completed Practitioner</button>
-                <button class="button expanded hollow">Multiplying Practitioner</button>
+                <?php
+                    foreach( $funnel_stages as $stage ) {
+                        $stage_class = 'hollow';
+                        if ( $stage['stage'] <= $funnel_number ) {
+                            $stage_class = 'success';
+                        }
+                        ?>
+                        <button class="button expanded <?php echo $stage_class ?>"><?php echo $stage['label'] ?></button>
+                        <?php
+                    }
+                ?>
             </div>
         <?php }
 
         if ( $post_type === 'contacts' && $section === 'faith' ) {
 
             $this_post = DT_Posts::get_post( $post_type, get_the_ID() );
-//            $post_type_fields = DT_Posts::get_post_field_settings( $post_type );
+            if ( !isset( $this_post['trainee_user_id'] ) ) {
+                ?>No Training ID Found<?php
+                return;
+            }
+            $activity = zume_user_log( $this_post['trainee_user_id'] );
+
             ?>
             <div class="cell small-12 medium-4">
                 <button class="button expanded" data-open="modal_user_overview">User Overview</button>
@@ -85,7 +98,15 @@ class Zume_Coaching_Tile
             <div class="reveal full" id="modal_activity" data-v-offset="0" data-reveal>
                 <h1>Activity History for <?php echo $this_post['title'] ?></h1>
                 <hr>
-                <div style="height: 800px"></div>
+                <div>
+                    <?php
+                    if ( ! empty( $activity ) ) {
+                        foreach( $activity as $row ) {
+                            echo date( 'M d, Y h:i:s a', $row['time_end'] ) ?> | <strong><?php echo $row['log_key'] ?></strong><br><?php
+                        }
+                    }
+                    ?>
+                </div>
                 <button class="close-button" data-close aria-label="Close modal" type="button">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -101,7 +122,17 @@ class Zume_Coaching_Tile
             <div class="reveal full" id="modal_reports" data-v-offset="0" data-reveal>
                 <h1>Practitioner Reports for <?php echo $this_post['title'] ?></h1>
                 <hr>
-                <div style="height: 800px"></div>
+                <div>
+                    <?php
+                    if ( ! empty( $activity ) ) {
+                        foreach( $activity as $row ) {
+                            if ( 'reports' === $row['type'] ) {
+                                echo date( 'M d, Y h:i:s a', $row['time_end'] ) ?> | <strong><?php echo $row['log_key'] ?></strong><br><?php
+                            }
+                        }
+                    }
+                    ?>
+                </div>
                 <button class="close-button" data-close aria-label="Close modal" type="button">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -120,8 +151,11 @@ class Zume_Coaching_Tile
 
         if ( $post_type === 'contacts' && $section === 'communication' ) {
 
-//            $this_post = DT_Posts::get_post( $post_type, get_the_ID() );
-//            $post_type_fields = DT_Posts::get_post_field_settings( $post_type );
+            $this_post = DT_Posts::get_post( $post_type, get_the_ID() );
+            if ( !isset( $this_post['trainee_user_id'] ) ) {
+                ?>No Training ID Found<?php
+                return;
+            }
             ?>
 
             <div class="cell small-12 medium-4">

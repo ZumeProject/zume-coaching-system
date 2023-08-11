@@ -92,6 +92,8 @@ class Zume_Coaching {
         $wpdb->zume_activity = 'wp_dt_activity_log';
         /* end custom table setup */
 
+        require_once( 'globals.php' );
+
         $is_rest = dt_is_rest();
         if ( $is_rest ) {
             require_once( 'system/rest-api.php' );
