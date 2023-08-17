@@ -12,168 +12,145 @@ class Zume_Coaching_Tile
     }
 
     public function __construct(){
+
         add_filter( 'dt_details_additional_tiles', [ $this, 'dt_details_additional_tiles' ], 99, 2 );
         add_filter( 'dt_custom_fields_settings', [ $this, 'dt_custom_fields_settings' ], 1, 2 );
         add_action( 'dt_details_additional_section', [ $this, 'dt_details_additional_section' ], 30, 2 );
-    }
 
+        if ( dt_is_rest() ) {
+            add_action( 'rest_api_init', [ $this, 'add_api_routes' ] );
+        }
+
+    }
     public function dt_details_additional_tiles( $tiles, $post_type = '' ) {
         if ( $post_type === 'contacts' ) {
-            $tiles['followup'] = [ 'label' => __( 'Funnel Stage', 'zume-coaching' ) ];
-            $tiles['faith'] = [ 'label' => __( 'Zúme System', 'zume-coaching' ) ];
+            $tiles['followup'] = [ 'label' => __( 'Funnel Stage', 'zume-coaching' ) ]; // Funnel tile is keyed to followup (reduce tile redundancy)
+            $tiles['faith'] = [ 'label' => __( 'Zúme System', 'zume-coaching' ) ]; // System tile is keyed to faith (reduce tile redundancy)
             $tiles['communication'] = [ 'label' => __( 'Communication', 'zume-coaching' ) ];
         }
         return $tiles;
     }
     public function dt_custom_fields_settings( array $fields, string $post_type = '' ) {
-
         if ( $post_type === 'contacts' ) {
-
-
+            // process fields
         }
-
         return $fields;
     }
     public function dt_details_additional_section( $section, $post_type ) {
-
+        // Funnel Tile
         if ( $post_type === 'contacts' && $section === 'followup' ) {
-            $this_post = DT_Posts::get_post( $post_type, get_the_ID() );
-            if ( !isset( $this_post['trainee_user_id'] ) ) {
-                ?>No Training ID Found<?php
-                return;
-            }
-            $funnel_stages = zume_funnel_stages();
-            $funnel_number = zume_get_stage( $this_post['trainee_user_id'], NULL, true );
-            ?>
-            <div class="cell small-12 medium-4">
-                <?php
-                    foreach( $funnel_stages as $stage ) {
-                        $stage_class = 'hollow';
-                        if ( $stage['stage'] <= $funnel_number ) {
-                            $stage_class = 'success';
-                        }
-                        ?>
-                        <button class="button expanded <?php echo $stage_class ?>"><?php echo $stage['label'] ?></button>
-                        <?php
-                    }
-                ?>
-            </div>
-        <?php }
-
+            Zume_Tile_Funnel::get( get_the_ID(), $post_type );
+        }
+        // System Title
         if ( $post_type === 'contacts' && $section === 'faith' ) {
-
-            $this_post = DT_Posts::get_post( $post_type, get_the_ID() );
-            if ( !isset( $this_post['trainee_user_id'] ) ) {
-                ?>No Training ID Found<?php
-                return;
-            }
-            $activity = zume_user_log( $this_post['trainee_user_id'] );
-
-            ?>
-            <div class="cell small-12 medium-4">
-                <button class="button expanded" data-open="modal_user_overview">User Overview</button>
-            </div>
-            <hr>
-            <h4>Training</h4>
-            <div class="cell small-12 medium-4">
-                <button class="button expanded" data-open="modal_activity">Activity History</button>
-                <button class="button expanded" data-open="modal_checklists">Checklists</button>
-            </div>
-            <hr>
-            <h4>Practitioner</h4>
-            <div class="cell small-12 medium-4">
-                <button class="button expanded" data-open="modal_reports">Practitioner Reports</button>
-                <button class="button expanded" data-open="modal_genmap">Current Genmap</button>
-            </div>
-
-
-            <div class="reveal full" id="modal_user_overview" data-v-offset="0" data-reveal>
-                <h1>User Overview for <?php echo $this_post['title'] ?></h1>
-                <hr>
-                <div style="height: 800px"></div>
-                <button class="close-button" data-close aria-label="Close modal" type="button">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="reveal full" id="modal_activity" data-v-offset="0" data-reveal>
-                <h1>Activity History for <?php echo $this_post['title'] ?></h1>
-                <hr>
-                <div>
-                    <?php
-                    if ( ! empty( $activity ) ) {
-                        foreach( $activity as $row ) {
-                            echo date( 'M d, Y h:i:s a', $row['time_end'] ) ?> | <strong><?php echo $row['log_key'] ?></strong><br><?php
-                        }
-                    }
-                    ?>
-                </div>
-                <button class="close-button" data-close aria-label="Close modal" type="button">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="reveal full" id="modal_checklists" data-v-offset="0" data-reveal>
-                <h1>Checklists for <?php echo $this_post['title'] ?></h1>
-                <hr>
-                <div style="height: 800px"></div>
-                <button class="close-button" data-close aria-label="Close modal" type="button">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="reveal full" id="modal_reports" data-v-offset="0" data-reveal>
-                <h1>Practitioner Reports for <?php echo $this_post['title'] ?></h1>
-                <hr>
-                <div>
-                    <?php
-                    if ( ! empty( $activity ) ) {
-                        foreach( $activity as $row ) {
-                            if ( 'reports' === $row['type'] ) {
-                                echo date( 'M d, Y h:i:s a', $row['time_end'] ) ?> | <strong><?php echo $row['log_key'] ?></strong><br><?php
-                            }
-                        }
-                    }
-                    ?>
-                </div>
-                <button class="close-button" data-close aria-label="Close modal" type="button">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="reveal full" id="modal_genmap" data-v-offset="0" data-reveal>
-                <h1>Current Genmap for <?php echo $this_post['title'] ?></h1>
-                <hr>
-                <div style="height: 800px"></div>
-                <button class="close-button" data-close aria-label="Close modal" type="button">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-
-        <?php }
-
+            Zume_Tile_System::instance()->get( get_the_ID(), $post_type );
+        }
+        // Communication Tile
         if ( $post_type === 'contacts' && $section === 'communication' ) {
-
-            $this_post = DT_Posts::get_post( $post_type, get_the_ID() );
-            if ( !isset( $this_post['trainee_user_id'] ) ) {
-                ?>No Training ID Found<?php
-                return;
-            }
-            ?>
-
-            <div class="cell small-12 medium-4">
-                <button class="button" data-open="modal-send-reports">Request Profile Update</button>
-                <button class="button" data-open="modal-send-reports">Request Checklist Review</button>
-                <button class="button" data-open="modal-send-reports">Request Activity Report</button>
-                <button class="button" data-open="modal-send-reports">Request Church Report</button>
-            </div>
-            <div class="reveal large" id="modal-send-reports" data-v-offset="0" data-reveal>
-                <h1>Send Reports to <?php echo $this_post['title'] ?></h1>
-                <hr>
-                <p class="lead">Send a report request to this person.</p>
-                <button class="close-button" data-close aria-label="Close modal" type="button">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-        <?php }
+            Zume_Tile_Communication::get( get_the_ID(), $post_type );
+        }
     }
+
+
+    public function add_api_routes() {
+        $namespace = 'zume_coaching/v1';
+        register_rest_route(
+            $namespace, '/activity', [
+                'methods'  => [ 'GET', 'POST' ],
+                'callback' => [ $this, 'api_action_switch' ],
+                'permission_callback' => '__return_true'
+            ]
+        );
+    }
+    public function api_action_switch( WP_REST_Request $request ) {
+        $params =  dt_recursive_sanitize_array( $request->get_params() );
+        if ( ! isset( $params['action'] ) ) {
+            return new WP_Error( 'no_stage', __( 'No stage key provided.', 'zume' ), array( 'status' => 400 ) );
+        }
+        switch( $params['action'] ) {
+            default:
+                return $this->api_general( $params );
+        }
+    }
+    public function api_general( $params ) {
+        return $params;
+    }
+
+    public function _activity_by_date( $activity ) {
+        if ( empty( $activity ) ) {
+            return [];
+        }
+
+        $range = $this->create_date_range_array( date( 'Y-m-d', $activity[0]['time_end'] ), date( 'Y-m-d', time() ) );
+
+        $new_activity = [];
+        foreach ($range as $value) {
+            $year = substr($value, 0, 4);
+            $day = substr($value, 5, 2) . '-' . substr($value, 8, 2);
+
+            if ( ! isset( $new_activity[$year] ) ) {
+                $new_activity[$year] = [];
+            }
+            $new_activity[$year][$day] = [];
+        }
+
+        foreach ( $activity as $item ) {
+            $year = date( 'Y', $item['time_end'] );
+            $day = date( 'm-d', $item['time_end'] );
+
+            if( ! isset( $new_activity[$year][$day] ) ) {
+                continue;
+            }
+
+            $new_activity[$year][$day][] = $item;
+
+        }
+        return $new_activity;
+    }
+    public function create_date_range_array($start_date,$end_date)
+    {
+        $aryRange = [];
+
+        $iDateFrom = mktime(1, 0, 0, substr($start_date, 5, 2), substr($start_date, 8, 2), substr($start_date, 0, 4));
+        $iDateTo = mktime(1, 0, 0, substr($end_date, 5, 2), substr($end_date, 8, 2), substr($end_date, 0, 4));
+
+        if ($iDateTo >= $iDateFrom) {
+            array_push($aryRange, date('Y-m-d', $iDateFrom)); // first entry
+            while ($iDateFrom<$iDateTo) {
+                $iDateFrom += 86400; // add 24 hours
+                array_push($aryRange, date('Y-m-d', $iDateFrom));
+            }
+        }
+        return $aryRange;
+    }
+    public function print_activity_list( $activity ) {
+        $activity_by_date = $this->_activity_by_date( $activity );
+        if ( ! empty( $activity_by_date ) ) {
+            echo '<div class="grid-x grid-padding-x">';
+            $days_skipped = 0;
+            foreach( $activity_by_date as $year => $days ) {
+                echo '<div class="cell"><h2>' . $year  . '</h2></div>';
+
+                foreach( $days as $day => $day_activity ) {
+                    if ( empty( $day_activity ) ) {
+                        $days_skipped++;
+                    } else {
+                        if ( $days_skipped > 0 ) {
+                            echo '<div class="cell small-3"></div><div class="cell small-9" style="padding:1em;">-- ' . $days_skipped . ' days no activity --</div>';
+                            $days_skipped = 0;
+                        }
+                        echo '<div class="cell small-3" style="text-align:right;">' . $day  . '</div><div class="cell small-9" style="border-left:1px solid lightgrey;">';
+                        foreach( $day_activity as $row) {
+                            echo date( 'h:i a', $row['time_end'] ) ?> - <strong><?php echo $row['log_key'] ?></strong><br><?php
+                        }
+                        echo '</div>';
+                    }
+                }
+            }
+            echo '</div>';
+        }
+    }
+
+
 }
 Zume_Coaching_Tile::instance();
