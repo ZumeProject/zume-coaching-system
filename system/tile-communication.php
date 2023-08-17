@@ -3,8 +3,18 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-class Zume_Tile_Communication {
-    public static function get( $post_id, $post_type ) {
+class Zume_Tile_Communication  {
+    private static $_instance = null;
+    public static function instance(){
+        if ( is_null( self::$_instance ) ) {
+            self::$_instance = new self();
+        }
+        return self::$_instance;
+    }
+
+    public function __construct(){
+    }
+    public function get( $post_id, $post_type ) {
         $this_post = DT_Posts::get_post( $post_type, $post_id );
         if ( !isset( $this_post['trainee_user_id'] ) ) {
             ?>No Training ID Found<?php

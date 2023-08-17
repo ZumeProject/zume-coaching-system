@@ -900,4 +900,29 @@ if( ! function_exists( 'zume_get_contact_id' ) ) {
         return $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM wp_postmeta WHERE meta_key = 'corresponds_to_user' AND meta_value = %s", $user_id ) );
     }
 }
+if( ! function_exists( 'zume_get_user_profile' ) ) {
+    function zume_get_user_profile( $user_id ) {
+        global $wpdb;
+        $contact_id = zume_get_contact_id( $user_id );
+        $name = $wpdb->get_var( $wpdb->prepare( "SELECT post_title FROM wp_posts WHERE ID = %d", $contact_id ) );
+        $contact_meta = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM wp_postmeta WHERE post_id = %d", $contact_id ), ARRAY_A );
+        $meta = [];
+        foreach( $contact_meta as $value ) {
+            $meta[$value['meta_key']] = $value['meta_value'];
+        }
 
+        $email = $meta['user_email'] ?? '';
+        $phone = $meta['user_phone'] ?? '';
+
+        return [
+            'user_id' => $user_id,
+            'contact_id' => $contact_id,
+            'name' => $name,
+            'email' => $email,
+            'phone' => $phone,
+            'locale' => get_user_locale( $user_id ),
+            'location' => zume_get_user_location( $user_id ),
+
+        ];
+    }
+}
