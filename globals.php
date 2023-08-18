@@ -91,302 +91,344 @@ if ( !function_exists( 'zume_languages' ) ) {
     function zume_languages() {
         global $zume_languages;
         $zume_languages = array(
-            array(
+            'en' => array(
+                'name' => 'English',
                 'enDisplayName' => 'English',
                 'code' => 'en',
                 'locale' => 'en',
                 'nativeName' => 'English',
                 'rtl' => false
             ),
-            array(
+            'ar' => array(
+                'name' => 'Arabic',
                 'enDisplayName' => 'Arabic',
                 'code' => 'ar',
                 'locale' => 'ar_LB',
                 'nativeName' => 'العربية',
                 'rtl' => true
             ),
-            array(
+            'ar_jo' => array(
+                'name' => 'Arabic (JO)',
                 'enDisplayName' => 'Arabic (JO)',
                 'code' => 'ar_jo',
                 'locale' => 'ar_JO',
                 'nativeName' => 'العربية - الأردن',
                 'rtl' => true
             ),
-            array(
+            'asl' => array(
+                'name' => 'American Sign Language',
                 'enDisplayName' => 'American Sign Language',
                 'code' => 'asl',
                 'locale' => 'asl',
                 'nativeName' => 'Sign Language',
                 'rtl' => false
             ),
-            array(
+            'bho' => array(
+                'name' => 'Bhojpuri',
                 'enDisplayName' => 'Bhojpuri',
                 'code' => 'bho',
                 'locale' => 'bho',
                 'nativeName' => 'भोजपुरी',
                 'rtl' => false
             ),
-            array(
+            'bn' => array(
+                'name' => 'Bengali (India)',
                 'enDisplayName' => 'Bengali (India)',
                 'code' => 'bn',
                 'locale' => 'bn_IN',
                 'nativeName' => 'বাংলা',
                 'rtl' => false
             ),
-            array(
+            'bs' => array(
+                'name' => 'Bosnian',
                 'enDisplayName' => 'Bosnian',
                 'code' => 'bs',
                 'locale' => 'bs_BA',
                 'nativeName' => 'Bosanski',
                 'rtl' => false
             ),
-            array(
+            'zhhk' => array(
+                'name' => 'Cantonese (Traditional)',
                 'enDisplayName' => 'Cantonese (Traditional)',
                 'code' => 'zhhk',
                 'locale' => 'zh_HK',
                 'nativeName' => '粵語 (繁體)',
                 'rtl' => false
             ),
-            array(
+            'zhcn' => array(
+                'name' => 'Chinese (Simplified)',
                 'enDisplayName' => 'Chinese (Simplified)',
                 'code' => 'zhcn',
                 'locale' => 'zh_CN',
                 'nativeName' => '国语（简体)',
                 'rtl' => false
             ),
-            array(
+            'zhtw' => array(
+                'name' => 'Chinese (Traditional)',
                 'enDisplayName' => 'Chinese (Traditional)',
                 'code' => 'zhtw',
                 'locale' => 'zh_TW',
                 'nativeName' => '國語（繁體)',
                 'rtl' => false
             ),
-            array(
+            'hr' => array(
+                'name' => 'Croatian',
                 'enDisplayName' => 'Croatian',
                 'code' => 'hr',
                 'locale' => 'hr',
                 'nativeName' => 'Hrvatski',
                 'rtl' => false
             ),
-            array(
+            'fa' => array(
+                'name' => 'Farsi/Persian',
                 'enDisplayName' => 'Farsi/Persian',
                 'code' => 'fa',
                 'locale' => 'fa_IR',
                 'nativeName' => 'فارسی',
                 'rtl' => true
             ),
-            array(
+            'fr' => array(
+                'name' => 'French',
                 'enDisplayName' => 'French',
                 'code' => 'fr',
                 'locale' => 'fr_FR',
                 'nativeName' => 'Français',
                 'rtl' => false
             ),
-            array(
+            'de' => array(
+                'name' => 'German',
                 'enDisplayName' => 'German',
                 'code' => 'de',
                 'locale' => 'de_DE',
                 'nativeName' => 'Deutsch',
                 'rtl' => false
             ),
-            array(
+            'gu' => array(
+                'namne' => 'Gujarati',
                 'enDisplayName' => 'Gujarati',
                 'code' => 'gu',
                 'locale' => 'gu',
                 'nativeName' => 'ગુજરાતી',
                 'rtl' => false
             ),
-            array(
+            'ha' => array(
+                'name' => 'Hausa',
                 'enDisplayName' => 'Hausa',
                 'code' => 'ha',
                 'locale' => 'ha_NG',
                 'nativeName' => 'Hausa',
                 'rtl' => false
             ),
-            array(
+            'hi' => array(
+                'name' => 'Hindi',
                 'enDisplayName' => 'Hindi',
                 'code' => 'hi',
                 'locale' => 'hi_IN',
                 'nativeName' => 'हिन्दी',
                 'rtl' => false
             ),
-            array(
+            'id' => array(
+                'name' => 'Indonesian',
                 'enDisplayName' => 'Indonesian',
                 'code' => 'id',
                 'locale' => 'id_ID',
                 'nativeName' => 'Bahasa Indonesia',
                 'rtl' => false
             ),
-            array(
+            'it' => array(
+                'name' => 'Italian',
                 'enDisplayName' => 'Italian',
                 'code' => 'it',
                 'locale' => 'it_IT',
                 'nativeName' => 'Italiano',
                 'rtl' => false
             ),
-
-            array(
+            'kn' => array(
+                'name' => 'Kannada',
                 'enDisplayName' => 'Kannada',
                 'code' => 'kn',
                 'locale' => 'kn',
                 'nativeName' => 'ಕನ್ನಡ',
                 'rtl' => false
             ),
-            array(
+            'ko' => array(
+                'name' => 'Korean',
                 'enDisplayName' => 'Korean',
                 'code' => 'ko',
                 'locale' => 'ko_KR',
                 'nativeName' => '한국어',
                 'rtl' => false
             ),
-            array(
+            'ku' => array(
+                'name' => 'Kurdish',
                 'enDisplayName' => 'Kurdish',
                 'code' => 'ku',
                 'locale' => 'ku',
                 'nativeName' => 'کوردی',
                 'rtl' => true
             ),
-            array(
+            'lo' => array(
+                'name' => 'Lao',
                 'enDisplayName' => 'Lao',
                 'code' => 'lo',
                 'locale' => 'lo',
                 'nativeName' => 'ພາສາລາວ',
                 'rtl' => false
             ),
-            array(
+            'mai' => array(
+                'name' => 'Maithili',
                 'enDisplayName' => 'Maithili',
                 'code' => 'mai',
                 'locale' => 'mai',
                 'nativeName' => '𑒧𑒻𑒟𑒱𑒪𑒲',
                 'rtl' => false
             ),
-            array(
+            'mr' => array(
+                'name' => 'Marathi',
                 'enDisplayName' => 'Marathi',
                 'code' => 'mr',
                 'locale' => 'mr',
                 'nativeName' => 'मराठी',
                 'rtl' => false
             ),
-            array(
+            'ml' => array(
+                'name' => 'Malayalam',
                 'enDisplayName' => 'Malayalam',
                 'code' => 'ml',
                 'locale' => 'ml',
                 'nativeName' => 'മലയാളം',
                 'rtl' => false
             ),
-            array(
+            'ne' => array(
+                'name' => 'Nepali',
                 'enDisplayName' => 'Nepali',
                 'code' => 'ne',
                 'locale' => 'ne_NP',
                 'nativeName' => 'नेपाली',
                 'rtl' => false
             ),
-            array(
+            'or' => array(
+                'name' => 'Oriya',
                 'enDisplayName' => 'Oriya',
                 'code' => 'or',
                 'locale' => 'or_IN',
                 'nativeName' => 'ଓଡ଼ିଆ',
                 'rtl' => false
             ),
-            array(
+            'pa' => array(
+                'name' => 'Punjabi',
                 'enDisplayName' => 'Punjabi',
                 'code' => 'pa',
                 'locale' => 'pa_IN',
                 'nativeName' => 'ਪੰਜਾਬੀ',
                 'rtl' => false
             ),
-            array(
+            'pt' => array(
+                'name' => 'Portuguese',
                 'enDisplayName' => 'Portuguese',
                 'code' => 'pt',
                 'locale' => 'pt_PT',
                 'nativeName' => 'Português',
                 'rtl' => false
             ),
-            array(
+            'ru' => array(
+                'name' => 'Russian',
                 'enDisplayName' => 'Russian',
                 'code' => 'ru',
                 'locale' => 'ru_RU',
                 'nativeName' => 'Русский',
                 'rtl' => false
             ),
-            array(
+            'ro' => array(
+                'name' => 'Romanian',
                 'enDisplayName' => 'Romanian',
                 'code' => 'ro',
                 'locale' => 'ro_RO',
                 'nativeName' => 'Română',
                 'rtl' => false
             ),
-            array(
+            'sl' => array(
+                'name' => 'Slovenian',
                 'enDisplayName' => 'Slovenian',
                 'code' => 'sl',
                 'locale' => 'sl_Sl',
                 'nativeName' => 'Slovenščina',
                 'rtl' => false
             ),
-            array(
+            'es' => array(
+                'name' => 'Spanish',
                 'enDisplayName' => 'Spanish',
                 'code' => 'es',
                 'locale' => 'es',
                 'nativeName' => 'Español',
                 'rtl' => false
             ),
-            array(
+            'so' => array(
+                'name' => 'Somali',
                 'enDisplayName' => 'Somali',
                 'code' => 'so',
                 'locale' => 'so',
                 'nativeName' => 'Soomaali',
                 'rtl' => false
             ),
-            array(
+            'swa' => array(
+                'name' => 'Swahili',
                 'enDisplayName' => 'Swahili',
                 'code' => 'swa',
                 'locale' => 'swa',
                 'nativeName' => 'Kiswahili',
                 'rtl' => false
             ),
-            array(
+            'ta' => array(
+                'name' => 'Tamil',
                 'enDisplayName' => 'Tamil',
                 'code' => 'ta',
                 'locale' => 'ta_IN',
                 'nativeName' => 'தமிழ்',
                 'rtl' => false
             ),
-            array(
+            'te' => array(
+                'name' => 'Telugu',
                 'enDisplayName' => 'Telugu',
                 'code' => 'te',
                 'locale' => 'te',
                 'nativeName' => 'తెలుగు',
                 'rtl' => false
             ),
-            array(
+            'th' => array(
+                'name' => 'Thai',
                 'enDisplayName' => 'Thai',
                 'code' => 'th',
                 'locale' => 'th',
                 'nativeName' => 'ไทย',
                 'rtl' => false
             ),
-            array(
+            'tr' => array(
+                'name' => 'Turkish',
                 'enDisplayName' => 'Turkish',
                 'code' => 'tr',
                 'locale' => 'tr_TR',
                 'nativeName' => 'Türkçe',
                 'rtl' => false
             ),
-            array(
+            'ur' => array(
+                'name' => 'Urdu',
                 'enDisplayName' => 'Urdu',
                 'code' => 'ur',
                 'locale' => 'ur',
                 'nativeName' => 'اردو',
                 'rtl' => true
             ),
-            array(
+            'vi' => array(
+                'name' => 'Vietnamese',
                 'enDisplayName' => 'Vietnamese',
                 'code' => 'vi',
                 'locale' => 'vi',
                 'nativeName' => 'Tiếng Việt',
                 'rtl' => false
             ),
-            array(
+            'yo' => array(
+                'name' => 'Yoruba',
                 'enDisplayName' => 'Yoruba',
                 'code' => 'yo',
                 'locale' => 'yo',
@@ -901,28 +943,80 @@ if( ! function_exists( 'zume_get_contact_id' ) ) {
     }
 }
 if( ! function_exists( 'zume_get_user_profile' ) ) {
-    function zume_get_user_profile( $user_id ) {
-        global $wpdb;
-        $contact_id = zume_get_contact_id( $user_id );
-        $name = $wpdb->get_var( $wpdb->prepare( "SELECT post_title FROM wp_posts WHERE ID = %d", $contact_id ) );
-        $contact_meta = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM wp_postmeta WHERE post_id = %d", $contact_id ), ARRAY_A );
-        $meta = [];
-        foreach( $contact_meta as $value ) {
-            $meta[$value['meta_key']] = $value['meta_value'];
+    function zume_get_user_profile( $user_id = NULL ) {
+        if ( is_null( $user_id ) ) {
+            $user_id = get_current_user_id();
         }
 
-        $email = $meta['user_email'] ?? '';
-        $phone = $meta['user_phone'] ?? '';
+        $contact_id = zume_get_contact_id( $user_id );
 
-        return [
-            'user_id' => $user_id,
-            'contact_id' => $contact_id,
-            'name' => $name,
-            'email' => $email,
-            'phone' => $phone,
-            'locale' => get_user_locale( $user_id ),
-            'location' => zume_get_user_location( $user_id ),
+        global $wpdb;
+        $name = $wpdb->get_var( $wpdb->prepare( "SELECT post_title FROM wp_posts WHERE ID = %d", $contact_id ) );
 
-        ];
+        $contact_meta_query = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM wp_postmeta WHERE post_id = %d", $contact_id ), ARRAY_A );
+        $contact_meta = [];
+        foreach( $contact_meta_query as $value ) {
+            $contact_meta[$value['meta_key']] = $value['meta_value'];
+        }
+
+        $email = $contact_meta['user_email'] ?? '';
+        $phone = $contact_meta['user_phone'] ?? '';
+        $language = zume_get_user_language( $user_id, 'array' );
+        $location = zume_get_user_location( $user_id );
+
+        if( $user_id == get_current_user_id() ) {
+            // user is current user, build global variable
+            global $zume_user_profile;
+            $zume_user_profile = [
+                'user_id' => $user_id,
+                'contact_id' => $contact_id,
+                'name' => $name,
+                'email' => $email,
+                'phone' => $phone,
+                'language' => $language,
+                'location' => $location,
+            ];
+            return $zume_user_profile;
+        } else {
+            // if user is not current user, return array
+            return [
+                'user_id' => $user_id,
+                'contact_id' => $contact_id,
+                'name' => $name,
+                'email' => $email,
+                'phone' => $phone,
+                'language' => $language,
+                'location' => $location,
+            ];
+        }
+    }
+}
+if( ! function_exists( 'zume_get_user_language' ) ) {
+    function zume_get_user_language( $user_id = NULL, $result_type = 'code' )
+    {
+        global $zume_languages;
+        if ( is_null( $user_id ) ) {
+            $user_id = get_current_user_id();
+        }
+        $locale = get_user_meta( $user_id, 'locale', true );
+        if ( $user_id == get_current_user_id() && $locale !== zume_current_language() ) {
+            update_user_meta( $user_id, 'locale', zume_current_language() );
+            $locale = zume_current_language();
+        }
+
+        if ( ! isset( $zume_languages[$locale]['locale'] ) ) {
+            $locale = 'en';
+        }
+
+        if ( 'code' === $result_type ) {
+            return $locale;
+        } else if ( 'locale' === $result_type ) {
+            return $zume_languages[$locale]['locale'];
+        } else if ( 'name' === $result_type ) {
+            return $zume_languages[$locale]['name'];
+        } else {
+            return $zume_languages[$locale];
+        }
+
     }
 }
