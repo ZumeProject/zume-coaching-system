@@ -21,20 +21,34 @@ class Zume_Tile_Basics {
             return;
         }
         $profile = zume_get_user_profile( $this_post['trainee_user_id'] );
+        $host = zume_get_user_host( $this_post['trainee_user_id'] );
+        $mawl = zume_get_user_mawl( $this_post['trainee_user_id'] );
+        dt_write_log($host);
+
+        $h = $host['percent']['h'] ?? 0;
+        $o = $host['percent']['o'] ?? 0;;
+        $s = $host['percent']['s'] ?? 0;;
+        $t = $host['percent']['t'] ?? 0;;
+        $m = $mawl['percent']['m'] ?? 0;
+        $a = $mawl['percent']['a'] ?? 0;
+        $w = $mawl['percent']['w'] ?? 0;
+        $l = $mawl['percent']['l'] ?? 0;
         ?>
         <div class="cell small-12 medium-4">
-            <p>Email : <?php echo $profile['email'] ?></p>
-            <p>Phone : <?php echo $profile['phone'] ?></p>
-            <p>Language : <?php echo $profile['locale'] ?></p>
-            <p>Location : <?php echo $profile['location']['label'] ?></p>
-            <p>H : <progress id="file" max="100" value="70">70%</progress></p>
-            <p>O : <progress id="file" max="100" value="70">70%</progress></p>
-            <p>S : <progress id="file" max="100" value="70">70%</progress></p>
-            <p>T : <progress id="file" max="100" value="70">70%</progress></p>
-            <p>M : <progress id="file" max="100" value="70">70%</progress></p>
-            <p>A : <progress id="file" max="100" value="70">70%</progress></p>
-            <p>W : <progress id="file" max="100" value="70">70%</progress></p>
-            <p>L : <progress id="file" max="100" value="70">70%</progress></p>
+            <div>Email : <?php echo $profile['email'] ?></div>
+            <div>Phone : <?php echo $profile['phone'] ?></div>
+            <div>Language : <?php echo $profile['language']['name'] ?? '' ?></div>
+            <div>Location : <?php echo $profile['location']['label'] ?? '' ?></div>
+            <hr>
+            <div>H : <progress id="file" max="100" value="<?php echo $h ?>"><?php echo $h ?>%</progress></div>
+            <div>O : <progress id="file" max="100" value="<?php echo $o ?>"><?php echo $o ?>%</progress></div>
+            <div>S : <progress id="file" max="100" value="<?php echo $s ?>"><?php echo $s ?>%</progress></div>
+            <div>T : <progress id="file" max="100" value="<?php echo $t ?>"><?php echo $t ?>%</progress></div>
+            <hr>
+            <div>M : <progress id="file" max="100" value="<?php echo $m ?>"><?php echo $m ?>%</progress></div>
+            <div>A : <progress id="file" max="100" value="<?php echo $a ?>"><?php echo $a ?>%</progress></div>
+            <div>W : <progress id="file" max="100" value="<?php echo $w ?>"><?php echo $w ?>%</progress></div>
+            <div>L : <progress id="file" max="100" value="<?php echo $l ?>"><?php echo $l ?>%</progress></div>
         </div>
         <?php
     }

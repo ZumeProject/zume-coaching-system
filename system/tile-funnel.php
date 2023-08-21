@@ -21,7 +21,7 @@ class Zume_Tile_Funnel {
             return;
         }
         $funnel_stages = zume_funnel_stages();
-        $funnel_number = zume_get_stage( $this_post['trainee_user_id'], NULL, true );
+        $funnel_number = zume_get_user_stage( $this_post['trainee_user_id'], NULL, true );
         ?>
         <div class="cell small-12 medium-4">
             <?php
@@ -31,7 +31,7 @@ class Zume_Tile_Funnel {
                     $stage_class = 'success';
                 }
                 ?>
-                <button style="cursor: default;" class="button expanded <?php echo $stage_class ?>"><?php echo $stage['label'] ?></button>
+                <button style="cursor: default; margin-bottom:5px;" class="button expanded <?php echo $stage_class ?>"><?php echo $stage['label'] ?></button>
                 <?php
             }
             ?>

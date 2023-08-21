@@ -5,89 +5,330 @@
  * All sql queries should not use variable table names, but should be fully qualified.
  */
 
-if ( !function_exists( 'zume_mirror_url' ) ) {
-    function zume_mirror_url() {
-        return 'https://storage.googleapis.com/zume-file-mirror/';
+if( ! function_exists( 'zume_get_user_profile' ) ) {
+    function zume_get_user_profile( $user_id = NULL ) {
+        if ( is_null( $user_id ) ) {
+            $user_id = get_current_user_id();
+        }
+
+        $contact_id = zume_get_user_contact_id( $user_id );
+
+        global $wpdb;
+        $name = $wpdb->get_var( $wpdb->prepare( "SELECT post_title FROM wp_posts WHERE ID = %d", $contact_id ) );
+
+        $contact_meta_query = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM wp_postmeta WHERE post_id = %d", $contact_id ), ARRAY_A );
+        $contact_meta = [];
+        foreach( $contact_meta_query as $value ) {
+            $contact_meta[$value['meta_key']] = $value['meta_value'];
+        }
+
+        $email = $contact_meta['user_email'] ?? '';
+        $phone = $contact_meta['user_phone'] ?? '';
+
+        $language = zume_get_user_language( $user_id );
+        $location = zume_get_user_location( $user_id );
+
+        if( $user_id == get_current_user_id() ) {
+            // user is current user, build global variable
+            global $zume_user_profile;
+            $zume_user_profile = [
+                'user_id' => $user_id,
+                'contact_id' => $contact_id,
+                'name' => $name,
+                'email' => $email,
+                'phone' => $phone,
+                'language' => $language,
+                'location' => $location,
+            ];
+            return $zume_user_profile;
+        } else {
+            // if user is not current user, return array
+            return [
+                'user_id' => $user_id,
+                'contact_id' => $contact_id,
+                'name' => $name,
+                'email' => $email,
+                'phone' => $phone,
+                'language' => $language,
+                'location' => $location,
+            ];
+        }
     }
 }
-if ( !function_exists( 'zume_landing_page_post_id' ) ) {
-    function zume_landing_page_post_id( int $number ): int {
-        /**
-         * These are the root post ids for the english page, which is used to find the translation page in the
-         * polylang system.
-         */
-        $list = array(
-            1 => 20730, // God uses ordinary people
-            2 => 20731, // teach them to obey
-            3 => 20732, // spiritual breathing
-            4 => 20733, // soaps bible reading
-            5 => 20735, // accountability groups
-            6 => 20737, // consumers vs producers
-            7 => 20738, // prayer cycle
-            8 => 20739, // list of 100
-            9 => 20740, // kingdom economy
-            10 => 20741, // the gospel
-            11 => 20742, // baptism
-            12 => 20743, // 3-minute testimony
-            13 => 20744, // greatest blessing
-            14 => 20745, // duckling discipleship
-            15 => 20746, // seeing where God's kingdom isn't
-            16 => 20747, // the lord's supper
-            17 => 20748, // prayer walking
-            18 => 20750, // person of peace
-            19 => 20749, // bless prayer
-            20 => 20751, // faithfulness
-            21 => 20752, // 3/3 group pattern
-            22 => 20753, // training cycle
-            23 => 20755, // leadership cells
-            24 => 20756, // non-sequential
-            25 => 20757, // pace
-            26 => 20758, // part of two churches
-            27 => 19848, // 3-month plan
-            28 => 20759, // coaching checklist
-            29 => 20760, // leadership in networks
-            30 => 20761, // peer mentoring groups
-            31 => 20762, // four fields tool
-            32 => 20763, // generation mapping
-            20730 => 1, // God uses ordinary people
-            20731 => 2, // teach them to obey
-            20732 => 3, // spiritual breathing
-            20733 => 4, // soaps bible reading
-            20735 => 5, // accountability groups
-            20737 => 6, // consumers vs producers
-            20738 => 7, // prayer cycle
-            20739 => 8, // list of 100
-            20740 => 9, // kingdom economy
-            20741 => 10, // the gospel
-            20742 => 11, // baptism
-            20743 => 12, // 3-minute testimony
-            20744 => 13, // greatest blessing
-            20745 => 14, // duckling discipleship
-            20746 => 15, // seeing where God's kingdom isn't
-            20747 => 16, // the lord's supper
-            20748 => 17, // prayer walking
-            20750 => 18, // person of peace
-            20749 => 19, // bless prayer
-            20751 => 20, // faithfulness
-            20752 => 21, // 3/3 group pattern
-            20753 => 22, // training cycle
-            20755 => 23, // leadership cells
-            20756 => 24, // non-sequential
-            20757 => 25, // pace
-            20758 => 26, // part of two churches
-            19848 => 27, // 3-month plan
-            20759 => 28, // coaching checklist
-            20760 => 29, // leadership in networks
-            20761 => 30, // peer mentoring groups
-            20762 => 31, // four fields tool
-            20763 => 32, // generation mapping
+if ( ! function_exists( 'zume_get_user_stage' ) ) {
+    function zume_get_user_stage( $user_id, $log = NULL, $number_only = false ) {
 
-        );
+        if ( is_null( $log ) ) {
+            $log = zume_user_log( $user_id );
+        }
 
-        return $list[$number] ?? 0;
+        $funnel = zume_funnel_stages();
+        $stage = $funnel[0];
+
+        if ( empty( $log ) ) {
+            return $stage;
+        }
+
+        if ( count($log) > 0 ) {
+
+            $funnel_steps = [
+                1 => false,
+                2 => false,
+                3 => false,
+                4 => false,
+                5 => false,
+                6 => false,
+            ];
+
+            foreach( $log as $index => $value ) {
+                if ( 'registered' == $value['subtype'] ) {
+                    $funnel_steps[1] = true;
+                }
+                if ( 'plan_created' == $value['subtype'] ) {
+                    $funnel_steps[2] = true;
+                }
+                if ( 'training_completed' == $value['subtype'] ) {
+                    $funnel_steps[3] = true;
+                }
+                if ( 'first_practitioner_report' == $value['subtype'] ) {
+                    $funnel_steps[4] = true;
+                }
+                if ( 'mawl_completed' == $value['subtype'] ) {
+                    $funnel_steps[5] = true;
+                }
+                if ( 'seeing_generational_fruit' == $value['subtype'] ) {
+                    $funnel_steps[6] = true;
+                }
+            }
+
+            if ( $funnel_steps[6] ) {
+                $stage = $funnel[6];
+            } else if ( $funnel_steps[5] ) {
+                $stage = $funnel[5];
+            } else if ( $funnel_steps[4] ) {
+                $stage = $funnel[4];
+            } else if ( $funnel_steps[3] ) {
+                $stage = $funnel[3];
+            } else if ( $funnel_steps[2] ) {
+                $stage = $funnel[2];
+            } else if ( $funnel_steps[1] ) {
+                $stage = $funnel[1];
+            } else {
+                $stage = $funnel[0];
+            }
+        }
+
+        if ( $number_only ) {
+            return $stage['stage'];
+        } else {
+            return $stage;
+        }
     }
 }
-if ( !function_exists( 'zume_languages' ) ) {
+if( ! function_exists( 'zume_get_user_language' ) ) {
+    function zume_get_user_language( $user_id = NULL, $result_type = NULL )
+    {
+        $zume_languages = zume_languages();
+        if ( is_null( $user_id ) ) {
+            $user_id = get_current_user_id();
+        }
+        $locale = get_user_meta( $user_id, 'locale', true );
+        if ( $user_id == get_current_user_id() && $locale !== zume_current_language() ) {
+            update_user_meta( $user_id, 'locale', zume_current_language() );
+            $locale = zume_current_language();
+        }
+
+        if ( ! $locale ) {
+            $locale = 'en';
+        }
+
+        if ( 'code' === $result_type ) {
+            return $locale;
+        } else if ( 'locale' === $result_type ) {
+            return $zume_languages[$locale]['locale'];
+        } else if ( 'name' === $result_type ) {
+            return $zume_languages[$locale]['name'];
+        } else {
+            return $zume_languages[$locale];
+        }
+    }
+}
+if( ! function_exists( 'zume_get_user_location' ) ) {
+    function zume_get_user_location( $user_id, $ip_lookup = false  ) {
+        global $wpdb;
+        $location = $wpdb->get_row( $wpdb->prepare(
+            "SELECT lng, lat, level, label, grid_id
+                    FROM wp_postmeta pm
+                    JOIN wp_dt_location_grid_meta lgm ON pm.post_id=lgm.post_id
+                    WHERE pm.meta_key = 'corresponds_to_user' AND pm.meta_value = %d
+                    ORDER BY grid_meta_id desc
+                    LIMIT 1"
+            , $user_id ), ARRAY_A );
+
+        if ( empty( $location ) && $ip_lookup ) {
+            $result = DT_Ipstack_API::get_location_grid_meta_from_current_visitor();
+            if ( ! empty( $result ) ) {
+                $location = [
+                    'lng' => $result['lng'],
+                    'lat' => $result['lat'],
+                    'level' => $result['level'],
+                    'label' => $result['label'],
+                    'grid_id' => $result['grid_id'],
+                ];
+            }
+        }
+
+        if ( empty( $location ) ) {
+            return false;
+        }
+
+        return [
+            'lng' => $location['lng'],
+            'lat' => $location['lat'],
+            'level' => $location['level'],
+            'label' => $location['label'],
+            'grid_id' => $location['grid_id'],
+        ];
+    }
+}
+if( ! function_exists( 'zume_get_user_host' ) ) {
+    function zume_get_user_host( $user_id = NULL, $log = NULL ) {
+        if ( is_null( $user_id ) ) {
+            $user_id = get_current_user_id();
+        }
+        if ( is_null( $log ) ) {
+            $log = zume_user_log( $user_id );
+        }
+        $training_items = zume_training_items();
+        $host = [];
+        foreach( $training_items as $item ) {
+            if ( isset( $item['host'] ) ) {
+                foreach( $item['host'] as $elements ) {
+                    $host[$elements['type'].'_'.$elements['subtype']] = false;
+                }
+            }
+        }
+        $keys = [];
+        $h = 0;
+        $o = 0;
+        $s = 0;
+        $t = 0;
+        foreach( $log as $row ) {
+            $keys[$row['log_key']] = $row['log_key'];
+        }
+        foreach( $host as $key => $value ) {
+            if ( in_array( $key, $keys ) ) {
+                $host[$key] = true;
+                if ( str_ends_with( $key, 'heard' ) ) {
+                    $h++;
+                }
+                else if ( str_ends_with( $key, 'obeyed' ) ) {
+                    $o++;
+                }
+                else if ( str_ends_with( $key, 'shared' ) ) {
+                    $s++;
+                }
+                else if ( str_ends_with( $key, 'trained' ) ) {
+                    $t++;
+                }
+            }
+        }
+        return [
+            'list' => $host,
+            'totals' => [
+                'h' => $h,
+                'o' => $o,
+                's' => $s,
+                't' => $t,
+            ],
+            'percent' => [
+                'h' => $h / count( $training_items ) * 100,
+                'o' => $o / count( $training_items ) * 100,
+                's' => $s / count( $training_items ) * 100,
+                't' => $t / count( $training_items ) * 100,
+            ],
+            'training_items' => $training_items,
+        ];
+    }
+}
+if( ! function_exists( 'zume_get_user_mawl' ) ) {
+    function zume_get_user_mawl( $user_id = NULL, $log = NULL ) {
+        if ( is_null( $user_id ) ) {
+            $user_id = get_current_user_id();
+        }
+        if ( is_null( $log ) ) {
+            $log = zume_user_log( $user_id );
+        }
+        $training_items = zume_training_items();
+        $mawl = [];
+        foreach( $training_items as $item ) {
+            if ( isset( $item['mawl'] ) ) {
+                foreach( $item['mawl'] as $elements ) {
+                    $mawl[$elements['type'].'_'.$elements['subtype']] = false;
+                }
+            }
+        }
+        $keys = [];
+        $m = 0;
+        $a = 0;
+        $w = 0;
+        $l = 0;
+        foreach( $log as $row ) {
+            $keys[$row['log_key']] = $row['log_key'];
+        }
+        foreach( $mawl as $key => $value ) {
+            if ( in_array( $key, $keys ) ) {
+                $mawl[$key] = true;
+                if ( str_ends_with( $key, 'modeling' ) ) {
+                    $m++;
+                }
+                else if ( str_ends_with( $key, 'assisting' ) ) {
+                    $a++;
+                }
+                else if ( str_ends_with( $key, 'watching' ) ) {
+                    $w++;
+                }
+                else if ( str_ends_with( $key, 'launching' ) ) {
+                    $l++;
+                }
+            }
+        }
+        return [
+            'list' => $mawl,
+            'totals' => [
+                'm' => $m,
+                'a' => $a,
+                'w' => $w,
+                'l' => $l,
+            ],
+            'percent' => [
+                'm' => $m / count( $training_items ) * 100,
+                'a' => $a / count( $training_items ) * 100,
+                'w' => $w / count( $training_items ) * 100,
+                'l' => $l / count( $training_items ) * 100,
+            ],
+            'training_items' => $training_items,
+        ];
+    }
+}
+if( ! function_exists( 'zume_get_user_contact_id' ) ) {
+    function zume_get_user_contact_id( $user_id ) {
+        global $wpdb;
+        return $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM wp_postmeta WHERE meta_key = 'corresponds_to_user' AND meta_value = %s", $user_id ) );
+    }
+}
+if ( ! function_exists( 'zume_user_log' ) ) {
+    function zume_user_log( $user_id ) {
+        global $wpdb;
+        $sql = $wpdb->prepare( "SELECT CONCAT( r.type, '_', r.subtype ) as log_key, r.*
+                FROM wp_dt_reports r
+                WHERE r.user_id = %s
+                AND r.post_type = 'zume'
+                ", $user_id );
+        return $wpdb->get_results( $sql, ARRAY_A );
+    }
+}
+if ( ! function_exists( 'zume_languages' ) ) {
     function zume_languages() {
         global $zume_languages;
         $zume_languages = array(
@@ -436,9 +677,9 @@ if ( !function_exists( 'zume_languages' ) ) {
                 'rtl' => false
             )
         );
+        return $zume_languages;
     }
 }
-
 if ( ! function_exists( 'zume_training_items' ) ) {
     function zume_training_items() : array {
 
@@ -767,7 +1008,6 @@ if ( ! function_exists( 'zume_training_items' ) ) {
         return $list;
     }
 }
-
 if ( ! function_exists( 'zume_funnel_stages' ) ) {
     function zume_funnel_stages() : array {
         return [
@@ -816,207 +1056,8 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
         ];
     }
 }
-if ( ! function_exists( 'zume_get_stage' ) ) {
-    function zume_get_stage( $user_id, $log = NULL, $number_only = false ) {
-
-        if ( is_null( $log ) ) {
-            $log = zume_user_log( $user_id );
-        }
-
-        $funnel = zume_funnel_stages();
-        $stage = $funnel[0];
-
-        if ( empty( $log ) ) {
-            return $stage;
-        }
-
-        if ( count($log) > 0 ) {
-
-            $funnel_steps = [
-                1 => false,
-                2 => false,
-                3 => false,
-                4 => false,
-                5 => false,
-                6 => false,
-            ];
-
-            foreach( $log as $index => $value ) {
-                if ( 'registered' == $value['subtype'] ) {
-                    $funnel_steps[1] = true;
-                }
-                if ( 'plan_created' == $value['subtype'] ) {
-                    $funnel_steps[2] = true;
-                }
-                if ( 'training_completed' == $value['subtype'] ) {
-                    $funnel_steps[3] = true;
-                }
-                if ( 'first_practitioner_report' == $value['subtype'] ) {
-                    $funnel_steps[4] = true;
-                }
-                if ( 'mawl_completed' == $value['subtype'] ) {
-                    $funnel_steps[5] = true;
-                }
-                if ( 'seeing_generational_fruit' == $value['subtype'] ) {
-                    $funnel_steps[6] = true;
-                }
-            }
-
-            if ( $funnel_steps[6] ) {
-                $stage = $funnel[6];
-            } else if ( $funnel_steps[5] ) {
-                $stage = $funnel[5];
-            } else if ( $funnel_steps[4] ) {
-                $stage = $funnel[4];
-            } else if ( $funnel_steps[3] ) {
-                $stage = $funnel[3];
-            } else if ( $funnel_steps[2] ) {
-                $stage = $funnel[2];
-            } else if ( $funnel_steps[1] ) {
-                $stage = $funnel[1];
-            } else {
-                $stage = $funnel[0];
-            }
-
-        }
-
-        if ( $number_only ) {
-            return $stage['stage'];
-        } else {
-            return $stage;
-        }
-    }
-}
-if ( ! function_exists( 'zume_user_log' ) ) {
-    function zume_user_log( $user_id ) {
-        global $wpdb;
-        $sql = $wpdb->prepare( "SELECT CONCAT( r.type, '_', r.subtype ) as log_key, r.*
-                FROM wp_dt_reports r
-                WHERE r.user_id = %s
-                AND r.post_type = 'zume'
-                ", $user_id );
-        return $wpdb->get_results( $sql, ARRAY_A );
-    }
-}
-if( ! function_exists( 'zume_get_user_location' ) ) {
-    function zume_get_user_location( $user_id, $ip_lookup = false  ) {
-        global $wpdb;
-        $location = $wpdb->get_row( $wpdb->prepare(
-            "SELECT lng, lat, level, label, grid_id
-                    FROM wp_postmeta pm
-                    JOIN wp_dt_location_grid_meta lgm ON pm.post_id=lgm.post_id
-                    WHERE pm.meta_key = 'corresponds_to_user' AND pm.meta_value = %d
-                    ORDER BY grid_meta_id desc
-                    LIMIT 1"
-            , $user_id ), ARRAY_A );
-
-        if ( empty( $location ) && $ip_lookup ) {
-            $result = DT_Ipstack_API::get_location_grid_meta_from_current_visitor();
-            if ( ! empty( $result ) ) {
-                $location = [
-                    'lng' => $result['lng'],
-                    'lat' => $result['lat'],
-                    'level' => $result['level'],
-                    'label' => $result['label'],
-                    'grid_id' => $result['grid_id'],
-                ];
-            }
-        }
-
-        if ( empty( $location ) ) {
-            return false;
-        }
-
-        return [
-            'lng' => $location['lng'],
-            'lat' => $location['lat'],
-            'level' => $location['level'],
-            'label' => $location['label'],
-            'grid_id' => $location['grid_id'],
-        ];
-    }
-}
-if( ! function_exists( 'zume_get_contact_id' ) ) {
-    function zume_get_contact_id( $user_id ) {
-        global $wpdb;
-        return $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM wp_postmeta WHERE meta_key = 'corresponds_to_user' AND meta_value = %s", $user_id ) );
-    }
-}
-if( ! function_exists( 'zume_get_user_profile' ) ) {
-    function zume_get_user_profile( $user_id = NULL ) {
-        if ( is_null( $user_id ) ) {
-            $user_id = get_current_user_id();
-        }
-
-        $contact_id = zume_get_contact_id( $user_id );
-
-        global $wpdb;
-        $name = $wpdb->get_var( $wpdb->prepare( "SELECT post_title FROM wp_posts WHERE ID = %d", $contact_id ) );
-
-        $contact_meta_query = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM wp_postmeta WHERE post_id = %d", $contact_id ), ARRAY_A );
-        $contact_meta = [];
-        foreach( $contact_meta_query as $value ) {
-            $contact_meta[$value['meta_key']] = $value['meta_value'];
-        }
-
-        $email = $contact_meta['user_email'] ?? '';
-        $phone = $contact_meta['user_phone'] ?? '';
-        $language = zume_get_user_language( $user_id, 'array' );
-        $location = zume_get_user_location( $user_id );
-
-        if( $user_id == get_current_user_id() ) {
-            // user is current user, build global variable
-            global $zume_user_profile;
-            $zume_user_profile = [
-                'user_id' => $user_id,
-                'contact_id' => $contact_id,
-                'name' => $name,
-                'email' => $email,
-                'phone' => $phone,
-                'language' => $language,
-                'location' => $location,
-            ];
-            return $zume_user_profile;
-        } else {
-            // if user is not current user, return array
-            return [
-                'user_id' => $user_id,
-                'contact_id' => $contact_id,
-                'name' => $name,
-                'email' => $email,
-                'phone' => $phone,
-                'language' => $language,
-                'location' => $location,
-            ];
-        }
-    }
-}
-if( ! function_exists( 'zume_get_user_language' ) ) {
-    function zume_get_user_language( $user_id = NULL, $result_type = 'code' )
-    {
-        global $zume_languages;
-        if ( is_null( $user_id ) ) {
-            $user_id = get_current_user_id();
-        }
-        $locale = get_user_meta( $user_id, 'locale', true );
-        if ( $user_id == get_current_user_id() && $locale !== zume_current_language() ) {
-            update_user_meta( $user_id, 'locale', zume_current_language() );
-            $locale = zume_current_language();
-        }
-
-        if ( ! isset( $zume_languages[$locale]['locale'] ) ) {
-            $locale = 'en';
-        }
-
-        if ( 'code' === $result_type ) {
-            return $locale;
-        } else if ( 'locale' === $result_type ) {
-            return $zume_languages[$locale]['locale'];
-        } else if ( 'name' === $result_type ) {
-            return $zume_languages[$locale]['name'];
-        } else {
-            return $zume_languages[$locale];
-        }
-
+if ( ! function_exists( 'zume_mirror_url' ) ) {
+    function zume_mirror_url() {
+        return 'https://storage.googleapis.com/zume-file-mirror/';
     }
 }
