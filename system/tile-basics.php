@@ -23,7 +23,6 @@ class Zume_Tile_Basics {
         $profile = zume_get_user_profile( $this_post['trainee_user_id'] );
         $host = zume_get_user_host( $this_post['trainee_user_id'] );
         $mawl = zume_get_user_mawl( $this_post['trainee_user_id'] );
-        dt_write_log($host);
 
         $h = $host['percent']['h'] ?? 0;
         $o = $host['percent']['o'] ?? 0;;

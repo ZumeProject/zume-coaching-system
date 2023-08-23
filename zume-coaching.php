@@ -92,7 +92,6 @@ class Zume_Coaching {
         $wpdb->zume_activity = 'wp_dt_activity_log';
         /* end custom table setup */
 
-        require_once( 'globals.php' ); // mirror to the zume_training_system plugin
         require_once( 'system/loader.php' );
 
         $this->i18n();
