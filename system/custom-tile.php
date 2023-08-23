@@ -84,14 +84,87 @@ class Zume_Coaching_Tile
         }
         switch( $params['action'] ) {
             default:
-                return $this->api_general( $params );
+                return self::api_general( $params );
         }
     }
     public function api_general( $params ) {
         return $params;
     }
 
+    public static function print_activity_list( $activity ) {
+        $activity_by_date = self::_activity_by_date( $activity );
+        if ( ! empty( $activity_by_date ) ) {
+            echo '<div class="grid-x grid-padding-x">';
+            $days_skipped = 0;
+            foreach( $activity_by_date as $year => $days ) {
+                echo '<div class="cell"><h2>' . $year  . '</h2></div>';
 
+                foreach( $days as $day => $day_activity ) {
+                    if ( empty( $day_activity ) ) {
+                        $days_skipped++;
+                    } else {
+                        if ( $days_skipped > 0 ) {
+                            echo '<div class="cell small-3"></div><div class="cell small-9" style="padding:1em;">-- ' . $days_skipped . ' days no activity --</div>';
+                            $days_skipped = 0;
+                        }
+                        echo '<div class="cell small-3" style="text-align:right;">' . $day  . '</div><div class="cell small-9" style="border-left:1px solid lightgrey;">';
+                        foreach( $day_activity as $row) {
+                            echo date( 'h:i a', $row['time_end'] ) ?> - <strong><?php echo ucwords( str_replace( '_', ' ', $row['log_key'] ) ) ?></strong><br><?php
+                        }
+                        echo '</div>';
+                    }
+                }
+            }
+            echo '</div>';
+        }
+    }
+    public static function _activity_by_date( $activity ) {
+        if ( empty( $activity ) ) {
+            return [];
+        }
+
+        $range = self::create_date_range_array( date( 'Y-m-d', $activity[0]['time_end'] ), date( 'Y-m-d', time() ) );
+
+        $new_activity = [];
+        foreach ($range as $value) {
+            $year = substr($value, 0, 4);
+            $day = substr($value, 5, 2) . '-' . substr($value, 8, 2);
+
+            if ( ! isset( $new_activity[$year] ) ) {
+                $new_activity[$year] = [];
+            }
+            $new_activity[$year][$day] = [];
+        }
+
+        foreach ( $activity as $item ) {
+            $year = date( 'Y', $item['time_end'] );
+            $day = date( 'm-d', $item['time_end'] );
+
+            if( ! isset( $new_activity[$year][$day] ) ) {
+                continue;
+            }
+
+            $new_activity[$year][$day][] = $item;
+
+        }
+        return $new_activity;
+    }
+    public static function create_date_range_array($start_date,$end_date)
+    {
+        $aryRange = [];
+
+        $iDateFrom = mktime(1, 0, 0, substr($start_date, 5, 2), substr($start_date, 8, 2), substr($start_date, 0, 4));
+        $iDateTo = mktime(1, 0, 0, substr($end_date, 5, 2), substr($end_date, 8, 2), substr($end_date, 0, 4));
+
+        if ($iDateTo >= $iDateFrom) {
+            array_push($aryRange, date('Y-m-d', $iDateFrom)); // first entry
+            while ($iDateFrom<$iDateTo) {
+                $iDateFrom += 86400; // add 24 hours
+                array_push($aryRange, date('Y-m-d', $iDateFrom));
+            }
+        }
+        return $aryRange;
+    }
 
 
 }
