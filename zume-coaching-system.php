@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Zúme - Coaching
+ * Plugin Name: Zúme - Coaching System
  * Plugin URI: https://github.com/ZumeProject/zume-coaching
  * Description: Zúme - Coaching enables remote coaching of users in another system.
  * Text Domain: zume-coaching
@@ -92,7 +92,9 @@ class Zume_Coaching {
         $wpdb->zume_activity = 'wp_dt_activity_log';
         /* end custom table setup */
 
+        require_once( 'globals.php' );
         require_once( 'system/loader.php' );
+        require_once( 'appearance/loader.php' );
 
         $this->i18n();
 
