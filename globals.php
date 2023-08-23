@@ -148,14 +148,19 @@ if ( ! function_exists( 'zume_get_user_stage' ) ) {
     }
 }
 if( ! function_exists( 'zume_get_user_language' ) ) {
-    function zume_get_user_language( $user_id = NULL, $result_type = NULL )
+    function zume_get_user_language( $user_id = NULL )
     {
-        $zume_languages = zume_languages();
+        global $zume_languages_by_locale;
+        if ( empty( $zume_languages_by_locale ) ) {
+            $zume_languages_by_locale = zume_languages( 'locale' );
+        }
+
         if ( is_null( $user_id ) ) {
             $user_id = get_current_user_id();
         }
+
         $locale = get_user_meta( $user_id, 'locale', true );
-        if ( $user_id == get_current_user_id() && $locale !== zume_current_language() ) {
+        if ( $user_id == get_current_user_id() && empty( $locale ) ) {
             update_user_meta( $user_id, 'locale', zume_current_language() );
             $locale = zume_current_language();
         }
@@ -164,15 +169,7 @@ if( ! function_exists( 'zume_get_user_language' ) ) {
             $locale = 'en';
         }
 
-        if ( 'code' === $result_type ) {
-            return $locale;
-        } else if ( 'locale' === $result_type ) {
-            return $zume_languages[$locale]['locale'];
-        } else if ( 'name' === $result_type ) {
-            return $zume_languages[$locale]['name'];
-        } else {
-            return $zume_languages[$locale];
-        }
+        return isset($zume_languages_by_locale[$locale]) ? $zume_languages_by_locale[$locale] : $zume_languages_by_locale['en'];
     }
 }
 if( ! function_exists( 'zume_get_user_location' ) ) {
@@ -351,9 +348,9 @@ if ( ! function_exists( 'zume_user_log' ) ) {
     }
 }
 if ( ! function_exists( 'zume_languages' ) ) {
-    function zume_languages() {
-        global $zume_languages;
-        $zume_languages = array(
+    function zume_languages( $type = 'code' ) {
+        global $zume_languages_by_code, $zume_languages_by_locale;
+        $zume_languages_by_code = array(
             'en' => array(
                 'name' => 'English',
                 'enDisplayName' => 'English',
@@ -699,30 +696,32 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false
             )
         );
-        return $zume_languages;
+        foreach( $zume_languages_by_code as $lang ) {
+            $zume_languages_by_locale[$lang['locale']] = $lang;
+        }
+
+        if ( $type === 'code' ) {
+            return $zume_languages_by_code;
+        } else {
+            return $zume_languages_by_locale;
+        }
     }
     zume_languages();
 }
 if ( ! function_exists( 'zume_language_codes' ) ) {
     function zume_language_codes() {
-        global $zume_languages;
-        $codes = array();
-        foreach ( $zume_languages as $lang ) {
-            $codes[] = $lang['code'];
-        }
-        return $codes;
+        global $zume_languages_by_code;
+        return array_keys( $zume_languages_by_code );
     }
 }
 if ( ! function_exists( 'get_zume_language_locale' ) ) {
     function get_zume_language_locale( $code ) {
-        global $zume_languages;
-        $locale = '';
-        foreach ( $zume_languages as $lang ) {
-            if ( $lang['code'] === $code ) {
-                $locale = $lang['locale'];
-            }
+        global $zume_languages_by_code;
+        if ( isset( $zume_languages_by_code[$code]['locale'] ) ) {
+            return $zume_languages_by_code[$code]['locale'];
+        } else {
+            return 'en';
         }
-        return $locale;
     }
 }
 if ( ! function_exists( 'zume_training_items' ) ) {
