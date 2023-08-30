@@ -90,11 +90,23 @@ class Zume_Coaching {
         global $wpdb;
         $wpdb->zume_reports = 'wp_dt_reports';
         $wpdb->zume_activity = 'wp_dt_activity_log';
+        $wpdb->dt_movement_log = 'wp_3_dt_movement_log'; // @remove temp support for legacy movement log
         /* end custom table setup */
 
         require_once( 'globals.php' );
-        require_once( 'system/loader.php' );
+        require_once( 'contact-tiles/loader.php' );
         require_once( 'appearance/loader.php' );
+
+
+        require_once( 'funnel-charts/loader.php' );
+        require_once( 'goals-charts/loader.php' );
+        require_once ('magic-maps/cluster-1-last100.php');
+        require_once ('magic-maps/heatmap.php');
+        require_once ('magic-maps/map-2-network-activities.php');
+        require_once ('magic-maps/map-3-trainees.php');
+        require_once ('magic-maps/map-4-practitioners.php');
+        require_once ('magic-maps/map-5-churches.php');
+
 
         $this->i18n();
 

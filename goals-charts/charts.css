@@ -1,0 +1,181 @@
+:root {
+    --white: #ffffff;
+    --lightgrey: #cccccc;
+    --darkgrey: #999999;
+
+    --darkred: rgba(255, 0, 0, 1);
+    --darkred-hover: rgba(255, 0, 0, .8);
+    --red: rgba(255, 165, 0, 1);
+    --red-hover: rgba(255, 165, 0, .8);
+    --grey: rgba(128,128,128,1);
+    --grey-hover: rgba(128,128,128,.8);
+    --green: rgba(0,255,0,1);
+    --green-hover: rgba(0,255,0,.5);
+    --darkgreen: rgba(0,100,0,1);
+    --darkgreen-hover: rgba(0,100,0,.8);
+
+    --small: 0.8rem;
+    --normal: 1rem;
+    --medium: 1.5rem;
+    --large: 2rem;
+    --xlarge: 3rem;
+
+    --radius: 10px;
+
+    --medium-weight: 400;
+    --heavy-weight: 700;
+}
+
+.valence-legend {
+    height: 10px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+.valence-darkred {
+    background-color: var(--darkred) !important;
+}
+.valence-darkred.hover:hover {
+    background-color: var(--darkred-hover) !important;
+    cursor: pointer;
+}
+.valence-red {
+    background-color: var(--red) !important;
+}
+.valence-red.hover:hover {
+    background-color: var(--red-hover) !important;
+    cursor: pointer;
+}
+.valence-grey {
+    background-color: var(--grey) !important;
+}
+.valence-grey.hover:hover {
+    background-color: var(--grey-hover) !important;
+    cursor: pointer;
+}
+.valence-green {
+    background-color: var(--green) !important;
+}
+.valence-green.hover:hover {
+    background-color: var(--green-hover) !important;
+    cursor: pointer;
+}
+.valence-darkgreen {
+    background-color: var(--darkgreen) !important;
+}
+.valence-darkgreen.hover:hover {
+    background-color: var(--darkgreen-hover) !important;
+    cursor: pointer;
+}
+
+
+.critical-path {
+    background: linear-gradient(var(--lightgrey), var(--lightgrey)) no-repeat center/10px 100%;
+}
+.critical-path-element {
+    margin: var(--normal) 0;
+}
+.z-range-filter {
+    float:right;
+    width: fit-content;
+}
+.float-spinner {
+    float:right;
+    margin: var(--small);
+}
+.right {
+    float:right;
+    text-align: right;
+}
+.padding-top {
+    padding-top: var(--normal);
+}
+
+
+
+/**
+Card Base
+ */
+.z-card {
+    border-radius: var(--radius);
+    box-shadow: 0 3px 3px 0 rgba(0,0,0,.6);
+    margin: var(--normal) auto;
+    text-align: center;
+    color: var(--white);
+    width: 100%;
+    background-color: var(--grey);
+}
+.z-card-single {
+    padding: var(--medium) 0;
+    border: 1px solid var(--white);
+    border-radius: var(--radius);
+}
+.z-card-main {
+    padding: var(--medium) 0;
+    border: 1px solid var(--white);
+    border-radius: var(--radius) var(--radius) 0 0;
+}
+.z-card-main.hover:hover {
+    cursor: pointer;
+    background-color: var(--darkgrey);
+}
+.z-card-sub-left {
+    border-radius: 0 0 0 var(--radius);
+    color: var(--white);
+    min-height: 50px;
+    font-size: var(--large);
+    border: 1px solid var(--white);
+}
+.z-card-sub-left.hover:hover {
+    cursor: pointer;
+    background-color: var(--darkgrey);
+}
+.z-card-sub-left.sub {
+    padding: var(--medium) 0;
+}
+.z-card-sub-right {
+    border-radius: 0 0 var(--radius) 0;
+    color: var(--white);
+    min-height: 50px;
+    font-size: var(--large);
+    border: 1px solid var(--white);
+}
+.z-card-sub-right.hover:hover {
+    cursor: pointer;
+    background-color: var(--darkgrey);
+}
+.z-card-sub-right.sub {
+    padding: var(--medium) 0;
+}
+.z-card-title {
+    text-transform:uppercase;
+    color: var(--white);
+    font-size: var(--medium);
+    font-weight: var(--medium-weight);
+}
+.z-card-value {
+    font-size: var(--xlarge);
+    font-weight: var(--heavy-weight);
+}
+.sub .z-card-value {
+    font-size: var(--large);
+    font-weight: var(--heavy-weight);
+}
+.z-card-description {
+    color: var(--white);
+    font-size: var(--small);
+    font-weight: var(--medium-weight);
+    padding-left: var(--small);
+    padding-right: var(--small);
+}
+
+
+
+.z-card-title.hero {
+    font-size: var(--xlarge);
+    font-weight: var(--medium-weight);
+}
+
+
+
+
+

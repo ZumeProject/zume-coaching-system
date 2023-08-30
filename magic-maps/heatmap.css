@@ -1,0 +1,129 @@
+/* general */
+body {
+    background: white !important;
+}
+#email {
+    display:none;
+}
+#email-send {
+    display:none;
+}
+.redborder {
+    border: 1px solid red;
+}
+#details-panel {
+    margin-top:1rem;
+    display:none;
+}
+.meter {
+    height:3rem;
+    width:100%;
+}
+#canvas_panel {
+    padding:1rem;
+}
+.ucwords {
+    text-transform: capitalize;
+}
+.bold {
+    font-weight:bold;
+}
+#map-sidebar-wrapper {
+    padding-left:1em;
+    overflow-y: scroll;
+}
+
+/*initialize screen*/
+#initialize-screen {
+    width: 100%;
+    height: 2000px;
+    z-index: 100;
+    background-color: white;
+    position: absolute;
+}
+#initialize-spinner-wrapper{
+    position:relative;
+    top:45%;
+}
+progress {
+    top: 50%;
+    margin: 0 auto;
+    height:50px;
+    width:300px;
+}
+
+/* training screen */
+#training-start-screen {
+    padding-top:2em;
+}
+
+
+
+#help-toggle-icon {
+    cursor: pointer;
+    color: #0c7cd5;
+    font-size:2.5em;
+    margin-top:1em;
+}
+
+@media (min-width:0px)  {
+    /* foundations small */
+    /* smartphones, portrait iPhone, portrait 480x320 phones (Android) */
+    #welcome-close-button {
+        font-size:1.5em;
+        padding:1em;
+    }
+    .training-screen-image {
+        height: 20px;
+    }
+    #training-start-screen p {
+        max-width: 90%;
+        margin: 1em auto;
+        font-size: .5em;
+    }
+}
+
+@media (min-width:640px)  {
+    /* foundations medium */
+    /* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
+    #map-container {
+        box-shadow: 2px 0 10px 1px;
+    }
+
+}
+@media (min-width:1024px) {
+    /* foundations large */
+    /* big landscape tablets, laptops, and desktops */
+
+    #welcome-close-button {
+        font-size:2.5em;
+        padding:1.5em;
+    }
+    .training-screen-image {
+        height: 35px;
+    }
+    #training-start-screen p {
+        max-width: 80%;
+        margin: 1em auto;
+        font-size: .8em;
+    }
+}
+@media (min-width:1200px) {
+    /* foundations x-large
+    /* hi-res laptops and desktops */
+    .training-screen-image {
+        height: 60px;
+    }
+}
+@media (min-width:1440px) {
+    /* foundations xx-large
+    /* hi-res laptops and desktops */
+    .training-screen-image {
+        height: 75px;
+    }
+    #training-start-screen p {
+        max-width: 70%;
+        margin: 1em auto;
+        font-size: 1.2em;
+    }
+}
