@@ -17,7 +17,7 @@ class Zume_Funnel_S1 extends Zume_Funnel_Chart_Base
         if ( !$this->has_permission() ){
             return;
         }
-        $this->base_title = __( 'S1 (Partial)', 'zume_funnels' );
+        $this->base_title = __( 'Partial Practitioner', 'zume_funnels' );
 
         $url_path = dt_get_url_path( true );
         if ( "zume-funnel/$this->base_slug" === $url_path ) {
@@ -82,9 +82,7 @@ class Zume_Funnel_S1 extends Zume_Funnel_Chart_Base
                 window.spin_add()
                 makeRequest('GET', 'total', { stage: "partial_practitioner", key: "total_partial_practitioner" }, window.site_info.rest_root ).done( function( data ) {
                     data.link = ''
-                    data.label = '(S1) Partial Practitioners'
-                    data.description = 'Learning through doing. Implementing partial checklist / 4-fields'
-                    jQuery('.'+data.key).html(window.template_map_list(data))
+                    jQuery('.'+data.key).html(window.template_hero_map_only(data))
                     window.click_listener( data )
                     window.spin_remove()
                 })

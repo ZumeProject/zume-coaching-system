@@ -17,14 +17,8 @@ class Zume_Goals_Metrics_Base {
         add_filter( 'desktop_navbar_menu_options', [ $this, 'add_navigation_links' ], 35 );
         add_filter( 'off_canvas_menu_options', [ $this, 'add_navigation_links' ], 35);
 
-        if ( dt_is_rest() ) {
-            require_once ('queries.php');
-            require_once( 'rest-api.php' );
-        }
-
-        $url_path = dt_get_url_path(true);
-
         // top
+        $url_path = dt_get_url_path(true);
         if ( str_contains( $url_path, $this->base_slug ) !== false ) {
             add_filter('dt_templates_for_urls', [$this, 'dt_templates_for_urls']);
             add_filter('dt_metrics_menu', [$this, 'dt_metrics_menu'], 99);

@@ -96,6 +96,7 @@ class Zume_Coaching {
         require_once( 'globals.php' );
         require_once( 'contact-tiles/loader.php' );
         require_once( 'appearance/loader.php' );
+        require_once( 'shared/loader.php' );
 
 
         require_once( 'funnel-charts/loader.php' );

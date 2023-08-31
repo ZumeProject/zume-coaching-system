@@ -1209,6 +1209,61 @@ if ( ! function_exists('zume_current_language') ) {
         return $locale;
     }
 }
+if ( ! function_exists('zume_format_int') ) {
+    function zume_format_int($int)
+    {
+        $int = (float)$int;
+        return number_format($int, 0, '.', ',');
+    }
+}
+if ( ! function_exists('zume_get_valence') ) {
+    function zume_get_valence(float $value, float $compare, $negative_stat = false)
+    {
+        $percent = zume_get_percent($value, $compare);
+
+        if ($negative_stat) {
+            if ($percent > 20) {
+                $valence = 'valence-darkred';
+            } else if ($percent > 10) {
+                $valence = 'valence-red';
+            } else if ($percent < -10) {
+                $valence = 'valence-green';
+            } else if ($percent < -20) {
+                $valence = 'valence-darkgreen';
+            } else {
+                $valence = 'valence-grey';
+            }
+        } else {
+            if ($percent > 20) {
+                $valence = 'valence-darkgreen';
+            } else if ($percent > 10) {
+                $valence = 'valence-green';
+            } else if ($percent < -10) {
+                $valence = 'valence-red';
+            } else if ($percent < -20) {
+                $valence = 'valence-darkred';
+            } else {
+                $valence = 'valence-grey';
+            }
+        }
+
+        return $valence;
+    }
+}
+if ( ! function_exists('zume_get_percent') ) {
+    function zume_get_percent(float $value, float $compare)
+    {
+        $percent = ($value / $compare) * 100;
+        if ($percent > 100) {
+            $percent = round($percent - 100, 1);
+        } else if ($percent < 100) {
+            $percent = round((100 - $percent), 1) * -1;
+        } else {
+            $percent = 0;
+        }
+        return $percent;
+    }
+}
 
 
 

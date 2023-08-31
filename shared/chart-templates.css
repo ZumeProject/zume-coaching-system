@@ -146,6 +146,20 @@ Card Base
 .z-card-sub-right.sub {
     padding: var(--medium) 0;
 }
+.z-card-sub-bottom {
+    border-radius: 0 0 var(--radius) var(--radius);
+    color: var(--white);
+    min-height: 50px;
+    font-size: var(--large);
+    border: 1px solid var(--white);
+}
+.z-card-sub-bottom.hover:hover {
+    cursor: pointer;
+    background-color: var(--darkgrey);
+}
+.z-card-sub-bottom.sub {
+    padding: var(--medium) 0;
+}
 .z-card-title {
     text-transform:uppercase;
     color: var(--white);

@@ -84,18 +84,20 @@ class Zume_Goals_Goals extends Zume_Goals_Chart_Base
                     window.spin_add()
                     makeRequest('GET', 'total', { stage: "general", key: "practitioners_total", range: range }, window.site_info.rest_root ).done( function( data ) {
                         data.label = 'Practitioners'
-                        data.link = ''
+                        data.link = 'heatmap_practitioners'
+                        data.valence = 'valence-grey'
                         data.description = 'Practitioners are those who have identified as movement practitioners (of all stages: Partial, Full, Multiplying). They are seeking movement with multiplicative methods and want to participate in the Zúme Community.'
-                        jQuery('.'+data.key).html(window.template_map_list(data))
+                        jQuery('.'+data.key).html(window.template_hero_map_only(data))
                         window.click_listener( data )
                         window.spin_remove()
                     })
                     window.spin_add()
                     makeRequest('GET', 'total', { stage: "general", key: "churches_total", range: range }, window.site_info.rest_root ).done( function( data ) {
                         data.label = 'Churches'
-                        data.link = ''
-                        data.description = 'These are the total number of churches reported by all the practitioners of all stages in the Zúme Community.'
-                        jQuery('.'+data.key).html(window.template_map_list(data))
+                        data.link = 'heatmap_churches'
+                        data.valence = 'valence-grey'
+                        data.description = 'These are the total number of churches reported by all the practitioners of all stages in the Zúme journey.'
+                        jQuery('.'+data.key).html(window.template_hero_map_only(data))
                         window.click_listener( data )
                         window.spin_remove()
                     })

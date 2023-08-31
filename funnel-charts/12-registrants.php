@@ -89,7 +89,8 @@ class Zume_Funnel_Registrant extends Zume_Funnel_Chart_Base
                 window.spin_add()
                 makeRequest('GET', 'total', { stage: "registrant", key: "total_registrants" }, window.site_info.rest_root ).done( function( data ) {
                     data.label = 'Registrants'
-                    jQuery('.'+data.key).html(window.template_map_list(data))
+                    data.link = ''
+                    jQuery('.'+data.key).html(window.template_hero_map_only(data))
                     window.click_listener( data )
                     window.spin_remove()
                 })

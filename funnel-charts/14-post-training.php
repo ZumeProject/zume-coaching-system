@@ -88,7 +88,7 @@ class Zume_Funnel_Post extends Zume_Funnel_Chart_Base
                 makeRequest('GET', 'total', { stage: "post_training_trainee", key: "total_post_training_trainee"}, window.site_info.rest_root ).done( function( data ) {
                     data.link = ''
                     data.label = 'Post-Training Trainees'
-                    jQuery('.'+data.key).html(window.template_map_list(data))
+                    jQuery('.'+data.key).html(window.template_hero_map_only(data))
                     window.click_listener( data )
                     window.spin_remove()
                 })

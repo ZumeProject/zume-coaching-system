@@ -98,7 +98,7 @@ class Zume_Funnel_Active extends Zume_Funnel_Chart_Base
                     data.link = ''
                     data.label = 'Active Training Trainees'
                     data.description = 'People who are actively working a training plan or have only partially completed the training.'
-                    jQuery('.'+data.key).html(window.template_map_list(data))
+                    jQuery('.'+data.key).html(window.template_hero_map_only(data))
                     window.click_listener( data )
                     window.spin_remove()
                 })
