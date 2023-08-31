@@ -84,7 +84,7 @@ class Zume_Charts_API
                     'methods'  => 'GET',
                     'callback' => [ $this, 'location_goals' ],
                     'permission_callback' => function () {
-                        return $this->has_permission();
+                        return $this->has_permission( $this->coach_permissions );
                     }
                 ],
             ]
@@ -1340,7 +1340,6 @@ class Zume_Charts_API
     public function list( WP_REST_Request $request ) {
         return Zume_Goals_Query::list( dt_recursive_sanitize_array( $request->get_params() ) );
     }
-
 
     public function map_switcher( WP_REST_Request $request ) {
         $params =  dt_recursive_sanitize_array( $request->get_params() );

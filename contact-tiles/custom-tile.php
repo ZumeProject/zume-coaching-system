@@ -17,10 +17,23 @@ class Zume_Coaching_Tile
         add_filter( 'dt_custom_fields_settings', [ $this, 'dt_custom_fields_settings' ], 1, 2 );
         add_action( 'dt_details_additional_section', [ $this, 'dt_details_additional_section' ], 30, 2 );
 
+        add_action( 'wp_enqueue_scripts', [ $this, 'scripts' ], 99 );
+
         if ( dt_is_rest() ) {
             add_action( 'rest_api_init', [ $this, 'add_api_routes' ] );
         }
 
+    }
+    public function scripts() {
+        global $post_type;
+        if ( 'contacts' === $post_type ) {
+            dt_write_log( 'Enqueueing orgchart scripts');
+            wp_enqueue_script( 'orgchart_js', 'https://cdnjs.cloudflare.com/ajax/libs/orgchart/3.7.0/js/jquery.orgchart.min.js', [
+                'jquery',
+            ], '3.7.0', true );
+            $css_file_name = 'genmap/jquery.orgchart.custom.css';
+            wp_enqueue_style( 'orgchart_css', plugin_dir_url(__FILE__) . $css_file_name, [], filemtime( plugin_dir_path(__FILE__)  . $css_file_name ) );
+        }
     }
     public function dt_details_additional_tiles( $tiles, $post_type = '' ) {
         if ( $post_type === 'contacts' ) {

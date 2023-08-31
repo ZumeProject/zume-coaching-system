@@ -41,7 +41,6 @@ class Zume_Tile_System  {
 
         // Modals
         self::_modal_localized_vision( $this_post, $activity, $profile );
-        self::_modal_checklists( $this_post, $activity );
         self::_modal_reports( $this_post, $activity );
         self::_modal_genmap( $this_post, $activity );
 
@@ -113,18 +112,6 @@ class Zume_Tile_System  {
         </script>
         <?php
     }
-    private function _modal_checklists( $this_post, $activity ) {
-        ?>
-        <div class="reveal full" id="modal_genmap" data-v-offset="0" data-reveal>
-            <h1>Checklist for <?php echo $this_post['title'] ?></h1>
-            <hr>
-            <div style="height: 800px"></div>
-            <button class="close-button" data-close aria-label="Close modal" type="button">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <?php
-    }
     private function _modal_reports( $this_post, $activity ) {
         ?>
         <div class="reveal" id="modal_reports" data-v-offset="0" data-reveal>
@@ -147,17 +134,8 @@ class Zume_Tile_System  {
         </div>
         <?php
     }
-    private function _modal_genmap( $this_post, $activity ) {
-        ?>
-        <div class="reveal full" id="modal_genmap" data-v-offset="0" data-reveal>
-            <h1>Current Genmap for <?php echo $this_post['title'] ?></h1>
-            <hr>
-            <div style="height: 800px"></div>
-            <button class="close-button" data-close aria-label="Close modal" type="button">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <?php
+    private function _modal_genmap( $this_post, $profile ) {
+        Zume_User_Genmap::instance()->modal( $this_post, $this_post['trainee_user_id'] );
     }
 }
 
@@ -238,3 +216,164 @@ class Zume_Tile_System_API {
 
 }
 Zume_Tile_System_API::instance();
+
+class Zume_User_Genmap {
+    private static $_instance = null;
+    public static function instance(){
+        if ( is_null( self::$_instance ) ) {
+            self::$_instance = new self();
+        }
+        return self::$_instance;
+    }
+
+    public function modal( $this_post, $user_id ) {
+        ?>
+        <div class="reveal full" id="modal_genmap" data-v-offset="0" data-reveal>
+            <h1>Current Genmap for <?php echo $this_post['title'] ?></h1>
+            <hr>
+            <div class="grid-x grid-padding-x">
+                <div class="cell medium-9">
+                    <div id="genmap" style="width: 100%; border: 1px solid lightgrey; overflow:scroll;"></div>
+                </div>
+                <div class="cell medium-3">
+                    <div id="genmap-details"></div>
+                </div>
+            </div>
+            <button class="close-button" data-close aria-label="Close modal" type="button">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <script>
+            jQuery(document).ready(function(){
+                window.group_tree = [<?php echo json_encode( $this->tree( $user_id ) ) ?>][0]
+                console.log(window.group_tree)
+
+                let container = jQuery('#genmap')
+                container.empty()
+
+                var nodeTemplate = function(data) {
+                    return `
+                    <div class="title" data-item-id="${data.id}">${data.name}</div>
+                    <div class="content">${data.content}</div>
+                  `;
+                };
+
+                container.orgchart({
+                    'data': window.group_tree,
+                    'nodeContent': 'content',
+                    'direction': 'l2r',
+                    'nodeTemplate': nodeTemplate,
+                });
+
+                let container_height = window.innerHeight - 200 // because it is rotated
+                container.height(container_height)
+
+                container.off('click', '.node' )
+                container.on('click', '.node', function () {
+                    let node = jQuery(this)
+                    let node_id = node.attr('id')
+                    open_modal_details(node_id, post_type)
+                })
+            })
+        </script>
+        <?php
+    }
+    public function tree( $user_id ) {
+        $query = $this->get_query( $user_id );
+        return $this->get_genmap( $query  );
+    }
+    public function get_query( $user_id ) {
+        global $wpdb;
+        $key = 'user-'.$user_id;
+        $query = $wpdb->get_results( $wpdb->prepare ( "
+                    SELECT
+                      a.ID         as id,
+                      0            as parent_id,
+                      a.post_title as name
+                    FROM wp_posts as a
+					LEFT JOIN wp_postmeta pm ON pm.post_id=a.ID AND pm.meta_key = 'assigned_to' AND pm.meta_value = %s
+                    WHERE a.post_type = 'groups'
+                    AND a.ID NOT IN (
+                      SELECT DISTINCT (p2p_from)
+                      FROM wp_p2p
+                      WHERE p2p_type = 'groups_to_groups'
+                      GROUP BY p2p_from
+                    )
+                    AND a.ID IN (
+                      SELECT DISTINCT (p2p_to)
+                      FROM wp_p2p
+                      WHERE p2p_type = 'groups_to_groups'
+                      GROUP BY p2p_to
+                    )
+					AND pm.meta_value IS NOT NULL
+                    UNION
+                    SELECT
+                      p.p2p_from  as id,
+                      p.p2p_to    as parent_id,
+                      (SELECT sub.post_title FROM wp_posts as sub WHERE sub.ID = p.p2p_from ) as name
+                    FROM wp_p2p as p
+					LEFT JOIN wp_postmeta pm2 ON pm2.post_id=p.p2p_from AND pm2.meta_key = 'assigned_to' AND pm2.meta_value = %s
+                    WHERE p.p2p_type = 'groups_to_groups'
+					AND pm2.meta_value IS NOT NULL;
+                ", $key, $key ), ARRAY_A );
+      
+        return $query;
+    }
+
+    public function get_genmap( $query ) {
+
+        if ( is_wp_error( $query ) ){
+            return $this->_circular_structure_error( $query );
+        }
+        if ( empty( $query ) ) {
+            return $this->_no_results();
+        }
+        $menu_data = $this->prepare_menu_array( $query );
+        return $this->build_array( 0, $menu_data, 0 );
+    }
+    public function prepare_menu_array( $query ) {
+        // prepare special array with parent-child relations
+        $menu_data = array(
+            'items' => array(),
+            'parents' => array()
+        );
+
+        foreach ( $query as $menu_item )
+        {
+            $menu_data['items'][$menu_item['id']] = $menu_item;
+            $menu_data['parents'][$menu_item['parent_id']][] = $menu_item['id'];
+        }
+        return $menu_data;
+    }
+    public function build_array( $parent_id, $menu_data, $gen ) {
+        $children = [];
+        if ( isset( $menu_data['parents'][$parent_id] ) )
+        {
+            $next_gen = $gen + 1;
+            foreach ( $menu_data['parents'][$parent_id] as $item_id )
+            {
+                $children[] = $this->build_array( $item_id, $menu_data, $next_gen );
+            }
+        }
+        $array = [
+            'id' => $parent_id,
+            'name' => $menu_data['items'][ $parent_id ]['name'] ?? 'SYSTEM' ,
+            'content' => 'Gen ' . $gen ,
+            'children' => $children,
+        ];
+        return $array;
+    }
+    public function _no_results() {
+        return '<p>'. esc_attr__( 'No Results', 'disciple_tools' ) .'</p>';
+    }
+    public function _circular_structure_error( $wp_error ) {
+        $link = false;
+        $data = $wp_error->get_error_data();
+
+        if ( isset( $data['record'] ) ){
+            $link = "<a target='_blank' href=" . get_permalink( $data['record'] ) . '>Open record</a>';
+        }
+        return '<p>' . esc_html( $wp_error->get_error_message() ) . ' ' . $link . '</p>';
+    }
+}
+Zume_User_Genmap::instance();

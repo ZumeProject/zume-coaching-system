@@ -32,9 +32,9 @@ class Zume_Funnel_Base {
             require_once ('12-registrants.php');
             require_once ('13-active-training.php');
             require_once ('14-post-training.php');
-            require_once ('15-s1-practitioner.php');
-            require_once ('16-s2-practitioner.php');
-            require_once ('17-s3-practitioner.php');
+            require_once ('15-partial-practitioner.php');
+            require_once ('16-full-practitioner.php');
+            require_once ('17-multiplying-practitioner.php');
 
             require_once ('20-overview.php');
             require_once ('21-facilitator.php');
