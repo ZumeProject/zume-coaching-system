@@ -28,9 +28,6 @@ class Zume_Views {
             '5' => 0,
             '6' => 0,
         ];
-        if ( empty( $results ) ) {
-            return $totals;
-        }
 
         foreach( $results as $result ) {
             $totals[$result['stage']] = (int) $result['total'];

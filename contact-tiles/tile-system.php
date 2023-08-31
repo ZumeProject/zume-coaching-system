@@ -316,7 +316,7 @@ class Zume_User_Genmap {
                     WHERE p.p2p_type = 'groups_to_groups'
 					AND pm2.meta_value IS NOT NULL;
                 ", $key, $key ), ARRAY_A );
-      
+
         return $query;
     }
 
