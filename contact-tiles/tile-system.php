@@ -48,21 +48,12 @@ class Zume_Tile_System  {
 
     }
     private function _modal_localized_vision( $this_post, $activity, $profile ) {
-
         ?>
         <div class="reveal full" id="modal_localized_vision" data-v-offset="0" data-reveal>
             <h1>Localized Vision for <?php echo $this_post['title'] ?></h1>
             <hr>
-            <div class="grid-x">
-                <div class="cell medium-6">
-                    <div id="vision_map map-wrapper">
-                        <div id='vision_map'><span class="localized_vision loading-spinner active"></span></div>
-                    </div>
-                </div>
-                <div class="cell medium-6">
-                    <span class="localized_vision loading-spinner active"></span>
-                </div>
-            </div>
+            <iframe src="https://zume5.training/zume_app/local_vision/?grid_id=<?php echo $profile['location']['grid_id'] ?>" id="local_vision_window" style="border:none;" width="100%" height="600px"></iframe>
+
             <button class="close-button" data-close aria-label="Close modal" type="button">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -70,46 +61,7 @@ class Zume_Tile_System  {
         <script>
             jQuery(document).ready(function(){
                 let vision_height = window.innerHeight - 125;
-                jQuery('#vision_map').css('height', vision_height + 'px').css('width', '100%' );
-
-                jQuery('#open_localized_vision').on('click', function() {
-
-                    let lat = <?php echo $profile['location']['lat'] ?? 0 ?>;
-                    let lng = <?php echo $profile['location']['lng'] ?? 0 ?>;
-                    let level = '<?php echo $profile['location']['level'] ?? 'admin0' ?>';
-                    console.log('lat', lat, 'lng', lng, 'level', level);
-
-                    let zoom = 6
-                    if ( 'admin0' === level ){
-                        zoom = 3
-                    } else if ( 'admin1' === level ) {
-                        zoom = 4
-                    } else if ( 'admin2' === level ) {
-                        zoom = 5
-                    }
-
-                    window.mapboxgl.accessToken = window.dtMapbox.map_key;
-                    var vision_map = new window.mapboxgl.Map({
-                        container: 'vision_map',
-                        style: 'mapbox://styles/mapbox/streets-v11',
-                        center: [lng, lat],
-                        minZoom: 1,
-                        zoom: zoom
-                    });
-
-                    vision_map.on( 'load', (event) => {
-                        vision_map.resize();
-
-                        var vision_marker = new window.mapboxgl.Marker()
-                            .setLngLat([lng, lat])
-                            .addTo(vision_map);
-                    })
-
-
-                    jQuery('.localized_vision.loading-spinner').removeClass('active');
-
-                    console.log('clicked')
-                })
+                jQuery('#local_vision_window').css('height', vision_height + 'px').css('width', '100%' );
             })
         </script>
         <?php
