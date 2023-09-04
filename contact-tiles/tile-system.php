@@ -36,6 +36,7 @@ class Zume_Tile_System  {
             <button class="button expanded" id="open_localized_vision" data-open="modal_localized_vision">Localized Vision</button>
             <button class="button expanded" data-open="modal_reports">Practitioner Reports</button>
             <button class="button expanded" data-open="modal_genmap">Current Genmap</button>
+            <button class="button expanded" data-open="modal_activity">User Activities</button>
         </div>
         <?php
 
@@ -43,6 +44,7 @@ class Zume_Tile_System  {
         self::_modal_localized_vision( $this_post, $activity, $profile );
         self::_modal_reports( $this_post, $activity );
         self::_modal_genmap( $this_post, $activity );
+        self::_modal_activity( $this_post, $activity );
 
     }
     private function _modal_localized_vision( $this_post, $activity, $profile ) {
@@ -136,6 +138,18 @@ class Zume_Tile_System  {
     }
     private function _modal_genmap( $this_post, $profile ) {
         Zume_User_Genmap::instance()->modal( $this_post, $this_post['trainee_user_id'] );
+    }
+    private function _modal_activity( $this_post, $activity ) {
+        ?>
+        <div class="reveal" id="modal_activity" data-v-offset="0" data-reveal>
+            <h1>Activity History for <?php echo $this_post['title'] ?></h1>
+            <hr>
+            <?php Zume_Coaching_Tile::print_activity_list( $activity) ?>
+            <button class="close-button" data-close aria-label="Close modal" type="button">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <?php
     }
 }
 
@@ -270,10 +284,82 @@ class Zume_User_Genmap {
 
                 container.off('click', '.node' )
                 container.on('click', '.node', function () {
+
                     let node = jQuery(this)
                     let node_id = node.attr('id')
-                    open_modal_details(node_id, post_type)
+                    console.log(node_id)
+                    open_modal_details(node_id, 'groups')
                 })
+
+
+                function open_modal_details( id, post_type ) {
+
+                    let spinner = ' <span class="loading-spinner active"></span> '
+                    jQuery('#genmap-details').html(spinner)
+
+                    makeRequest('GET', post_type + '/' + id, null, 'zume_training/v1/' )
+                        .then(data => {
+                            console.log(data)
+                            let container = jQuery('#genmap-details')
+                            container.empty()
+                            if (data) {
+                                container.html(window.detail_template(post_type, data))
+                            }
+                        })
+                }
+
+                window.detail_template = ( post_type, data ) => {
+                    if ( post_type === 'contacts' ) {
+
+                        return `
+                        <div class="grid-x grid-padding-x">
+                          <div class="cell">
+                            <h2>${data.post_title}</h2><hr>
+                          </div>
+                          <div class="cell">
+                            Status: ${status}
+                          </div>
+                          <div class="cell">
+                            Groups:
+                            ${group_list}
+                          </div>
+                          <div class="cell">
+                            Assigned To:
+                            ${assign_to}
+                          </div>
+                          <div class="cell">
+                            Coaches: <br>
+                            ${coach_list}
+                          </div>
+                          <div class="cell"><hr>
+                            <a href="${dtMetricsProject.site_url}/${post_type}/${data.ID}" target="_blank" class="button">View Contact</a>
+                          </div>
+                        </div>
+                      `
+                    } else if ( post_type === 'groups' ) {
+
+                        return `
+                                <div class="grid-x grid-padding-x">
+                                  <div class="cell">
+                                    <h2>${data.post_title}</h2><hr>
+                                  </div>
+                                  <div class="cell">
+                                    Type: ${data.group_status}
+                                  </div>
+                                  <div class="cell">
+                                    Type: ${data.group_type}
+                                  </div>
+                                  <div class="cell">
+                                    Member Count: ${data.member_count}
+                                  </div>
+                                  <div class="cell"><hr>
+                                    <a href="https://zume5.training/${post_type}/${data.ID}" target="_blank" class="button">View Group</a>
+                                  </div>
+                                </div>
+                              `
+                    }
+                }
+
             })
         </script>
         <?php

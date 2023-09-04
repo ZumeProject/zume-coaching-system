@@ -6,7 +6,9 @@
 // Load dependencies first
 require_once( __DIR__ . '/custom-tile.php' );
 
-
+if( dt_is_rest() ) {
+    require_once( __DIR__ . '/rest-api.php' );
+}
 
 // Load all other files
 $dir = scandir( __DIR__ );

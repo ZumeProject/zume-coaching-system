@@ -27,7 +27,6 @@ class Zume_Coaching_Tile
     public function scripts() {
         global $post_type;
         if ( 'contacts' === $post_type ) {
-            dt_write_log( 'Enqueueing orgchart scripts');
             wp_enqueue_script( 'orgchart_js', 'https://cdnjs.cloudflare.com/ajax/libs/orgchart/3.7.0/js/jquery.orgchart.min.js', [
                 'jquery',
             ], '3.7.0', true );

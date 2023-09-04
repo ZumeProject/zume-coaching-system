@@ -34,16 +34,11 @@ class Zume_Tile_Basics {
         $w = $mawl['percent']['w'] ?? 0;
         $l = $mawl['percent']['l'] ?? 0;
 
-        $activity_count = 0;
-        if ( ! empty( $log ) ) {
-            $activity_count = count( $log );
-        }
         ?>
         <div class="cell small-12 medium-4">
             <div>Email : <?php echo $profile['email'] ?></div>
             <div>Phone : <?php echo $profile['phone'] ?></div>
             <div>Language : <?php echo $profile['language']['name'] ?? '' ?></div>
-            <div>System Activities: <span style="cursor:pointer; color: #3f729b;" data-open="modal_activity"><?php echo $activity_count; ?> Records</span></div>
             <hr>
             <div class="open_host_modal" data-open="open_host_modal">
                 <div><label for="heard">H : <progress id="heard" max="100" value="<?php echo $h ?>"><?php echo $h ?>%</progress></label></div>
@@ -109,23 +104,10 @@ class Zume_Tile_Basics {
                     color: white !important;
                 }
             </style>
-            <?php $this->_modal_activity( $this_post, $log ) ?>
             <?php $this->_modal_host( $this_post, $log ) ?>
             <?php $this->_modal_mawl( $this_post, $log ) ?>
         </div>
 
-        <?php
-    }
-    private function _modal_activity( $this_post, $activity ) {
-        ?>
-        <div class="reveal" id="modal_activity" data-v-offset="0" data-reveal>
-            <h1>Activity History for <?php echo $this_post['title'] ?></h1>
-            <hr>
-            <?php Zume_Coaching_Tile::print_activity_list( $activity) ?>
-            <button class="close-button" data-close aria-label="Close modal" type="button">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
         <?php
     }
 
@@ -212,6 +194,5 @@ class Zume_Tile_Basics {
         </div>
         <?php
     }
-
 
 }

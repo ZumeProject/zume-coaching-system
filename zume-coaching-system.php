@@ -98,16 +98,14 @@ class Zume_Coaching {
         require_once( 'appearance/loader.php' );
         require_once( 'shared/loader.php' );
 
-
         require_once( 'funnel-charts/loader.php' );
         require_once( 'goals-charts/loader.php' );
-        require_once ('magic-maps/cluster-1-last100.php');
-        require_once ('magic-maps/heatmap.php');
-        require_once ('magic-maps/map-2-network-activities.php');
-        require_once ('magic-maps/map-3-trainees.php');
-        require_once ('magic-maps/map-4-practitioners.php');
-        require_once ('magic-maps/map-5-churches.php');
-
+        require_once( 'magic-maps/cluster-1-last100.php' );
+        require_once( 'magic-maps/heatmap.php' );
+        require_once( 'magic-maps/map-2-network-activities.php' );
+        require_once( 'magic-maps/map-3-trainees.php' );
+        require_once( 'magic-maps/map-4-practitioners.php' );
+        require_once( 'magic-maps/map-5-churches.php' );
 
         $this->i18n();
 
