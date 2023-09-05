@@ -331,6 +331,7 @@ if( ! function_exists( 'zume_get_user_mawl' ) ) {
     }
 }
 if( ! function_exists( 'zume_get_user_commitments' ) ) {
+    // open, closed, all
     function zume_get_user_commitments($user_id, $status = 'open')
     {
         global $wpdb;
@@ -373,12 +374,18 @@ if( ! function_exists( 'zume_get_user_contact_id' ) ) {
 if ( ! function_exists( 'zume_get_user_log' ) ) {
     function zume_get_user_log( $user_id ) {
         global $wpdb;
-        $sql = $wpdb->prepare( "SELECT CONCAT( r.type, '_', r.subtype ) as log_key, r.*
+        $results =  $wpdb->get_results( $wpdb->prepare(
+            "SELECT CONCAT( r.type, '_', r.subtype ) as log_key, r.*
                 FROM wp_dt_reports r
                 WHERE r.user_id = %s
                 AND r.post_type = 'zume'
-                ", $user_id );
-        return $wpdb->get_results( $sql, ARRAY_A );
+                ", $user_id ), ARRAY_A );
+
+        if ( is_array( $results ) ) {
+            return $results;
+        } else {
+            return [];
+        }
     }
 }
 if ( ! function_exists( 'zume_languages' ) ) {

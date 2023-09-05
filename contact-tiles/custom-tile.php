@@ -39,7 +39,6 @@ class Zume_Coaching_Tile
             $tiles['basics'] = [ 'label' => __( 'Basics', 'zume-coaching' ) ]; // Funnel tile is keyed to followup (reduce tile redundancy)
             $tiles['followup'] = [ 'label' => __( 'Funnel Stage', 'zume-coaching' ) ]; // Funnel tile is keyed to followup (reduce tile redundancy)
             $tiles['faith'] = [ 'label' => __( 'Zúme System', 'zume-coaching' ) ]; // System tile is keyed to faith (reduce tile redundancy)
-            $tiles['commitments'] = [ 'label' => __( 'Commitments', 'zume-coaching' ) ]; // System tile is keyed to faith (reduce tile redundancy)
             $tiles['communication'] = [ 'label' => __( 'Communication', 'zume-coaching' ) ];
         }
         return $tiles;
@@ -65,15 +64,11 @@ class Zume_Coaching_Tile
         if ( $post_type === 'contacts' && $section === 'faith' ) {
             Zume_Tile_System::instance()->get( get_the_ID(), $post_type );
         }
-        if ( $post_type === 'contacts' && $section === 'commitments' ) {
-            Zume_Tile_Commitments::instance()->get( get_the_ID(), $post_type );
-        }
         // Communication Tile
         if ( $post_type === 'contacts' && $section === 'communication' ) {
             Zume_Tile_Communication::instance()->get( get_the_ID(), $post_type );
         }
     }
-
 
     public function add_api_routes() {
         $namespace = 'zume_coaching/v1';
@@ -99,12 +94,12 @@ class Zume_Coaching_Tile
         return $params;
     }
 
-    public static function print_activity_list( $activity ) {
-        $activity_by_date = self::_activity_by_date( $activity );
-        if ( ! empty( $activity_by_date ) ) {
+    public static function print_activity_list( $log ) {
+        $log_by_date = self::_activity_by_date( $log );
+        if ( ! empty( $log_by_date ) ) {
             echo '<div class="grid-x grid-padding-x">';
             $days_skipped = 0;
-            foreach( $activity_by_date as $year => $days ) {
+            foreach( $log_by_date as $year => $days ) {
                 echo '<div class="cell"><h2>' . $year  . '</h2></div>';
 
                 foreach( $days as $day => $day_activity ) {
@@ -126,12 +121,12 @@ class Zume_Coaching_Tile
             echo '</div>';
         }
     }
-    public static function _activity_by_date( $activity ) {
-        if ( empty( $activity ) ) {
+    public static function _activity_by_date( $log ) {
+        if ( empty( $log ) ) {
             return [];
         }
 
-        $range = self::create_date_range_array( date( 'Y-m-d', $activity[0]['time_end'] ), date( 'Y-m-d', time() ) );
+        $range = self::create_date_range_array( date( 'Y-m-d', $log[0]['time_end'] ), date( 'Y-m-d', time() ) );
 
         $new_activity = [];
         foreach ($range as $value) {
@@ -144,7 +139,7 @@ class Zume_Coaching_Tile
             $new_activity[$year][$day] = [];
         }
 
-        foreach ( $activity as $item ) {
+        foreach ( $log as $item ) {
             $year = date( 'Y', $item['time_end'] );
             $day = date( 'm-d', $item['time_end'] );
 

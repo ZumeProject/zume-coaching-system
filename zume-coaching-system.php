@@ -23,6 +23,13 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
+if ( ! defined( 'ZUME_TRAINING_URL' ) ) {
+    define( 'ZUME_TRAINING_URL', 'https://zume5.training/' );
+}
+if ( ! defined( 'ZUME_COACHING_URL' ) ) {
+    define( 'ZUME_COACHING_URL', 'https://zume5.training/coaching/' );
+}
+
 /**
  * Gets the instance of the `Zume_Coaching` class.
  *
