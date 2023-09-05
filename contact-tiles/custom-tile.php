@@ -39,6 +39,7 @@ class Zume_Coaching_Tile
             $tiles['basics'] = [ 'label' => __( 'Basics', 'zume-coaching' ) ]; // Funnel tile is keyed to followup (reduce tile redundancy)
             $tiles['followup'] = [ 'label' => __( 'Funnel Stage', 'zume-coaching' ) ]; // Funnel tile is keyed to followup (reduce tile redundancy)
             $tiles['faith'] = [ 'label' => __( 'Zúme System', 'zume-coaching' ) ]; // System tile is keyed to faith (reduce tile redundancy)
+            $tiles['commitments'] = [ 'label' => __( 'Commitments', 'zume-coaching' ) ]; // System tile is keyed to faith (reduce tile redundancy)
             $tiles['communication'] = [ 'label' => __( 'Communication', 'zume-coaching' ) ];
         }
         return $tiles;
@@ -51,15 +52,7 @@ class Zume_Coaching_Tile
     }
     public function dt_details_additional_section( $section, $post_type ) {
         // Hide Details Tile
-        if ( $post_type === 'contacts' ) {
-            ?>
-            <style>
-                #details-tile {
-                    display:none;
-                }
-            </style>
-            <?php
-        }
+
         // Basics
         if ( $post_type === 'contacts' && $section === 'basics' ) {
             Zume_Tile_Basics::instance()->get( get_the_ID(), $post_type );
@@ -71,6 +64,9 @@ class Zume_Coaching_Tile
         // System Title
         if ( $post_type === 'contacts' && $section === 'faith' ) {
             Zume_Tile_System::instance()->get( get_the_ID(), $post_type );
+        }
+        if ( $post_type === 'contacts' && $section === 'commitments' ) {
+            Zume_Tile_Commitments::instance()->get( get_the_ID(), $post_type );
         }
         // Communication Tile
         if ( $post_type === 'contacts' && $section === 'communication' ) {

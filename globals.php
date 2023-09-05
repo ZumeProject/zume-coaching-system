@@ -335,9 +335,9 @@ if( ! function_exists( 'zume_get_user_commitments' ) ) {
     {
         global $wpdb;
         $results = $wpdb->get_results($wpdb->prepare(
-            "SELECT * FROM {wp_dt_post_user_meta}
+            "SELECT * FROM wp_dt_post_user_meta
                     WHERE user_id = %d
-                      AND type = 'custom'
+                      AND category = 'custom'
                     ORDER BY date DESC"
             , $user_id), ARRAY_A);
 

@@ -15,6 +15,7 @@ class Zume_Tile_Basics {
     public function __construct(){
     }
     public function get( $post_id, $post_type ) {
+
         $this_post = DT_Posts::get_post( $post_type, $post_id );
         if ( !isset( $this_post['trainee_user_id'] ) ) {
             ?>No Training ID Found<?php
@@ -107,7 +108,16 @@ class Zume_Tile_Basics {
             <?php $this->_modal_host( $this_post, $log ) ?>
             <?php $this->_modal_mawl( $this_post, $log ) ?>
         </div>
-
+        <?php
+        /**
+         * Hide the Details Title if training id is present.
+         */
+        ?>
+        <style>
+            #details-tile {
+                display:none;
+            }
+        </style>
         <?php
     }
 
