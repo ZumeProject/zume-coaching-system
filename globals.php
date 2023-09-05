@@ -81,7 +81,7 @@ if ( ! function_exists( 'zume_get_user_stage' ) ) {
     function zume_get_user_stage( $user_id, $log = NULL, $number_only = false ) {
 
         if ( is_null( $log ) ) {
-            $log = zume_user_log( $user_id );
+            $log = zume_get_user_log( $user_id );
         }
 
         $funnel = zume_funnel_stages();
@@ -216,7 +216,7 @@ if( ! function_exists( 'zume_get_user_host' ) ) {
             $user_id = get_current_user_id();
         }
         if ( is_null( $log ) ) {
-            $log = zume_user_log( $user_id );
+            $log = zume_get_user_log( $user_id );
         }
         $training_items = zume_training_items();
         $host = [];
@@ -276,7 +276,7 @@ if( ! function_exists( 'zume_get_user_mawl' ) ) {
             $user_id = get_current_user_id();
         }
         if ( is_null( $log ) ) {
-            $log = zume_user_log( $user_id );
+            $log = zume_get_user_log( $user_id );
         }
         $training_items = zume_training_items();
         $mawl = [];
@@ -330,14 +330,48 @@ if( ! function_exists( 'zume_get_user_mawl' ) ) {
         ];
     }
 }
+if( ! function_exists( 'zume_get_user_commitments' ) ) {
+    function zume_get_user_commitments($user_id, $status = 'open')
+    {
+        global $wpdb;
+        $results = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM {wp_dt_post_user_meta}
+                    WHERE user_id = %d
+                      AND type = 'custom'
+                    ORDER BY date DESC"
+            , $user_id), ARRAY_A);
+
+        $list = [];
+        foreach ($results as $result) {
+            $meta = maybe_unserialize($result['meta_value']);
+
+            if ('open' === $status && isset($meta['status'])) { // status is added when closed, so if present, then it is closed
+                continue;
+            }
+
+            if ('closed' === $status && !isset($meta['status'])) {
+                continue;
+            }
+
+            $list[] = [
+                'id' => $result['id'],
+                'note' => $meta['note'],
+                'status' => isset($meta['status']) ? 'closed' : 'open',
+                'due_date' => $result['date'],
+            ];
+        }
+
+        return $list;
+    }
+}
 if( ! function_exists( 'zume_get_user_contact_id' ) ) {
     function zume_get_user_contact_id( $user_id ) {
         global $wpdb;
         return $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM wp_postmeta WHERE meta_key = 'corresponds_to_user' AND meta_value = %s", $user_id ) );
     }
 }
-if ( ! function_exists( 'zume_user_log' ) ) {
-    function zume_user_log( $user_id ) {
+if ( ! function_exists( 'zume_get_user_log' ) ) {
+    function zume_get_user_log( $user_id ) {
         global $wpdb;
         $sql = $wpdb->prepare( "SELECT CONCAT( r.type, '_', r.subtype ) as log_key, r.*
                 FROM wp_dt_reports r
