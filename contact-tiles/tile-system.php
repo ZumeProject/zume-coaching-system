@@ -26,7 +26,7 @@ class Zume_Tile_System  {
         }
 
         $profile = zume_get_user_profile( $this_post['trainee_user_id'] );
-        $activity = zume_user_log( $trainee_user_id );
+        $activity = zume_get_user_log( $trainee_user_id );
         if ( empty( $activity ) ) {
            $activity = [];
         }
