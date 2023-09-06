@@ -140,7 +140,9 @@
     <exclude name="WordPress.Arrays.CommaAfterArrayItem.SpaceAfterComma" />
     <exclude name="WordPress.Arrays.CommaAfterArrayItem.SpaceBeforeComma" />
     <exclude name="WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound" />
-    <exclude name="Generic.Arrays.DisallowShortArraySyntax.Found"/>
+    <exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
+    <exclude name="Universal.Files.SeparateFunctionsFromOO.Mixed"/>
+    <exclude name="PEAR.Files.IncludingFile.BracketsNotRequired"/>
     <exclude name="WordPress.PHP.DisallowShortTernary.Found"/>
     <exclude name="WordPress.PHP.YodaConditions.NotYoda" />
     <!-- <exclude name="WordPress.WhiteSpace.CastStructureSpacing.NoSpaceBeforeOpenParenthesis" /> -->
