@@ -367,6 +367,42 @@ if ( ! function_exists( 'zume_get_user_commitments' ) ) {
         return $list;
     }
 }
+if ( ! function_exists( 'zume_get_user_plans' ) ) {
+    function zume_get_user_plans( $user_id = null )
+    {
+        if ( is_null( $user_id ) ) {
+            $user_id = get_current_user_id();
+        }
+
+        global $wpdb;
+        $contact_id = zume_get_user_contact_id( $user_id );
+        $connections = $wpdb->get_results( $wpdb->prepare(
+            "SELECT p.ID as post_id, p.post_title as title, pm.meta_key, pm.meta_value
+                    FROM wp_p2p p2
+                    LEFT JOIN wp_posts p ON p.ID=p2.p2p_to
+                    LEFT JOIN wp_postmeta pm ON pm.post_id=p2.p2p_to
+                    WHERE p2.p2p_type = 'zume_plans_to_contacts'
+                    AND p2.p2p_from = %d ",
+            $contact_id
+        ), ARRAY_A );
+
+        $plans = [];
+        if ( ! empty( $connections ) ) {
+            foreach( $connections as $connection ){
+                if ( ! isset( $plans[$connection['post_id']] ) ) {
+                    $plans[$connection['post_id']] = [];
+                    $plans[$connection['post_id']]['title'] =  $connection['title'];
+                }
+                $plans[$connection['post_id']][$connection['meta_key']] = $connection['meta_value'];
+            }
+        }
+
+        // @todo embelish the array with more info and convert the dates from unix.
+
+
+        return $plans;
+    }
+}
 if ( ! function_exists( 'zume_get_user_contact_id' ) ) {
     function zume_get_user_contact_id( $user_id ) {
         global $wpdb;
