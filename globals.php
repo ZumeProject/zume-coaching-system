@@ -78,8 +78,10 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
     }
 }
 if ( ! function_exists( 'zume_get_user_stage' ) ) {
-    function zume_get_user_stage( $user_id, $log = null, $number_only = false ) {
-
+    function zume_get_user_stage( $user_id = null, $log = null, $number_only = false ) {
+        if ( is_null( $user_id ) ) {
+            $user_id = get_current_user_id();
+        }
         if ( is_null( $log ) ) {
             $log = zume_get_user_log( $user_id );
         }
@@ -373,10 +375,12 @@ if ( ! function_exists( 'zume_get_user_plans' ) ) {
         if ( is_null( $user_id ) ) {
             $user_id = get_current_user_id();
         }
+        $log = zume_get_user_log( $user_id );
+        $log_subtypes = array_column( $log, 'subtype' );
 
         global $wpdb;
         $contact_id = zume_get_user_contact_id( $user_id );
-        $connections = $wpdb->get_results( $wpdb->prepare(
+        $connected_plans = $wpdb->get_results( $wpdb->prepare(
             "SELECT p.ID as post_id, p.post_title as title, pm.meta_key, pm.meta_value
                     FROM wp_p2p p2
                     LEFT JOIN wp_posts p ON p.ID=p2.p2p_to
@@ -387,13 +391,45 @@ if ( ! function_exists( 'zume_get_user_plans' ) ) {
         ), ARRAY_A );
 
         $plans = [];
-        if ( ! empty( $connections ) ) {
-            foreach( $connections as $connection ){
+        if ( ! empty( $connected_plans ) ) {
+            $participants = [];
+            foreach( $connected_plans as $connection ){
                 if ( ! isset( $plans[$connection['post_id']] ) ) {
                     $plans[$connection['post_id']] = [];
                     $plans[$connection['post_id']]['title'] =  $connection['title'];
+                    $plans[$connection['post_id']]['participants'] = [];
+                    $participants[] = $connection['post_id'];
                 }
-                $plans[$connection['post_id']][$connection['meta_key']] = $connection['meta_value'];
+                if ( ((string) (int) $connection['meta_value'] === $connection['meta_value'])
+                    && ($connection['meta_value'] <= PHP_INT_MAX)
+                    && ($connection['meta_value'] >= ~PHP_INT_MAX)
+                    && $connection['meta_key'] !== 'last_modified') {
+                    $plans[$connection['post_id']][$connection['meta_key']] = [
+                        'timestamp' => $connection['meta_value'],
+                        'date' => date( 'Y-m-d', $connection['meta_value'] ),
+                        'date_formatted' => date( 'M j, Y', $connection['meta_value'] ),
+                        'completed' => in_array( $connection['meta_key'], $log_subtypes ),
+                    ];
+                } else {
+                    $plans[$connection['post_id']][$connection['meta_key']] = $connection['meta_value'];
+                }
+
+            }
+            $participants_string = implode( ',', $participants );
+            $participants_result = $wpdb->get_results(
+                "SELECT  p2.p2p_to as plan_id, p2.p2p_from as contact_id, pm.meta_value as user_id, p.post_title as user_name
+                    FROM wp_p2p p2
+            		LEFT JOIN wp_posts p ON p.ID=p2.p2p_from
+					LEFT JOIN wp_postmeta pm ON p2.p2p_from=pm.post_id AND pm.meta_key = 'corresponds_to_user'
+                    WHERE p2.p2p_type = 'zume_plans_to_contacts'
+                    AND p2.p2p_to IN ( $participants_string ) ",ARRAY_A );
+
+            foreach( $participants_result as $participant ){
+                $plans[$participant['plan_id']]['participants'][] = [
+                    'contact_id' => $participant['contact_id'],
+                    'user_id' => $participant['user_id'],
+                    'name' => $participant['user_name'],
+                ];
             }
         }
 
