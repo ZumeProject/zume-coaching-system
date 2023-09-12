@@ -25,6 +25,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
         $email = $contact_meta['user_email'] ?? '';
         $phone = $contact_meta['user_phone'] ?? '';
         $timezone = $contact_meta['user_timezone'] ?? '';
+        $user_friend_key = $contact_meta['user_friend_key'] ?? '';
 
         $language = zume_get_user_language( $user_id );
         $location = zume_get_user_location( $user_id );
@@ -51,31 +52,33 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
             // user is current user, build global variable
             global $zume_user_profile; // sets a global variable for user_profile
             $zume_user_profile = [
+                'name' => $name,
                 'user_id' => $user_id,
                 'contact_id' => $contact_id,
                 'coaching_contact_id' => $coaching_contact_id,
-                'coaches' => $coaches,
-                'name' => $name,
                 'email' => $email,
                 'phone' => $phone,
-                'language' => $language,
                 'location' => $location,
+                'language' => $language,
                 'timezone' => $timezone,
+                'coaches' => $coaches,
+                'friend_key' => $user_friend_key,
             ];
             return $zume_user_profile;
         } else {
             // if user is not current user, return array
             return [
+                'name' => $name,
                 'user_id' => $user_id,
                 'contact_id' => $contact_id,
                 'coaching_contact_id' => $coaching_contact_id,
-                'coaches' => $coaches,
-                'name' => $name,
                 'email' => $email,
                 'phone' => $phone,
-                'language' => $language,
                 'location' => $location,
+                'language' => $language,
                 'timezone' => $timezone,
+                'coaches' => $coaches,
+                'friend_key' => $user_friend_key,
             ];
         }
     }
