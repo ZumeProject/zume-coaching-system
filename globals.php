@@ -26,6 +26,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
         $phone = $contact_meta['user_phone'] ?? '';
         $timezone = $contact_meta['user_timezone'] ?? '';
         $user_friend_key = $contact_meta['user_friend_key'] ?? '';
+        $user_ui_language = $contact_meta['user_ui_language'] ?? '';
 
         $language = zume_get_user_language( $user_id );
         $location = zume_get_user_location( $user_id );
@@ -35,7 +36,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
                 FROM wp_3_postmeta
                 WHERE meta_key = 'trainee_user_id'
                   AND meta_value = %s",
-            $user_id ), );
+        $user_id ) );
         $coaches = $wpdb->get_results( $wpdb->prepare(
             "SELECT p.ID as contact_id, pm.meta_value as user_id, p.post_title as name
                 FROM wp_3_p2p p2
@@ -43,7 +44,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
                 LEFT JOIN wp_3_postmeta pm ON pm.post_id = p.ID AND pm.meta_key = 'corresponds_to_user'
                 WHERE p2p_from = %d
                   AND p2p_type = 'contacts_to_contacts'",
-            $coaching_contact_id ), ARRAY_A );
+        $coaching_contact_id ), ARRAY_A );
         if ( empty( $coaches ) ) {
             $coaches = [];
         }
@@ -63,6 +64,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
                 'timezone' => $timezone,
                 'coaches' => $coaches,
                 'friend_key' => $user_friend_key,
+                'ui_language' => $user_ui_language,
             ];
             return $zume_user_profile;
         } else {
@@ -79,6 +81,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
                 'timezone' => $timezone,
                 'coaches' => $coaches,
                 'friend_key' => $user_friend_key,
+                'ui_language' => $user_ui_language,
             ];
         }
     }
@@ -192,7 +195,7 @@ if ( ! function_exists( 'zume_get_user_location' ) ) {
                     WHERE pm.meta_key = 'corresponds_to_user' AND pm.meta_value = %d
                     ORDER BY grid_meta_id desc
                     LIMIT 1",
-            $user_id ), ARRAY_A );
+        $user_id ), ARRAY_A );
 
         if ( empty( $location ) && $ip_lookup ) {
             $result = DT_Ipstack_API::get_location_grid_meta_from_current_visitor();
@@ -223,11 +226,11 @@ if ( ! function_exists( 'zume_get_user_location' ) ) {
     }
 }
 if ( ! function_exists( 'zume_get_user_timezone' ) ) {
-    function zume_get_user_timezone( $user_id = null, $location = null  ) {
+    function zume_get_user_timezone( $user_id = null, $location = null ) {
         if ( is_null( $user_id ) ) {
             $user_id = get_current_user_id();
         }
-        $contact_id = zume_get_user_contact_id($user_id);
+        $contact_id = zume_get_user_contact_id( $user_id );
         $timezone = get_user_meta( $contact_id, 'user_timezone', true );
 
         if ( empty( $timezone ) ) {
@@ -244,7 +247,7 @@ if ( ! function_exists( 'zume_get_user_timezone' ) ) {
             'offset_hours' => 0,
             'offset_minutes' => 0,
             'offset_seconds' => 0,
-            'current_time' => date('Y-m-d H:i:s'),
+            'current_time' => date( 'Y-m-d H:i:s' ),
         ];
 
         return $timezone_details;
@@ -306,7 +309,6 @@ if ( ! function_exists( 'zume_get_user_host' ) ) {
                 's' => $s / count( $training_items ) * 100,
                 't' => $t / count( $training_items ) * 100,
             ],
-//            'training_items' => $training_items,
         ];
     }
 }
@@ -380,7 +382,7 @@ if ( ! function_exists( 'zume_get_user_commitments' ) ) {
                     WHERE user_id = %d
                       AND category = 'custom'
                     ORDER BY date DESC",
-            $user_id), ARRAY_A);
+        $user_id), ARRAY_A);
 
         $list = [];
         foreach ( $results as $result ) {
@@ -429,10 +431,10 @@ if ( ! function_exists( 'zume_get_user_plans' ) ) {
         $plans = [];
         if ( ! empty( $connected_plans ) ) {
             $participants = [];
-            foreach( $connected_plans as $connection ){
+            foreach ( $connected_plans as $connection ){
                 if ( ! isset( $plans[$connection['post_id']] ) ) {
                     $plans[$connection['post_id']] = [];
-                    $plans[$connection['post_id']]['title'] =  $connection['title'];
+                    $plans[$connection['post_id']]['title'] = $connection['title'];
                     $plans[$connection['post_id']]['participants'] = [];
                     $participants[] = $connection['post_id'];
                 }
@@ -449,7 +451,6 @@ if ( ! function_exists( 'zume_get_user_plans' ) ) {
                 } else {
                     $plans[$connection['post_id']][$connection['meta_key']] = $connection['meta_value'];
                 }
-
             }
             $participants_string = implode( ',', $participants );
             $participants_result = $wpdb->get_results(
@@ -458,9 +459,9 @@ if ( ! function_exists( 'zume_get_user_plans' ) ) {
             		LEFT JOIN wp_posts p ON p.ID=p2.p2p_from
 					LEFT JOIN wp_postmeta pm ON p2.p2p_from=pm.post_id AND pm.meta_key = 'corresponds_to_user'
                     WHERE p2.p2p_type = 'zume_plans_to_contacts'
-                    AND p2.p2p_to IN ( $participants_string ) ",ARRAY_A );
+                    AND p2.p2p_to IN ( $participants_string ) ", ARRAY_A );
 
-            foreach( $participants_result as $participant ){
+            foreach ( $participants_result as $participant ) {
                 $plans[$participant['plan_id']]['participants'][] = [
                     'contact_id' => $participant['contact_id'],
                     'user_id' => $participant['user_id'],
@@ -1391,7 +1392,7 @@ if ( ! function_exists( 'zume_get_valence' ) ) {
                 $valence = 'valence-grey';
             }
         } elseif ( $percent > 20 ) {
-            $valence = 'valence-darkgreen';
+                $valence = 'valence-darkgreen';
         } else if ( $percent > 10 ) {
             $valence = 'valence-green';
         } else if ( $percent < -10 ) {

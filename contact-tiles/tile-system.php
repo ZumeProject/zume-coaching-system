@@ -106,12 +106,7 @@ class Zume_Tile_System  {
             <h1>Commitments for <?php echo $profile['name'] ?></h1>
             <hr>
             <div class="grid-x grid-padding-x">
-                <div class="cell medium-4">
-                    <h3>Add New</h3>
-                    <p style="display:none;"><?php echo $profile['name'] ?> can add commitments through the post-training plan. You can add here and it will show up on their list.</p>
-                    <textarea id="commitment-note" placeholder="Enter a new commitment"></textarea>
-                    <button class="button" id="commitment-add">Add Commitment</button>
-                </div>
+
                 <div class="cell medium-8">
                     <h3>Active</h3>
                     <div class="grid-x">
@@ -119,8 +114,8 @@ class Zume_Tile_System  {
                         foreach( $active_commitments as $active_commitment ) {
                             ?>
                             <div class="cell">
-                                <div class="button-group no-gaps" style="border-radius:0; width:100%;">
-                                    <span class="button hollow" style="border-radius:0;"><?php echo $active_commitment['note'] ?></span>
+                                <span ><?php echo $active_commitment['note'] ?></span>
+                                <div class="button-group no-gaps" style="border-radius:0; border:0; width:100%;">
                                     <a class="button" style="border-radius:0;">Completed</a>
                                     <a class="button alert" style="border-radius:0;">Delete</a>
                                 </div>
@@ -143,6 +138,13 @@ class Zume_Tile_System  {
                         }
                         ?>
                     </div>
+
+                </div>
+                <div class="cell medium-4">
+                    <h3>Add New</h3>
+                    <p style="display:none;"><?php echo $profile['name'] ?> can add commitments through the post-training plan. You can add here and it will show up on their list.</p>
+                    <textarea id="commitment-note" placeholder="Enter a new commitment"></textarea>
+                    <button class="button" id="commitment-add">Add Commitment</button>
                 </div>
             </div>
             <button class="close-button" data-close aria-label="Close modal" type="button">
@@ -256,13 +258,14 @@ class Zume_User_Genmap {
     }
 
     public function modal( $profile, $user_id ) {
+        $results = $this->tree( $user_id );
         ?>
         <div class="reveal full" id="modal_genmap" data-v-offset="0" data-reveal>
             <h1>Current Genmap for <?php echo $profile['name'] ?></h1>
             <hr>
             <div class="grid-x grid-padding-x">
                 <div class="cell medium-9">
-                    <div id="genmap" style="width: 100%; border: 1px solid lightgrey; overflow:scroll;"></div>
+                    <div id="genmap" style="width: 100%; border: 1px solid lightgrey; overflow:scroll;"><span style="padding: 1em;">No Reported Groups</span></div>
                 </div>
                 <div class="cell medium-3">
                     <div id="genmap-details"></div>
@@ -272,8 +275,11 @@ class Zume_User_Genmap {
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+
+       <?php if ( $results ) {  ?>
         <script>
             jQuery(document).ready(function(){
+
                 window.group_tree = [<?php echo json_encode( $this->tree( $user_id ) ) ?>][0]
                 console.log(window.group_tree)
 
@@ -377,8 +383,8 @@ class Zume_User_Genmap {
                 }
 
             })
-        </script>
-        <?php
+            </script>
+        <?php }
     }
     public function tree( $user_id ) {
         $query = $this->get_query( $user_id );
@@ -428,7 +434,7 @@ class Zume_User_Genmap {
             return $this->_circular_structure_error( $query );
         }
         if ( empty( $query ) ) {
-            return $this->_no_results();
+            return false;
         }
         $menu_data = $this->prepare_menu_array( $query );
         return $this->build_array( 0, $menu_data, 0 );
