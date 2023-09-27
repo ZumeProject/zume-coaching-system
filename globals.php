@@ -374,8 +374,11 @@ if ( ! function_exists( 'zume_get_user_mawl' ) ) {
 }
 if ( ! function_exists( 'zume_get_user_commitments' ) ) {
     // open, closed, all
-    function zume_get_user_commitments( $user_id, $status = 'open' )
+    function zume_get_user_commitments(  $user_id = null, $status = 'open' )
     {
+        if ( is_null( $user_id ) ) {
+            $user_id = get_current_user_id();
+        }
         global $wpdb;
         $results = $wpdb->get_results($wpdb->prepare(
             "SELECT * FROM wp_dt_post_user_meta
@@ -398,7 +401,9 @@ if ( ! function_exists( 'zume_get_user_commitments' ) ) {
 
             $list[] = [
                 'id' => $result['id'],
-                'note' => $meta['note'],
+                'note' => $meta['note'] ?? '',
+                'question' => $meta['question'] ?? '',
+                'answer' => $meta['answer'] ?? '',
                 'status' => isset( $meta['status'] ) ? 'closed' : 'open',
                 'due_date' => $result['date'],
             ];
