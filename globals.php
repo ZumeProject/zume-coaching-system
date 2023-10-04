@@ -196,7 +196,7 @@ if ( ! function_exists( 'zume_get_user_stage' ) ) {
                 if ( 'first_practitioner_report' == $value['subtype'] ) {
                     $funnel_steps[4] = true;
                 }
-                if ( 'mawl_completed' == $value['subtype'] ) {
+                if ( 'mawl_completed' == $value['subtype'] || 'host_completed' == $value['subtype'] ) {
                     $funnel_steps[5] = true;
                 }
                 if ( 'seeing_generational_fruit' == $value['subtype'] ) {
@@ -1384,8 +1384,8 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
             5 => [
                 'key' => 'full_practitioner',
                 'value' => 5,
-                'label' => 'Full Practitioner',
-                'label_full' => '(S2) Full Practitioner',
+                'label' => 'Practitioner',
+                'label_full' => '(S2) Practitioner',
                 'description' => 'Practitioner who has completed the MAWL checklist, but is not multiplying.',
                 'description_full' => 'Practitioner who has completed the MAWL checklist, but is not multiplying.',
                 'characteristics' => [
