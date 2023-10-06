@@ -36,6 +36,22 @@ class Zume_Tile_Basics {
         $l = $mawl['percent']['l'] ?? 0;
 
         ?>
+        <style>
+            .open_host_modal, .open_host_modal progress, .open_host_modal label, .open_mawl_modal, .open_mawl_modal progress, .open_mawl_modal label {
+                cursor: pointer !important;
+            }
+            .open_host_modal:hover, .open_mawl_modal:hover {
+                background-color: #F5F5F5;
+            }
+            progress {
+                vertical-align: middle;
+                width: 90%;
+            }
+            .zume_button_green {
+                background-color: #4CAF50 !important;
+                color: white !important;
+            }
+        </style>
         <div class="cell small-12 medium-4">
             <div>Email : <?php echo $profile['email'] ?></div>
             <div>Phone : <?php echo $profile['phone'] ?></div>
@@ -88,23 +104,7 @@ class Zume_Tile_Basics {
                     jQuery('.zume_map.loading-spinner').removeClass('active');
                 })
             </script>
-            <style>
-                .open_host_modal, .open_mawl_modal {
-                    padding: 5px;
-                    cursor: pointer;
-                }
-                .open_host_modal:hover, .open_mawl_modal:hover {
-                    background-color: #F5F5F5;
-                }
-                progress {
-                    vertical-align: middle;
-                    width: 90%;
-                }
-                .zume_button_green {
-                    background-color: #4CAF50 !important;
-                    color: white !important;
-                }
-            </style>
+
             <?php $this->_modal_host( $this_post, $log ) ?>
             <?php $this->_modal_mawl( $this_post, $log ) ?>
         </div>
@@ -144,8 +144,8 @@ class Zume_Tile_Basics {
                     <div class="cell small-4" style="text-align:right;">
                         <div class="small button-group" style="display: inline-block; margin-bottom: 5px;">
                             <?php foreach ( $element['host'] as $option_value ) : ?>
-                                <button id="<?php echo esc_html( $option_value['key'] ) ?>" type="button"
-                                        class="<?php echo in_array( $option_value['key'], $completed ) ? 'zume_button_green' : ''; ?> empty-select-button <?php echo esc_html( $option_value['type'] ); ?>_<?php echo esc_html( $option_value['subtype'] ) ?> select-button button" style="padding:5px">
+                                <button id="<?php echo esc_html( $option_value['key'] ) ?>" type="button" data-type="<?php echo esc_html( $option_value['type'] ); ?>" data-subtype="<?php echo esc_html( $option_value['subtype'] ) ?>"
+                                        class="<?php echo in_array( $option_value['key'], $completed ) ? 'zume_button_green' : ''; ?> empty-select-button <?php echo esc_html( $option_value['type'] ); ?>_<?php echo esc_html( $option_value['subtype'] ) ?> select-button button <?php echo esc_html( $option_value['type'] ); ?>" style="padding:5px">
                                     <?php echo esc_html( $option_value['short_label'] ) ?>
                                 </button>
                             <?php endforeach; ?>
@@ -159,6 +159,27 @@ class Zume_Tile_Basics {
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+        <script>
+            jQuery(document).ready(function(){
+                jQuery('.select-button.button.training').on('click', function( event ){
+                    let type = event.target.dataset.type
+                    let subtype = event.target.dataset.subtype
+
+                    if ( jQuery(this).hasClass('zume_button_green') ) {
+                        jQuery(this).removeClass('zume_button_green')
+                        makeRequest('DELETE', 'host', { type: type, subtype: subtype, user_id: <?php echo $this_post['trainee_user_id'] ?> }, 'zume_system/v1' ).done( function( data ) {
+                            console.log(data)
+
+                        })
+                    } else {
+                        jQuery(this).addClass('zume_button_green')
+                        makeRequest('POST', 'host', { type: type, subtype: subtype, user_id: <?php echo $this_post['trainee_user_id'] ?>  }, 'zume_system/v1' ).done( function( data ) {
+                            console.log(data)
+                        })
+                    }
+                })
+            })
+        </script>
         <?php
     }
     private function _modal_mawl( $this_post, $activity ) {
@@ -187,8 +208,8 @@ class Zume_Tile_Basics {
                     <div class="cell small-4" style="text-align:right;">
                         <div class="small button-group" style="display: inline-block; margin-bottom: 5px;">
                             <?php foreach ( $element['mawl'] as $option_value ) : ?>
-                                <button id="<?php echo esc_html( $option_value['key'] ) ?>" type="button"
-                                        class="<?php echo in_array( $option_value['key'], $completed ) ? 'zume_button_green' : ''; ?> empty-select-button <?php echo esc_html( $option_value['type'] ); ?>_<?php echo esc_html( $option_value['subtype'] ) ?> select-button button" style="padding:5px">
+                                <button id="<?php echo esc_html( $option_value['key'] ) ?>" type="button" data-type="<?php echo esc_html( $option_value['type'] ); ?>" data-subtype="<?php echo esc_html( $option_value['subtype'] ) ?>"
+                                        class="<?php echo in_array( $option_value['key'], $completed ) ? 'zume_button_green' : ''; ?> empty-select-button <?php echo esc_html( $option_value['type'] ); ?>_<?php echo esc_html( $option_value['subtype'] ) ?> select-button button <?php echo esc_html( $option_value['type'] ); ?>" style="padding:5px">
                                     <?php echo esc_html( $option_value['short_label'] ) ?>
                                 </button>
                             <?php endforeach; ?>
@@ -202,6 +223,27 @@ class Zume_Tile_Basics {
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+        <script>
+            jQuery(document).ready(function(){
+                jQuery('.select-button.button.coaching').on('click', function( event ){
+                    let type = event.target.dataset.type
+                    let subtype = event.target.dataset.subtype
+
+                    if ( jQuery(this).hasClass('zume_button_green') ) {
+                        jQuery(this).removeClass('zume_button_green')
+                        makeRequest('DELETE', 'mawl', { type: type, subtype: subtype, user_id: <?php echo $this_post['trainee_user_id'] ?> }, 'zume_system/v1' ).done( function( data ) {
+                            console.log(data)
+
+                        })
+                    } else {
+                        jQuery(this).addClass('zume_button_green')
+                        makeRequest('POST', 'mawl', { type: type, subtype: subtype, user_id: <?php echo $this_post['trainee_user_id'] ?>  }, 'zume_system/v1' ).done( function( data ) {
+                            console.log(data)
+                        })
+                    }
+                })
+            })
+        </script>
         <?php
     }
 
