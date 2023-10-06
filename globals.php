@@ -5,75 +5,6 @@
  * All sql queries should not use variable table names, but should be fully qualified.
  */
 
-/**
- * API Routes for common global functions
- */
-if ( dt_is_rest() ) {
-    add_action( 'rest_api_init', 'zume_global_add_api_routes' );
-    add_filter( 'dt_allow_rest_access', 'zume_global_authorize_url', 10, 1 );
-}
-function zume_global_add_api_routes()
-{
-    $namespace = 'zume_system/v1';
-    register_rest_route(
-        $namespace, '/user_data/profile', [
-            'methods' => [ 'GET', 'POST' ],
-            'callback' => 'zume_get_user_profile_api',
-            'permission_callback' => '__return_true',
-        ]
-    );
-    register_rest_route(
-        $namespace, '/user_data/stage', [
-            'methods' => [ 'GET', 'POST' ],
-            'callback' => 'zume_get_user_stage_api',
-            'permission_callback' => '__return_true',
-        ]
-    );
-    register_rest_route(
-        $namespace, '/user_data/host', [
-            'methods' => [ 'GET', 'POST' ],
-            'callback' => 'zume_get_user_host_api',
-            'permission_callback' => '__return_true',
-        ]
-    );
-    register_rest_route(
-        $namespace, '/user_data/mawl', [
-            'methods' => [ 'GET', 'POST' ],
-            'callback' => 'zume_get_user_mawl_api',
-            'permission_callback' => '__return_true',
-        ]
-    );
-}
-function zume_global_authorize_url( $authorized )
-{
-    if ( isset( $_SERVER['REQUEST_URI'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 'zume_system/v1' ) !== false ) {
-        $authorized = true;
-    }
-    return $authorized;
-}
-function zume_get_user_profile_api( WP_REST_Request $request ) {
-    $user_id = get_current_user_id();
-    return zume_get_user_profile( $user_id );
-}
-function zume_get_user_stage_api( WP_REST_Request  $request )
-{
-    $user_id = get_current_user_id();
-    return zume_get_user_stage( $user_id );
-}
-function zume_get_user_host_api( WP_REST_Request $request )
-{
-    $user_id = get_current_user_id();
-    return zume_get_user_host( $user_id );
-}
-function zume_get_user_mawl_api( WP_REST_Request $request )
-{
-    $user_id = get_current_user_id();
-    return zume_get_user_mawl( $user_id );
-}
-
-/**
- * End API Routes
- */
 
 if ( ! function_exists( 'zume_get_user_profile' ) ) {
     function zume_get_user_profile( $user_id = null ) {
@@ -193,7 +124,7 @@ if ( ! function_exists( 'zume_get_user_stage' ) ) {
                 if ( 'training_completed' == $value['subtype'] ) {
                     $funnel_steps[3] = true;
                 }
-                if ( 'first_practitioner_report' == $value['subtype'] ) {
+                if ( 'first_practitioner_report' == $value['subtype'] || 'join_community' == $value['subtype'] ) {
                     $funnel_steps[4] = true;
                 }
                 if ( 'mawl_completed' == $value['subtype'] || 'host_completed' == $value['subtype'] ) {
@@ -4448,6 +4379,354 @@ if ( ! function_exists( 'zume_get_timezones' ) ) {
         return $timezones;
     }
 }
+
+class Zume_Global_Endpoints {
+    public $namespace = 'zume_system/v1';
+    private static $_instance = null;
+    public static function instance()
+    {
+        if ( is_null( self::$_instance ) ) {
+            self::$_instance = new self();
+        }
+        return self::$_instance;
+    }
+
+    public function __construct()
+    {
+        if ( dt_is_rest() ) {
+            add_action( 'rest_api_init', [ $this, 'add_api_routes' ] );
+            add_filter( 'dt_allow_rest_access', [ $this, 'authorize_url' ], 10, 1 );
+        }
+    }
+
+    public function authorize_url( $authorized )
+    {
+        if ( isset( $_SERVER['REQUEST_URI'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), $this->namespace ) !== false ) {
+            $authorized = true;
+        }
+        return $authorized;
+    }
+    public function add_api_routes()
+    {
+        $namespace = $this->namespace;
+        /**
+         * User Data
+         */
+        register_rest_route(
+            $namespace, '/user_data/profile', [
+                'methods' => [ 'GET', 'POST' ],
+                'callback' => [ $this, 'user_data_profile' ],
+                'permission_callback' => '__return_true',
+            ]
+        );
+        register_rest_route(
+            $namespace, '/user_data/stage', [
+                'methods' => [ 'GET', 'POST' ],
+                'callback' => [ $this, 'user_data_stage' ],
+                'permission_callback' => '__return_true',
+            ]
+        );
+
+        /**
+         * Commitments API
+         */
+        register_rest_route(
+            $namespace, '/commitment', [
+                'methods' => 'POST',
+                'callback' => [ $this, 'create_commitment' ],
+                'permission_callback' => '__return_true',
+            ]
+        );
+        register_rest_route(
+            $namespace, '/commitments', [
+                'methods' => 'GET',
+                'callback' => [ $this, 'list_commitments' ],
+                'permission_callback' => '__return_true',
+            ]
+        );
+        register_rest_route(
+            $namespace, '/commitment', [
+                'methods' => 'PUT',
+                'callback' => [ $this, 'update_commitment' ],
+                'permission_callback' => '__return_true',
+            ]
+        );
+        register_rest_route(
+            $namespace, '/commitment', [
+                'methods' => 'DELETE',
+                'callback' => [ $this, 'delete_commitment' ],
+                'permission_callback' => '__return_true',
+            ]
+        );
+        /**
+         * HOST API
+         */
+        register_rest_route(
+            $namespace, '/host', [
+                'methods' => 'GET',
+                'callback' => [ $this, 'list_host' ],
+                'permission_callback' => '__return_true',
+            ]
+        );
+        register_rest_route(
+            $namespace, '/host', [
+                'methods' => 'POST',
+                'callback' => [ $this, 'create_host' ],
+                'permission_callback' => '__return_true',
+            ]
+        );
+        register_rest_route(
+            $namespace, '/host', [
+                'methods' => 'DELETE',
+                'callback' => [ $this, 'delete_host' ],
+                'permission_callback' => '__return_true',
+            ]
+        );
+        /**
+         * MAWL API
+         */
+        register_rest_route(
+            $namespace, '/mawl', [
+                'methods' => 'GET',
+                'callback' => [ $this, 'read_mawl' ],
+                'permission_callback' => '__return_true',
+            ]
+        );
+        register_rest_route(
+            $namespace, '/mawl', [
+                'methods' => 'POST',
+                'callback' => [ $this, 'create_mawl' ],
+                'permission_callback' => '__return_true',
+            ]
+        );
+        register_rest_route(
+            $namespace, '/mawl', [
+                'methods' => 'DELETE',
+                'callback' => [ $this, 'delete_mawl' ],
+                'permission_callback' => '__return_true',
+            ]
+        );
+
+    }
+
+    public function user_data_profile( WP_REST_Request $request ) {
+        $user_id = get_current_user_id();
+        return zume_get_user_profile( $user_id );
+    }
+    public function user_data_stage( WP_REST_Request  $request )
+    {
+        $user_id = get_current_user_id();
+        return zume_get_user_stage( $user_id );
+    }
+
+    public function create_commitment( WP_REST_Request $request )
+    {
+        if ( ! is_user_logged_in() ) {
+            return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
+        }
+
+        global $wpdb;
+        $params = dt_recursive_sanitize_array( $request->get_params() );
+        $user_id = $params['user_id'];
+        if ( empty( $user_id ) ) {
+            $user_id = get_current_user_id();
+        }
+        $contact_id = zume_get_user_contact_id( $user_id );
+
+        $fields = [
+            'user_id' => $user_id,
+            'post_id' => $contact_id,
+            'meta_key' => 'tasks',
+            'meta_value' => maybe_serialize([
+                'note' => $params['note'],
+                'question' => $params['question'],
+                'answer' => $params['answer'],
+            ]),
+            'date' => $params['date'],
+            'category' => 'custom',
+        ];
+
+        $create = $wpdb->insert( 'wp_dt_post_user_meta', $fields );
+
+        $log = zume_get_user_log( $user_id );
+        $subtypes = array_column( $log, 'subtype' );
+        if ( ! in_array( 'made_3_month_plan', $subtypes ) ) {
+            zume_log_insert( 'system', 'made_3_month_plan', [ 'user_id' => $user_id ] );
+        }
+
+        return $create;
+    }
+    public function list_commitments( WP_REST_Request $request )
+    {
+        if ( ! is_user_logged_in() ) {
+            return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
+        }
+
+        $params = dt_recursive_sanitize_array( $request->get_params() );
+
+        if ( isset( $params['user_id'] ) ) {
+            $user_id = $params['user_id'];
+        } else {
+            $user_id = get_current_user_id();
+        }
+
+        $status = 'open';
+        if ( isset( $params['status'] ) ) {
+            $status = $params['status'];
+        }
+
+        return zume_get_user_commitments( $user_id, $status );
+    }
+    public function update_commitment( WP_REST_Request $request )
+    {
+        global $wpdb;
+        $params = dt_recursive_sanitize_array( $request->get_params() );
+        if ( ! isset( $params['id'] ) ) {
+            return new WP_Error( __METHOD__, 'Id required', array( 'status' => 401 ) );
+        }
+
+        $user_id = $this->_get_user_id( $params );
+
+        $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM wp_dt_post_user_meta WHERE id = %d AND user_id = %d", $params['id'], $user_id ), ARRAY_A );
+        $data = maybe_unserialize( $row['meta_value'] );
+        $data['status'] = 'closed';
+        $data = maybe_serialize( $data );
+        $where = [
+            'id' => $params['id'],
+            'user_id' => $user_id,
+        ];
+
+        $update = $wpdb->update( 'wp_dt_post_user_meta', [ 'meta_value' => $data ], $where );
+        return $update;
+    }
+    public function delete_commitment( WP_REST_Request $request )
+    {
+        global $wpdb;
+        $params = dt_recursive_sanitize_array( $request->get_params() );
+        if ( ! isset( $params['id'] ) ) {
+            return new WP_Error( __METHOD__, 'Id required', array( 'status' => 401 ) );
+        }
+
+        $user_id = $this->_get_user_id( $params );
+
+        $fields = [
+            'id' => $params['id'],
+            'user_id' => $user_id,
+        ];
+
+        $delete = $wpdb->delete( 'wp_dt_post_user_meta', $fields );
+
+        return $delete;
+    }
+
+
+    /** Host */
+    public function list_host( WP_REST_Request $request ) {
+        if ( ! is_user_logged_in() ) {
+            return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
+        }
+        $params = dt_recursive_sanitize_array( $request->get_params() );
+        $user_id = $this->_get_user_id( $params );
+
+        return zume_get_user_host( $user_id );
+    }
+    public function create_host( WP_REST_Request $request ) {
+        if ( ! is_user_logged_in() ) {
+            return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
+        }
+        $params = dt_recursive_sanitize_array( $request->get_params() );
+        if ( ! isset( $params['type'], $params['subtype'] ) && 'training' === $params['type'] ) {
+            return new WP_Error( __METHOD__, 'Type and subtype required. Type must be training.', array( 'status' => 401 ) );
+        }
+        $user_id = $this->_get_user_id( $params );
+
+        return zume_log_insert( $params['type'], $params['subtype'], [ 'user_id' => $user_id ] );
+    }
+    public function delete_host( WP_REST_Request $request ) {
+        global $wpdb;
+        if ( ! is_user_logged_in() ) {
+            return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
+        }
+        $params = dt_recursive_sanitize_array( $request->get_params() );
+        if ( ! isset( $params['type'], $params['subtype'] ) && 'training' === $params['type'] ) {
+            return new WP_Error( __METHOD__, 'Type and subtype required. Type must be training.', array( 'status' => 401 ) );
+        }
+        $user_id = $this->_get_user_id( $params );
+
+        $fields = [
+            'type' => $params['type'],
+            'subtype' => $params['subtype'],
+            'user_id' => $user_id,
+        ];
+
+        $delete = $wpdb->delete( 'wp_dt_reports', $fields );
+
+        return $delete;
+    }
+
+    /** MAWL */
+    public function list_mawl( WP_REST_Request $request ) {
+        if ( ! is_user_logged_in() ) {
+            return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
+        }
+        $params = dt_recursive_sanitize_array( $request->get_params() );
+        $user_id = $this->_get_user_id( $params );
+
+        return zume_get_user_mawl( $user_id );
+
+    }
+    public function create_mawl( WP_REST_Request $request ) {
+        if ( ! is_user_logged_in() ) {
+            return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
+        }
+        $params = dt_recursive_sanitize_array( $request->get_params() );
+        if ( ! isset( $params['type'], $params['subtype'] ) && 'coaching' === $params['type'] ) {
+            return new WP_Error( __METHOD__, 'Type and subtype required. Type must be coaching.', array( 'status' => 401 ) );
+        }
+        $user_id = $this->_get_user_id( $params );
+
+        return zume_log_insert( $params['type'], $params['subtype'], [ 'user_id' => $user_id ] );
+    }
+    public function delete_mawl( WP_REST_Request $request ) {
+        global $wpdb;
+        if ( ! is_user_logged_in() ) {
+            return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
+        }
+        $params = dt_recursive_sanitize_array( $request->get_params() );
+        if ( ! isset( $params['type'], $params['subtype'] ) && 'coaching' === $params['type'] ) {
+            return new WP_Error( __METHOD__, 'Type and subtype required. Type must be training.', array( 'status' => 401 ) );
+        }
+        $user_id = $this->_get_user_id( $params );
+
+        $fields = [
+            'type' => $params['type'],
+            'subtype' => $params['subtype'],
+            'user_id' => $user_id,
+        ];
+
+        $delete = $wpdb->delete( 'wp_dt_reports', $fields );
+
+        return $delete;
+    }
+
+    public function _get_user_id( $params ) {
+        if ( ! is_user_logged_in() ) {
+            return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
+        }
+        if ( isset( $params['user_id'] ) ) {
+            if ( ! current_user_can( 'dt_list_users' ) ) {
+                return new WP_Error( __METHOD__, 'User not allowed to view other users', array( 'status' => 401 ) );
+            }
+            $user_id = (int) $params['user_id'];
+        } else {
+            $user_id = get_current_user_id();
+        }
+        return $user_id;
+    }
+
+}
+Zume_Global_Endpoints::instance();
+
 
 
 // must be last for initialization
