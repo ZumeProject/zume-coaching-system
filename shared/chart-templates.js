@@ -243,11 +243,12 @@ jQuery(document).ready(function($) {
     window.load_map = ( data ) => {
       console.log(data)
       jQuery('.zume-map.'+data.key).click(function(){
+        console.log('click' + data.key )
         jQuery('#modal-full').foundation('open')
         jQuery('#modal-full-title').empty().html(`${data.label}<hr>`)
         jQuery('#modal-full-content').empty().html('<span class="loading-spinner active"></span>')
 
-        makeRequest('GET', 'map', { stage: data.stage, key: data.key }, window.site_info.rest_root ).done( function( data_map ) {
+        makeRequest('POST', 'map', { stage: data.stage, key: data.key }, window.site_info.rest_root ).done( function( data_map ) {
           console.log(data_map)
           let height = window.innerHeight - 150;
           jQuery('#modal-full-content').html(`
@@ -256,23 +257,83 @@ jQuery(document).ready(function($) {
                             <div id="map" style="position:relative;height: ${height}px !important;"></div>
                         </div>
                         <div class="cell small-6 medium-4">
-                            <h2>List</h2>
+                            <h2>List</h2><hr>
                             <div id="list-results"></div>
                         </div>
                     </div>
-                        `)
+          `)
 
           mapboxgl.accessToken = window.site_info.map_key;
           var map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/light-v10',
-            center: [0, 0],
-            minZoom: 0,
-            zoom: 0
+            center: [-98, 38.88],
+            minZoom: 1,
+            zoom: 1
           });
 
           map.dragRotate.disable();
           map.touchZoomRotate.disableRotation();
+
+          map.on('load', function() {
+            map.addSource('layer-source', {
+              type: 'geojson',
+              data: data_map,
+              cluster: true,
+              clusterMaxZoom: 20,
+              clusterRadius: 50
+            });
+            map.addLayer({
+              id: 'clusters',
+              type: 'circle',
+              source: 'layer-source',
+              filter: ['has', 'point_count'],
+              paint: {
+                'circle-color': [
+                  'step',
+                  ['get', 'point_count'],
+                  '#00d9ff',
+                  20,
+                  '#00aeff',
+                  150,
+                  '#90C741'
+                ],
+                'circle-radius': [
+                  'step',
+                  ['get', 'point_count'],
+                  20,
+                  100,
+                  30,
+                  750,
+                  40
+                ]
+              }
+            });
+            map.addLayer({
+              id: 'cluster-count-contacts',
+              type: 'symbol',
+              source: 'layer-source',
+              filter: ['has', 'point_count'],
+              layout: {
+                'text-field': '{point_count_abbreviated}',
+                'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+                'text-size': 12
+              }
+            });
+            map.addLayer({
+              id: 'unclustered-point-contacts',
+              type: 'circle',
+              source: 'layer-source',
+              filter: ['!', ['has', 'point_count']],
+              paint: {
+                'circle-color': '#00d9ff',
+                'circle-radius':12,
+                'circle-stroke-width': 1,
+                'circle-stroke-color': '#fff'
+              }
+            });
+
+          })
 
           map.on('zoomstart', function(e) {
             jQuery('#list-results').empty().html('<span class="loading-spinner active"></span>')
@@ -287,12 +348,24 @@ jQuery(document).ready(function($) {
             list_result()
           })
           function list_result() {
-            console.log(map.getBounds())
+            // console.log(map.getBounds())
             let bounds = map.getBounds()
-            jQuery('#list-results').empty().html(`North: ${bounds._ne.lat}<br>East: ${bounds._ne.lng}, <br>South: ${bounds._sw.lat}, <br>West: ${bounds._sw.lng}`)
+            makeRequest('POST', 'map_list', { stage: data.stage, key: data.key, north: bounds._ne.lat, south: bounds._sw.lat, east: bounds._ne.lng, west: bounds._sw.lng }, window.site_info.rest_root ).done( function( list ) {
+              console.log(list)
+              let container = jQuery('#list-results')
+              container.empty()
+              jQuery.each(list, function(i,v)  {
+                container.append( `<div class="grid-x grid-padding-x">
+                    <div class="cell small-12">
+                        <h3><a href="https://zume5.training/contacts/${v.contact_id}">${ v.name }</a></h3>
+                        <p>${ v.label }</p>
+                        <hr>
+                   </div>
+                </div>`)
+              })
+              jQuery('.loading-spinner').removeClass('active')
+            })
           }
-
-          jQuery('.loading-spinner').removeClass('active')
         })
       })
     }

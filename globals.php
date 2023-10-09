@@ -1423,15 +1423,19 @@ if ( ! function_exists( 'zume_get_valence' ) ) {
 if ( ! function_exists( 'zume_get_percent' ) ) {
     function zume_get_percent( float $value, float $compare )
     {
-        $percent = ( $value / $compare ) * 100;
-        if ( $percent > 100 ) {
-            $percent = round( $percent - 100, 1 );
-        } else if ( $percent < 100 ) {
-            $percent = round( ( 100 - $percent ), 1 ) * -1;
+        if ( $value > 0 && $compare > 0 ) {
+            $percent = ( $value / $compare ) * 100;
+            if ( $percent > 100 ) {
+                $percent = round( $percent - 100, 1 );
+            } else if ( $percent < 100 ) {
+                $percent = round( ( 100 - $percent ), 1 ) * -1;
+            } else {
+                $percent = 0;
+            }
+            return $percent;
         } else {
-            $percent = 0;
+            return 0;
         }
-        return $percent;
     }
 }
 if ( ! function_exists( 'zume_get_timezones' ) ) {

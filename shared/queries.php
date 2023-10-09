@@ -38,6 +38,55 @@ class Zume_Queries {
         return $results;
     }
 
+    public static function stage_by_location( $stage = 1 ) {
+        global $wpdb;
+
+        $results = $wpdb->get_results( $wpdb->prepare(
+            "SELECT p.post_title as name, tb.user_id, tb.post_id as contact_id, tb.stage, lgm.label, lgm.grid_id, lgm.lng, lgm.lat, lgm.level
+            FROM
+            (
+              SELECT r.user_id, r.post_id, MAX(r.value) as stage, MAX(r.id) as rid FROM wp_dt_reports r
+              WHERE r.type = 'stage' and r.subtype = 'current_level'
+              GROUP BY r.user_id, r.post_id
+            ) as tb
+            LEFT JOIN wp_posts p ON p.ID=tb.post_id
+            LEFT JOIN wp_dt_location_grid_meta lgm ON lgm.post_id=tb.post_id AND lgm.post_type='contacts'
+            WHERE tb.stage = %s;", $stage ), ARRAY_A );
+
+        if ( empty( $results ) ) {
+            return [];
+        }
+
+        return $results;
+    }
+
+    public static function stage_by_boundary( $stage, $north, $south, $east, $west ) {
+        global $wpdb;
+
+        $results = $wpdb->get_results( $wpdb->prepare(
+            "SELECT p.post_title as name, tb.user_id, tb.post_id as contact_id, tb.stage, lgm.label, lgm.grid_id, lgm.lng, lgm.lat, lgm.level
+            FROM
+            (
+              SELECT r.user_id, r.post_id, MAX(r.value) as stage, MAX(r.id) as rid FROM wp_dt_reports r
+              WHERE r.type = 'stage' and r.subtype = 'current_level'
+              GROUP BY r.user_id, r.post_id
+            ) as tb
+            LEFT JOIN wp_posts p ON p.ID=tb.post_id
+            LEFT JOIN wp_dt_location_grid_meta lgm ON lgm.post_id=tb.post_id AND lgm.post_type='contacts'
+            WHERE tb.stage = %s
+            AND lgm.lat > %f
+            AND lgm.lat < %f
+            AND lgm.lng > %f
+            AND lgm.lng < %f
+            ;", $stage, $south, $north, $west, $east ), ARRAY_A );
+
+        if ( empty( $results ) ) {
+            return [];
+        }
+
+        return $results;
+    }
+
     /**
      * Training subtype counts for all *heard* reports.
      *

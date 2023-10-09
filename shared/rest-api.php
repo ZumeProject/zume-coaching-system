@@ -50,6 +50,15 @@ class Zume_Charts_API
             ]
         );
         register_rest_route(
+            $namespace, '/map_list', [
+                'methods'  => [ 'GET', 'POST' ],
+                'callback' => [ $this, 'map_list_switcher' ],
+                'permission_callback' => function () {
+                    return $this->has_permission( $this->coach_permissions );
+                }
+            ]
+        );
+        register_rest_route(
             $namespace, '/list', [
                 'methods'  => [ 'GET', 'POST' ],
                 'callback' => [ $this, 'list' ],
@@ -182,50 +191,50 @@ class Zume_Charts_API
                 $label = 'Total Registrations';
                 $description = 'Total registrations over the entire history of the project';
                 $link = '';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = 'valence-grey';
                 break;
             case 'visitors':
                 $label = 'Visitors';
                 $description = 'Visitors to some content on the website (not including bounces).';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'registrations':
                 $label = 'Registrations';
                 $description = 'Total registrations to the system.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'coach_requests':
                 $label = 'Coach Requests';
                 $description = 'Responses to the "Request a Coach" CTA';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'joined_online_training':
                 $label = 'Joined Online Training';
                 $description = 'People who have responded the online training CTA';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'total_anonymous':
                 $label = 'Anonymous';
                 $description = 'Visitors who have meaningfully engaged with the site, but have not registered.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             default:
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
 
         }
@@ -265,68 +274,68 @@ class Zume_Charts_API
             case 'locations':
                 $label = 'Locations';
                 $description = 'Cumulative number of locations in this stage.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = 'valence-grey';
                 break;
             case 'countries':
                 $label = 'Countries';
                 $description = 'Cumulative number of countries in this stage.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = 'valence-grey';
                 break;
             case 'new_registrations':
                 $label = 'New Registrations';
                 $description = 'Total number of registrants in this stage.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'coach_requests':
                 $label = 'Coach Requests';
                 $description = 'Coach requests in this period of time';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'has_plan':
                 $label = 'Has Plan';
                 $description = 'Total number of registrants who have a plan.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'no_plan':
                 $label = 'Has No Plan';
                 $description = 'Total number of registrants who have no plan.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = NULL;
                 break;
             case 'no_friends':
                 $label = 'Has No Friends';
                 $description = 'Total number of registrants who have not invited any friends.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'no_coach':
                 $label = 'Has Not Requested a Coach';
                 $description = 'Total number of registrants who have not requested a coach.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'no_updated_profile':
                 $label = 'Has Not Updated Profile';
                 $description = 'Total number of registrants who have not updated their profile.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
 
             case 'total_registrants':
@@ -334,8 +343,8 @@ class Zume_Charts_API
                 $description = 'People who have registered but have not progressed into training.';
                 $link = 'registrants';
                 $value = Zume_Views::stage_totals( 1 );
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'in_and_out':
                 return [
@@ -344,15 +353,15 @@ class Zume_Charts_API
                     'label' => 'Flow',
                     'description' => 'People moving in and out of thise stage.',
                     'link' => '',
-                    'value_in' => zume_format_int( rand(100, 1000) ),
-                    'value_idle' => zume_format_int( rand(100, 1000) ),
-                    'value_out' => zume_format_int( rand(100, 1000) ),
+                    'value_in' => zume_format_int( 0 ),
+                    'value_idle' => zume_format_int( 0 ),
+                    'value_out' => zume_format_int( 0 ),
                 ];
 
             default:
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
         }
 
@@ -391,46 +400,46 @@ class Zume_Charts_API
             case 'has_coach':
                 $label = 'Has Coach';
                 $description = 'Active trainees who have a coach.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = 'valence-grey';
                 break;
             case 'inactive_trainees':
                 $label = 'Inactive Trainees';
                 $description = 'People who have been inactive more than 6 months.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = 'valence-grey';
                 break;
             case 'new_active_trainees':
                 $label = 'New Active Trainees';
                 $description = 'New people who entered stage during time period.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'total_checkins':
                 $label = 'Total Checkins';
                 $description = 'Total number of checkins registered for training.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'has_no_coach':
                 $label = 'Has No Coach';
                 $description = 'People who have no coach.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'has_no_updated_profile':
                 $label = 'No Updated Profile';
                 $description = 'People who have not updated their profile.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = NULL;
                 break;
             case 'in_and_out':
@@ -440,21 +449,21 @@ class Zume_Charts_API
                     'label' => 'Flow',
                     'description' => 'People moving in and out of thise stage.',
                     'link' => '',
-                    'value_in' => zume_format_int( rand(100, 1000) ),
-                    'value_idle' => zume_format_int( rand(100, 1000) ),
-                    'value_out' => zume_format_int( rand(100, 1000) ),
+                    'value_in' => zume_format_int( 0 ),
+                    'value_idle' => zume_format_int( 0 ),
+                    'value_out' => zume_format_int( 0 ),
                 ];
             case 'total_active_training_trainee':
                 $label = 'Active Training Trainees';
                 $description = 'People who are actively working a training plan or have only partially completed the training.';
                 $value = Zume_Views::stage_totals( 2 );
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $goal = 0;
+                $trend = 0;
                 break;
             default:
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
         }
 
@@ -494,47 +503,47 @@ class Zume_Charts_API
             case 'needs_3_month_plan':
                 $label = 'Needs 3 Month Plan';
                 $description = 'Needs a 3 month plan.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = 'valence-grey';
                 break;
             case 'needs_coach':
                 $label = 'Needs Coach';
                 $description = 'Needs a coach';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = 'valence-grey';
                 break;
             case 'new_trainees':
                 $label = 'New Trainees';
                 $description = 'New trainees entering stage in time period.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'new_3_month_plans':
                 $label = 'New Post Training Plans';
                 $description = 'New Post Training Plans';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'new_coaching_requests':
                 $label = 'New Coaching Requests';
                 $description = 'New coaching requests during the time period.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'total_post_training_trainee':
                 $label = 'Post-Training Trainees';
                 $description = 'People who have completed the training and are working on a post training plan.';
                 $link = 'post';
                 $value = Zume_Views::stage_totals( 3 );
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'in_and_out':
                 return [
@@ -543,14 +552,14 @@ class Zume_Charts_API
                     'label' => 'Flow',
                     'description' => 'People moving in and out of thise stage.',
                     'link' => '',
-                    'value_in' => zume_format_int( rand(100, 1000) ),
-                    'value_idle' => zume_format_int( rand(100, 1000) ),
-                    'value_out' => zume_format_int( rand(100, 1000) ),
+                    'value_in' => zume_format_int( 0 ),
+                    'value_idle' => zume_format_int( 0 ),
+                    'value_out' => zume_format_int( 0 ),
                 ];
             default:
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
         }
 
@@ -590,76 +599,76 @@ class Zume_Charts_API
             case 'total_churches';
                 $label = 'Churches';
                 $description = 'Total number of churches reported by S1 Practitioners.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = 'valence-grey';
                 break;
             case 'total_locations';
                 $label = 'Locations';
                 $description = 'Total number of locations reported by S1 Practitioners.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = 'valence-grey';
                 break;
             case 'total_active_reporters';
                 $label = 'Reporting';
                 $description = 'Total number of active reporters.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = 'valence-grey';
                 break;
             case 'new_practitioners';
                 $label = 'New Practitioners';
                 $description = 'Total number of new practitioners.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'new_reporters';
                 $label = 'New Reporters';
                 $description = 'Total number of new reporters.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'new_churches';
                 $label = 'New Churches';
                 $description = 'Total number of new churches reported by S1 Practitioners.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'new_locations';
                 $label = 'New Locations';
                 $description = 'Total number of new locations reported by S1 Practitioners.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'has_no_coach';
                 $label = 'Has No Coach';
                 $description = 'Total number of S1 Practitioners who have not yet been assigned a coach.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'has_not_reported';
                 $label = 'Has Not Reported';
                 $description = 'Total number of S1 Practitioners who have not yet reported.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'total_partial_practitioner':
                 $label = '(S1) Partial Practitioners';
                 $description = 'Learning through doing. Implementing partial checklist / 4-fields';
                 $link = 'partial_practitioner_practitioners';
                 $value = Zume_Views::stage_totals( 4 );
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'in_and_out':
                 return [
@@ -668,14 +677,14 @@ class Zume_Charts_API
                     'label' => 'Flow',
                     'description' => 'People moving in and out of thise stage.',
                     'link' => '',
-                    'value_in' => zume_format_int( rand(100, 1000) ),
-                    'value_idle' => zume_format_int( rand(100, 1000) ),
-                    'value_out' => zume_format_int( rand(100, 1000) ),
+                    'value_in' => zume_format_int( 0 ),
+                    'value_idle' => zume_format_int( 0 ),
+                    'value_out' => zume_format_int( 0 ),
                 ];
             default:
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
         }
 
@@ -715,66 +724,66 @@ class Zume_Charts_API
             case 'total_churches';
                 $label = 'Churches';
                 $description = 'Total number of churches reported by S2 Practitioners.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'total_locations';
                 $label = 'Locations';
                 $description = 'Total number of locations reported by S2 Practitioners.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'total_active_reporters';
                 $label = 'Active Reporters';
                 $description = 'Total number of active reporters.';
                 $link = 'partial_practitioner_practitioners';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'new_practitioners';
                 $label = 'New Practitioners';
                 $description = 'Total number of new practitioners.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'new_reporters';
                 $label = 'New Reporters';
                 $description = 'Total number of new reporters.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'new_churches';
                 $label = 'New Churches';
                 $description = 'Total number of new churches reported by S2 Practitioners.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'new_locations';
                 $label = 'New Locations';
                 $description = 'Total number of new locations reported by S2 Practitioners.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'has_no_coach';
                 $label = 'Has No Coach';
                 $description = 'Total number of S2 Practitioners who have not yet been assigned a coach.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'has_not_reported';
                 $label = 'Has Not Reported';
                 $description = 'Total number of S2 Practitioners who have not yet reported.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'total_full_practitioner':
                 $label = 'Full Practitioners';
@@ -791,14 +800,14 @@ class Zume_Charts_API
                     'label' => 'Flow',
                     'description' => 'People moving in and out of thise stage.',
                     'link' => '',
-                    'value_in' => zume_format_int( rand(100, 1000) ),
-                    'value_idle' => zume_format_int( rand(100, 1000) ),
-                    'value_out' => zume_format_int( rand(100, 1000) ),
+                    'value_in' => zume_format_int( 0 ),
+                    'value_idle' => zume_format_int( 0 ),
+                    'value_out' => zume_format_int( 0 ),
                 ];
             default:
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
         }
 
@@ -837,74 +846,74 @@ class Zume_Charts_API
             case 'total_churches';
                 $label = 'Churches';
                 $description = 'Total number of churches reported by S2 Practitioners.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'total_locations';
                 $label = 'Locations';
                 $description = 'Total number of locations reported by S2 Practitioners.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'total_active_reporters';
                 $label = 'Active Reporters';
                 $description = 'Total number of active reporters.';
                 $link = 'partial_practitioner_practitioners';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'new_practitioners';
                 $label = 'New Practitioners';
                 $description = 'Total number of new practitioners.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'new_reporters';
                 $label = 'New Reporters';
                 $description = 'Total number of new reporters.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'new_churches';
                 $label = 'New Churches';
                 $description = 'Total number of new churches reported by S2 Practitioners.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'new_locations';
                 $label = 'New Locations';
                 $description = 'Total number of new locations reported by S2 Practitioners.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'has_no_coach';
                 $label = 'Has No Coach';
                 $description = 'Total number of S2 Practitioners who have not yet been assigned a coach.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'has_not_reported';
                 $label = 'Has Not Reported';
                 $description = 'Total number of S2 Practitioners who have not yet reported.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'total_multiplying_practitioner':
                 $label = 'Multiplying Practitioners';
                 $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
                 $link = 'multiplying_practitioner_practitioners';
                 $value = Zume_Views::stage_totals( 6 );
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'in_and_out':
                 return [
@@ -913,14 +922,14 @@ class Zume_Charts_API
                     'label' => 'Flow',
                     'description' => 'People moving in and out of thise stage.',
                     'link' => '',
-                    'value_in' => zume_format_int( rand(100, 1000) ),
-                    'value_idle' => zume_format_int( rand(100, 1000) ),
-                    'value_out' => zume_format_int( rand(100, 1000) ),
+                    'value_in' => zume_format_int( 0 ),
+                    'value_idle' => zume_format_int( 0 ),
+                    'value_out' => zume_format_int( 0 ),
                 ];
             default:
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
         }
 
@@ -960,31 +969,31 @@ class Zume_Charts_API
             case 'new_coaching_requests';
                 $label = 'New Coaching Requests';
                 $description = 'Total number of new coaching requests submitted to Facilitator Coaches.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = 'valence-grey';
                 break;
             case 'languages';
                 $label = 'Languages';
                 $description = 'Number of languages from requests';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = 'valence-grey';
                 break;
             case 'locations';
                 $label = 'Locations';
                 $description = 'Locations from requests.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = 'valence-grey';
                 break;
             default:
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
         }
 
@@ -1024,24 +1033,24 @@ class Zume_Charts_API
             case 'new_coaching_requests';
                 $label = 'Languages';
                 $description = '';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = 'valence-grey';
                 break;
             case 'languages';
                 $label = 'New Coaching Requests';
                 $description = 'Number of languages from requests';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'locations';
                 $label = 'Locations';
                 $description = 'Locations from requests.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = 'valence-grey';
                 break;
             case 'total_multiplying_practitioner';
@@ -1049,9 +1058,9 @@ class Zume_Charts_API
                 $label = '(S3) Multiplying Practitioners';
                 $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
                 $link = 'multiplying_practitioner_practitioners';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
         }
 
@@ -1091,79 +1100,79 @@ class Zume_Charts_API
             case 'total_churches';
                 $label = 'Total Churches';
                 $description = 'Total number of churches reported by S2 Practitioners.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'total_locations';
                 $label = 'Total Locations';
                 $description = 'Total number of locations reported by S2 Practitioners.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'total_active_reporters';
                 $label = 'Total Active Reporters';
                 $description = 'Total number of active reporters.';
                 $link = 'partial_practitioner_practitioners';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'new_practitioners';
                 $label = 'New Practitioners';
                 $description = 'Total number of new practitioners.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'new_reporters';
                 $label = 'New Reporters';
                 $description = 'Total number of new reporters.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'new_churches';
                 $label = 'New Churches';
                 $description = 'Total number of new churches reported by S2 Practitioners.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'new_locations';
                 $label = 'New Locations';
                 $description = 'Total number of new locations reported by S2 Practitioners.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'has_no_coach';
                 $label = 'Has No Coach';
                 $description = 'Total number of S2 Practitioners who have not yet been assigned a coach.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'has_not_reported';
                 $label = 'Has Not Reported';
                 $description = 'Total number of S2 Practitioners who have not yet reported.';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'total_multiplying_practitioner':
                 $label = '(S3) Multiplying Practitioners';
                 $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
                 $link = 'multiplying_practitioner_practitioners';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
             default:
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
         }
 
@@ -1203,33 +1212,33 @@ class Zume_Charts_API
             case 'active_coaches';
                 $label = 'Active Coaches';
                 $description = 'Number of active coaches';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = 'valence-grey';
                 break;
             case 'total_people_in_coaching';
                 $label = 'People in Coaching';
                 $description = 'Number of people in coaching';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = 'valence-grey';
                 break;
             case 'people_in_coaching';
                 $label = 'People in Coaching';
                 $description = 'Number of people in coaching';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = 'valence-grey';
                 break;
             case 'coaching_engagements';
                 $label = 'Coaching Engagements';
                 $description = 'Number of coaching engagements';
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 $valence = 'valence-grey';
                 break;
             case 'in_and_out':
@@ -1238,14 +1247,14 @@ class Zume_Charts_API
                     'label' => '',
                     'description' => 'Description',
                     'link' => '',
-                    'value_in' => zume_format_int( rand(100, 1000) ),
-                    'value_idle' => zume_format_int( rand(100, 1000) ),
-                    'value_out' => zume_format_int( rand(100, 1000) ),
+                    'value_in' => zume_format_int( 0 ),
+                    'value_idle' => zume_format_int( 0 ),
+                    'value_out' => zume_format_int( 0 ),
                 ];
             default:
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
         }
 
@@ -1284,22 +1293,22 @@ class Zume_Charts_API
                 $label = 'Total Registrations';
                 $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
                 $value = Zume_Queries::query_total_churches();
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);;
+                $goal = 0;
+                $trend = 0;;
                 $valence = 'valence-grey';
                 break;
             case 'practitioners_total':
                 $label = 'Visitors';
                 $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
                 $value = Zume_Queries::query_total_practitioners();
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $goal = 0;
+                $trend = 0;
                 $valence = 'valence-grey';
                 break;
             default:
-                $value = rand(100, 1000);
-                $goal = rand(500, 700);
-                $trend = rand(500, 700);
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
                 break;
 
         }
@@ -1341,28 +1350,28 @@ class Zume_Charts_API
         return Zume_Goals_Query::list( dt_recursive_sanitize_array( $request->get_params() ) );
     }
 
+
     public function map_switcher( WP_REST_Request $request ) {
         $params =  dt_recursive_sanitize_array( $request->get_params() );
         if ( ! isset( $params['stage'] ) ) {
             return new WP_Error( 'no_stage', __( 'No stage key provided.', 'zume' ), array( 'status' => 400 ) );
         }
 
-
         switch( $params['stage'] ) {
             case 'anonymous':
-                return $this->total_anonymous( $params );
+                return $this->map_geojson( 0 );
             case 'registrant':
-                return $this->total_registrants( $params );
+                return $this->map_geojson( 1 );
             case 'active_training_trainee':
-                return $this->total_active_training_trainee( $params );
+                return $this->map_geojson( 2 );
             case 'post_training_trainee':
-                return $this->total_post_training_trainee( $params );
+                return $this->map_geojson( 3 );
             case 'partial_practitioner':
-                return $this->total_partial_practitioner( $params );
+                return $this->map_geojson( 4 );
             case 'full_practitioner':
-                return $this->total_full_practitioner( $params );
+                return $this->map_geojson( 5 );
             case 'multiplying_practitioner':
-                return $this->total_multiplying_practitioner( $params );
+                return $this->map_geojson( 6 );
             case 'facilitator':
                 return $this->total_facilitator( $params );
             case 'early':
@@ -1373,40 +1382,71 @@ class Zume_Charts_API
                 return $this->general( $params );
         }
     }
-    public function map( WP_REST_Request $request ) {
+
+    public function map_geojson( int $stage ) {
+        global $wpdb;
+        $results = Zume_Queries::stage_by_location( $stage );
+
+        $features = [];
+        foreach ( $results as $result ) {
+
+            $lat = $result['lat'];
+            $lng = $result['lng'];
+
+            $features[] = array(
+                'type' => 'Feature',
+                'properties' => [
+                ],
+                'geometry' => array(
+                    'type' => 'Point',
+                    'coordinates' => array(
+                        (float) $lng,
+                        (float) $lat,
+                        1
+                    ),
+                ),
+            );
+        }
+
+        $new_data = array(
+            'stage' => $stage,
+            'type' => 'FeatureCollection',
+            'features' => $features,
+        );
+
+        return $new_data;
+    }
+
+    public function map_list_switcher( WP_REST_Request $request ) {
         $params =  dt_recursive_sanitize_array( $request->get_params() );
-        dt_write_log( $params );
-        $data = Zume_Funnels_Query::map( $params );
+        if ( ! isset( $params['stage'], $params['north'], $params['south'], $params['east'], $params['west'] ) ) {
+            return new WP_Error( 'no_stage', __( 'No stage key or complete boundaries provided.', 'zume' ), array( 'status' => 400 ) );
+        }
 
-//        $features = [];
-//        foreach ( $results as $result ) {
-//            $features[] = array(
-//                'type' => 'Feature',
-//                'properties' => array(
-//                    'address' => $result['address'],
-//                    'post_id' => $result['post_id'],
-//                    'name' => $result['name'],
-//                    'post_type' => $post_type
-//                ),
-//                'geometry' => array(
-//                    'type' => 'Point',
-//                    'coordinates' => array(
-//                        $result['lng'],
-//                        $result['lat'],
-//                        1
-//                    ),
-//                ),
-//            );
-//        }
-//
-//        $new_data = array(
-//            'type' => 'FeatureCollection',
-//            'features' => $features,
-//        );
-//
-//        return $new_data;
-
-        return [ "link" => '<iframe class="map-iframe" width="100%" height="2500" src="https://zume.training/coaching/zume_app/heatmap_trainees" frameborder="0" style="border:0" allowfullscreen></iframe>' ];
+        switch( $params['stage'] ) {
+            case 'anonymous':
+                return Zume_Queries::stage_by_boundary( 0, $params['north'], $params['south'], $params['east'], $params['west'] );
+            case 'registrant':
+                return Zume_Queries::stage_by_boundary( 1, $params['north'], $params['south'], $params['east'], $params['west'] );
+            case 'active_training_trainee':
+                return Zume_Queries::stage_by_boundary( 2, $params['north'], $params['south'], $params['east'], $params['west'] );
+            case 'post_training_trainee':
+                return Zume_Queries::stage_by_boundary( 3, $params['north'], $params['south'], $params['east'], $params['west'] );
+            case 'partial_practitioner':
+                return Zume_Queries::stage_by_boundary( 4, $params['north'], $params['south'], $params['east'], $params['west'] );
+            case 'full_practitioner':
+                return Zume_Queries::stage_by_boundary( 5, $params['north'], $params['south'], $params['east'], $params['west'] );
+            case 'multiplying_practitioner':
+                return Zume_Queries::stage_by_boundary( 6, $params['north'], $params['south'], $params['east'], $params['west'] );
+            case 'facilitator':
+                return $this->total_facilitator( $params );
+            case 'early':
+                return $this->total_early( $params );
+            case 'advanced':
+                return $this->total_advanced( $params );
+            default:
+                return $this->general( $params );
+        }
     }
 
     public function query_location_funnel( array $range ) {
