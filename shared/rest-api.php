@@ -168,8 +168,10 @@ class Zume_Charts_API
                 return $this->total_early( $params );
             case 'advanced':
                 return $this->total_advanced( $params );
-            case 'goals':
-                return $this->total_goals( $params );
+            case 'practitioners':
+                return $this->total_practitioners( $params );
+            case 'churches':
+                return $this->total_churches( $params );
             default:
                 return $this->general( $params );
         }
@@ -1276,7 +1278,63 @@ class Zume_Charts_API
         ];
 
     }
-    public function total_goals( $params ) {
+    public function total_practitioners( $params ) {
+        $negative_stat = $params['negative_stat'] ?? false;
+
+        $label = '';
+        $description = '';
+        $link = '';
+        $value = 0;
+        $goal = 0;
+        $trend = 0;
+        $valence = NULL;
+
+        switch( $params['key'] ) {
+
+            case 'churches_total':
+                $label = 'Total Registrations';
+                $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
+                $value = Zume_Queries::query_total_churches();
+                $goal = 0;
+                $trend = 0;;
+                $valence = 'valence-grey';
+                break;
+            case 'practitioners_total':
+                $label = 'Visitors';
+                $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
+                $value = Zume_Queries::query_total_practitioners();
+                $goal = 0;
+                $trend = 0;
+                $valence = 'valence-grey';
+                break;
+            default:
+                $value = 0;
+                $goal = 0;
+                $trend = 0;
+                break;
+
+        }
+
+        return [
+            'key' => $params['key'],
+            'stage' => $params['stage'],
+            'label' => $label,
+            'description' => $description,
+            'link' => $link,
+            'value' => zume_format_int( $value ),
+            'valence' => $valence ?? zume_get_valence( $value, $goal, $negative_stat ),
+            'goal' => $goal,
+            'goal_valence' => zume_get_valence( $value, $goal, $negative_stat ),
+            'goal_percent' => zume_get_percent( $value, $goal ),
+            'trend' => $trend,
+            'trend_valence' => zume_get_valence( $value, $trend, $negative_stat ),
+            'trend_percent' => zume_get_percent( $value, $trend ),
+            'negative_stat' => $negative_stat,
+        ];
+
+    }
+
+    public function total_churches( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
 
         $label = '';
@@ -1359,32 +1417,37 @@ class Zume_Charts_API
 
         switch( $params['stage'] ) {
             case 'anonymous':
-                return $this->map_geojson( 0 );
+                return $this->map_geojson( [ 0 ] );
             case 'registrant':
-                return $this->map_geojson( 1 );
+                return $this->map_geojson( [1] );
             case 'active_training_trainee':
-                return $this->map_geojson( 2 );
+                return $this->map_geojson( [2] );
             case 'post_training_trainee':
-                return $this->map_geojson( 3 );
+                return $this->map_geojson( [3] );
             case 'partial_practitioner':
-                return $this->map_geojson( 4 );
+                return $this->map_geojson( [4] );
             case 'full_practitioner':
-                return $this->map_geojson( 5 );
+                return $this->map_geojson( [5] );
             case 'multiplying_practitioner':
-                return $this->map_geojson( 6 );
-            case 'facilitator':
-                return $this->total_facilitator( $params );
-            case 'early':
-                return $this->total_early( $params );
-            case 'advanced':
-                return $this->total_advanced( $params );
+                return $this->map_geojson( [6] );
+            case 'trainees':
+                return $this->map_geojson( [1,2,3] );
+            case 'practitioners':
+                return $this->map_geojson( [4,5,6] );
+            case 'churches':
+                return $this->map_churches_geojson( 6 );
+//            case 'facilitator':
+//                return $this->total_facilitator( $params );
+//            case 'early':
+//                return $this->total_early( $params );
+//            case 'advanced':
+//                return $this->total_advanced( $params );
             default:
                 return $this->general( $params );
         }
     }
 
-    public function map_geojson( int $stage ) {
-        global $wpdb;
+    public function map_geojson( array $stage ) {
         $results = Zume_Queries::stage_by_location( $stage );
 
         $features = [];
@@ -1396,6 +1459,9 @@ class Zume_Charts_API
             $features[] = array(
                 'type' => 'Feature',
                 'properties' => [
+                    'name' => $result['name'],
+                    'post_id' => $result['post_id'],
+                    'post_type' => 'contacts'
                 ],
                 'geometry' => array(
                     'type' => 'Point',
@@ -1417,33 +1483,77 @@ class Zume_Charts_API
         return $new_data;
     }
 
+    public function map_churches_geojson( ) {
+        global $wpdb;
+        $results = Zume_Queries::churches_with_location();
+
+        $features = [];
+        foreach ( $results as $result ) {
+
+            $lat = $result['lat'];
+            $lng = $result['lng'];
+
+            $features[] = array(
+                'type' => 'Feature',
+                'properties' => [
+                    'name' => $result['name'],
+                    'post_id' => $result['post_id'],
+                    'post_type' => 'groups'
+                ],
+                'geometry' => array(
+                    'type' => 'Point',
+                    'coordinates' => array(
+                        (float) $lng,
+                        (float) $lat,
+                        1
+                    ),
+                ),
+            );
+        }
+
+        $new_data = array(
+            'type' => 'FeatureCollection',
+            'features' => $features,
+        );
+
+        return $new_data;
+    }
+
     public function map_list_switcher( WP_REST_Request $request ) {
         $params =  dt_recursive_sanitize_array( $request->get_params() );
         if ( ! isset( $params['stage'], $params['north'], $params['south'], $params['east'], $params['west'] ) ) {
             return new WP_Error( 'no_stage', __( 'No stage key or complete boundaries provided.', 'zume' ), array( 'status' => 400 ) );
         }
+        $params['north'] = (float) $params['north'];
+        $params['south'] = (float) $params['south'];
+        $params['east'] = (float) $params['east'];
+        $params['west'] = (float) $params['west'];
 
         switch( $params['stage'] ) {
             case 'anonymous':
-                return Zume_Queries::stage_by_boundary( 0, $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [0], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'registrant':
-                return Zume_Queries::stage_by_boundary( 1, $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [1], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'active_training_trainee':
-                return Zume_Queries::stage_by_boundary( 2, $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [2], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'post_training_trainee':
-                return Zume_Queries::stage_by_boundary( 3, $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [3], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'partial_practitioner':
-                return Zume_Queries::stage_by_boundary( 4, $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [4], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'full_practitioner':
-                return Zume_Queries::stage_by_boundary( 5, $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [5], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'multiplying_practitioner':
-                return Zume_Queries::stage_by_boundary( 6, $params['north'], $params['south'], $params['east'], $params['west'] );
-            case 'facilitator':
-                return $this->total_facilitator( $params );
-            case 'early':
-                return $this->total_early( $params );
-            case 'advanced':
-                return $this->total_advanced( $params );
+                return Zume_Queries::stage_by_boundary( [6], $params['north'], $params['south'], $params['east'], $params['west'] );
+            case 'practitioners':
+                return Zume_Queries::stage_by_boundary( [4,5,6], $params['north'], $params['south'], $params['east'], $params['west'] );
+            case 'churches':
+                return Zume_Queries::churches_by_boundary( $params['north'], $params['south'], $params['east'], $params['west'] );
+//            case 'facilitator':
+//                return $this->total_facilitator( $params );
+//            case 'early':
+//                return $this->total_early( $params );
+//            case 'advanced':
+//                return $this->total_advanced( $params );
             default:
                 return $this->general( $params );
         }

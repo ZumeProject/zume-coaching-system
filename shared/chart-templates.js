@@ -257,8 +257,8 @@ jQuery(document).ready(function($) {
                             <div id="map" style="position:relative;height: ${height}px !important;"></div>
                         </div>
                         <div class="cell small-6 medium-4">
-                            <h2>List</h2><hr>
-                            <div id="list-results"></div>
+                            <h2>List</h2>
+                            <div id="list-results" style="position:relative;height: ${height -50}px !important; overflow-y: scroll; "></div>
                         </div>
                     </div>
           `)
@@ -357,7 +357,7 @@ jQuery(document).ready(function($) {
               jQuery.each(list, function(i,v)  {
                 container.append( `<div class="grid-x grid-padding-x">
                     <div class="cell small-12">
-                        <h3><a href="https://zume5.training/contacts/${v.contact_id}">${ v.name }</a></h3>
+                        <h3><a href="https://zume5.training/${v.post_type}/${v.post_id}">${ v.name }</a></h3>
                         <p>${ v.label }</p>
                         <hr>
                    </div>

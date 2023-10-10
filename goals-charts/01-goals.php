@@ -82,7 +82,7 @@ class Zume_Goals_Goals extends Zume_Goals_Chart_Base
                 window.path_load = ( range ) => {
 
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "goals", key: "practitioners_total", range: range }, window.site_info.rest_root ).done( function( data ) {
+                    makeRequest('GET', 'total', { stage: "practitioners", key: "practitioners_total", range: range }, window.site_info.rest_root ).done( function( data ) {
                         data.label = 'Practitioners'
                         data.link = 'heatmap_practitioners'
                         data.valence = 'valence-grey'
@@ -92,7 +92,7 @@ class Zume_Goals_Goals extends Zume_Goals_Chart_Base
                         window.spin_remove()
                     })
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "goals", key: "churches_total", range: range }, window.site_info.rest_root ).done( function( data ) {
+                    makeRequest('GET', 'total', { stage: "churches", key: "churches_total", range: range }, window.site_info.rest_root ).done( function( data ) {
                         data.label = 'Churches'
                         data.link = 'heatmap_churches'
                         data.valence = 'valence-grey'

@@ -3,19 +3,19 @@ if ( !defined( 'ABSPATH' ) ) { exit; } // Exit if accessed directly.
 
 class Zume_Queries {
 
-    public static function list( $params ) {
-        global $wpdb;
-
-        $list = $wpdb->get_results( $wpdb->prepare(
-            "
-                    SELECT ID, display_name, user_registered
-                    FROM $wpdb->users
-                    ORDER BY user_registered DESC
-                    LIMIT 100
-                    ", ARRAY_A ) );
-
-        return $list;
-    }
+//    public static function list( $params ) {
+//        global $wpdb;
+//
+//        $list = $wpdb->get_results( $wpdb->prepare(
+//            "
+//                    SELECT ID, display_name, user_registered
+//                    FROM $wpdb->users
+//                    ORDER BY user_registered DESC
+//                    LIMIT 100
+//                    ", ARRAY_A ) );
+//
+//        return $list;
+//    }
 
     public static function stage_totals() {
         global $wpdb;
@@ -38,11 +38,17 @@ class Zume_Queries {
         return $results;
     }
 
-    public static function stage_by_location( $stage = 1 ) {
+    public static function stage_by_location( array $range = [ 1 ] ) {
         global $wpdb;
 
-        $results = $wpdb->get_results( $wpdb->prepare(
-            "SELECT p.post_title as name, tb.user_id, tb.post_id as contact_id, tb.stage, lgm.label, lgm.grid_id, lgm.lng, lgm.lat, lgm.level
+        if( count( $range ) > 1 ) {
+            $range = '(' . implode( ',', $range ) . ')';
+        } else {
+            $range = '(' . $range[0] . ')';
+        }
+
+        $results = $wpdb->get_results(
+            "SELECT p.post_title as name, tb.user_id, tb.post_id, 'contacts' as post_type, tb.stage, lgm.label, lgm.grid_id, lgm.lng, lgm.lat, lgm.level
             FROM
             (
               SELECT r.user_id, r.post_id, MAX(r.value) as stage, MAX(r.id) as rid FROM wp_dt_reports r
@@ -51,7 +57,7 @@ class Zume_Queries {
             ) as tb
             LEFT JOIN wp_posts p ON p.ID=tb.post_id
             LEFT JOIN wp_dt_location_grid_meta lgm ON lgm.post_id=tb.post_id AND lgm.post_type='contacts'
-            WHERE tb.stage = %s;", $stage ), ARRAY_A );
+            WHERE tb.stage IN $range;", ARRAY_A );
 
         if ( empty( $results ) ) {
             return [];
@@ -60,11 +66,56 @@ class Zume_Queries {
         return $results;
     }
 
-    public static function stage_by_boundary( $stage, $north, $south, $east, $west ) {
+    public static function churches_with_location( ) {
         global $wpdb;
 
-        $results = $wpdb->get_results( $wpdb->prepare(
-            "SELECT p.post_title as name, tb.user_id, tb.post_id as contact_id, tb.stage, lgm.label, lgm.grid_id, lgm.lng, lgm.lat, lgm.level
+        $results = $wpdb->get_results(
+            "SELECT p.ID as post_id, p.post_title as name, 'groups' as post_type, lgm.grid_id, lgm.lng, lgm.lat, lgm.level, lgm.source, lgm.label
+            FROM wp_posts p
+            LEFT JOIN wp_postmeta pm ON pm.post_id=p.ID AND pm.meta_key = 'location_grid_meta'
+            LEFT JOIN wp_dt_location_grid_meta lgm ON lgm.grid_meta_id=pm.meta_value
+            WHERE p.post_type = 'groups';", ARRAY_A );
+
+        if ( empty( $results ) ) {
+            return [];
+        }
+
+        return $results;
+    }
+
+    public static function churches_by_boundary( float $north, float $south, float $east, float $west ) {
+        global $wpdb;
+
+        $results = $wpdb->get_results(
+            "SELECT p.ID, p.post_title as name, 'groups' as post_type, lgm.grid_id, lgm.lng, lgm.lat, lgm.level, lgm.source, lgm.label
+            FROM wp_posts p
+            LEFT JOIN wp_postmeta pm ON pm.post_id=p.ID AND pm.meta_key = 'location_grid_meta'
+            LEFT JOIN wp_dt_location_grid_meta lgm ON lgm.grid_meta_id=pm.meta_value
+            WHERE p.post_type = 'groups'
+            AND lgm.lat > $south
+            AND lgm.lat < $north
+            AND lgm.lng > $west
+            AND lgm.lng < $east
+        ;", ARRAY_A );
+
+        if ( empty( $results ) ) {
+            return [];
+        }
+
+        return $results;
+    }
+
+    public static function stage_by_boundary( array $range, float $north, float $south, float $east, float $west ) {
+        global $wpdb;
+
+        if( count( $range ) > 1 ) {
+            $range = '(' . implode( ',', $range ) . ')';
+        } else {
+            $range = '(' . $range[0] . ')';
+        }
+
+        $results = $wpdb->get_results(
+            "SELECT p.post_title as name, tb.user_id, tb.post_id,  'groups' as post_type, tb.stage, lgm.label, lgm.grid_id, lgm.lng, lgm.lat, lgm.level
             FROM
             (
               SELECT r.user_id, r.post_id, MAX(r.value) as stage, MAX(r.id) as rid FROM wp_dt_reports r
@@ -73,12 +124,12 @@ class Zume_Queries {
             ) as tb
             LEFT JOIN wp_posts p ON p.ID=tb.post_id
             LEFT JOIN wp_dt_location_grid_meta lgm ON lgm.post_id=tb.post_id AND lgm.post_type='contacts'
-            WHERE tb.stage = %s
-            AND lgm.lat > %f
-            AND lgm.lat < %f
-            AND lgm.lng > %f
-            AND lgm.lng < %f
-            ;", $stage, $south, $north, $west, $east ), ARRAY_A );
+            WHERE tb.stage IN $range
+            AND lgm.lat > $south
+            AND lgm.lat < $north
+            AND lgm.lng > $west
+            AND lgm.lng < $east
+            ;", ARRAY_A );
 
         if ( empty( $results ) ) {
             return [];

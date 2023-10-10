@@ -33,10 +33,7 @@ class Zume_Goals_Metrics_Base {
             require_once ('39-promotion-maps.php');
             require_once ('40-public-facts.php');
             require_once ('41-public-stats.php');
-
         }
-
-
     }
 
     public function add_navigation_links( $tabs ) {
