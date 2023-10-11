@@ -410,7 +410,6 @@ if ( ! function_exists( 'zume_get_user_commitments' ) ) {
         $results = $wpdb->get_results($wpdb->prepare(
             "SELECT * FROM wp_dt_post_user_meta
                     WHERE user_id = %d
-                      AND category = 'custom'
                     ORDER BY date DESC",
             $user_id), ARRAY_A);
 
@@ -433,6 +432,7 @@ if ( ! function_exists( 'zume_get_user_commitments' ) ) {
                 'answer' => $meta['answer'] ?? '',
                 'status' => isset( $meta['status'] ) ? 'closed' : 'open',
                 'due_date' => $result['date'],
+                'category' => $result['category']
             ];
         }
 
@@ -4746,15 +4746,18 @@ class Zume_Global_Endpoints {
                 'answer' => $params['answer'],
             ]),
             'date' => $params['date'],
-            'category' => 'custom',
+            'category' => $params['category'] ?? 'custom',
         ];
 
         $create = $wpdb->insert( 'wp_dt_post_user_meta', $fields );
 
-        $log = zume_get_user_log( $user_id );
-        $subtypes = array_column( $log, 'subtype' );
-        if ( ! in_array( 'made_3_month_plan', $subtypes ) ) {
-            zume_log_insert( 'system', 'made_3_month_plan', [ 'user_id' => $user_id ] );
+        // check if 3 month plan is made
+        if ( 'post_training_plan' === $fields['category'] ) {
+            $log = zume_get_user_log( $user_id );
+            $subtypes = array_column( $log, 'subtype' );
+            if ( ! in_array( 'made_post_training_plan', $subtypes ) ) {
+                zume_log_insert( 'system', 'made_post_training_plan', [ 'user_id' => $user_id ] );
+            }
         }
 
         return $create;
@@ -4825,6 +4828,9 @@ class Zume_Global_Endpoints {
 
     /** Host */
     public function list_host( WP_REST_Request $request ) {
+        if ( ! is_user_logged_in() ) {
+            return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
+        }
         $params = dt_recursive_sanitize_array( $request->get_params() );
         if ( ! isset( $params['user_id'] ) ) {
             return new WP_Error( __METHOD__, 'User_id required.', array( 'status' => 401 ) );
@@ -4834,6 +4840,9 @@ class Zume_Global_Endpoints {
         return zume_get_user_host( $user_id );
     }
     public function create_host( WP_REST_Request $request ) {
+        if ( ! is_user_logged_in() ) {
+            return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
+        }
         $params = dt_recursive_sanitize_array( $request->get_params() );
         if ( ! isset( $params['type'], $params['subtype'], $params['user_id'] ) ) {
             return new WP_Error( __METHOD__, 'Type, subtype, and user_id required.', array( 'status' => 401 ) );
@@ -4846,6 +4855,9 @@ class Zume_Global_Endpoints {
         return zume_log_insert( $params['type'], $params['subtype'], [ 'user_id' => $user_id ] );
     }
     public function delete_host( WP_REST_Request $request ) {
+        if ( ! is_user_logged_in() ) {
+            return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
+        }
         $params = dt_recursive_sanitize_array( $request->get_params() );
         if ( ! isset( $params['type'], $params['subtype'], $params['user_id'] ) ) {
             return new WP_Error( __METHOD__, 'Type, subtype, and user_id required.', array( 'status' => 401 ) );
@@ -5137,13 +5149,13 @@ class Zume_System_Log_API
         }
         /**
          * business logic:
-         * - if a user completes a plan, create a made_3_month_plan log entry
+         * - if a user completes a plan, create a made_post_training_plan log entry
          */
         if ( 'system' === $type && 'completed_3_month_plan' === $subtype ) {
-            if ( self::_needs_to_be_logged( $log, 'system', 'made_3_month_plan' ) ) {
+            if ( self::_needs_to_be_logged( $log, 'system', 'made_post_training_plan' ) ) {
                 $data_item = $data;
                 $data_item['type'] = 'system';
-                $data_item['subtype'] = 'made_3_month_plan';
+                $data_item['subtype'] = 'made_post_training_plan';
                 $data_item['hash'] = hash('sha256', maybe_serialize( $data_item )  . time() );
                 $added_log[] = self::insert( $data_item, true, false );
             }
