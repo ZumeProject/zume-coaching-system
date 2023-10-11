@@ -545,6 +545,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'English',
                 'enDisplayName' => 'English',
                 'code' => 'en',
+                'displayCode' => 'en',
                 'locale' => 'en',
                 'nativeName' => 'English',
                 'rtl' => false,
@@ -553,6 +554,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Arabic',
                 'enDisplayName' => 'Arabic',
                 'code' => 'ar',
+                'displayCode' => 'ar',
                 'locale' => 'ar_LB',
                 'nativeName' => 'العربية',
                 'rtl' => true,
@@ -561,6 +563,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Arabic (JO)',
                 'enDisplayName' => 'Arabic (JO)',
                 'code' => 'ar_jo',
+                'displayCode' => 'ar_jo',
                 'locale' => 'ar_JO',
                 'nativeName' => 'العربية - الأردن',
                 'rtl' => true,
@@ -569,6 +572,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'American Sign Language',
                 'enDisplayName' => 'American Sign Language',
                 'code' => 'asl',
+                'displayCode' => 'asl',
                 'locale' => 'asl',
                 'nativeName' => 'Sign Language',
                 'rtl' => false,
@@ -577,6 +581,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Bhojpuri',
                 'enDisplayName' => 'Bhojpuri',
                 'code' => 'bho',
+                'displayCode' => 'bho',
                 'locale' => 'bho',
                 'nativeName' => 'भोजपुरी',
                 'rtl' => false,
@@ -585,6 +590,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Bengali (India)',
                 'enDisplayName' => 'Bengali (India)',
                 'code' => 'bn',
+                'displayCode' => 'bn',
                 'locale' => 'bn_IN',
                 'nativeName' => 'বাংলা',
                 'rtl' => false,
@@ -593,6 +599,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Bosnian',
                 'enDisplayName' => 'Bosnian',
                 'code' => 'bs',
+                'displayCode' => 'bs',
                 'locale' => 'bs_BA',
                 'nativeName' => 'Bosanski',
                 'rtl' => false,
@@ -601,6 +608,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Cantonese (Traditional)',
                 'enDisplayName' => 'Cantonese (Traditional)',
                 'code' => 'zhhk',
+                'displayCode' => 'zhhk',
                 'locale' => 'zh_HK',
                 'nativeName' => '粵語 (繁體)',
                 'rtl' => false,
@@ -609,6 +617,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Chinese (Simplified)',
                 'enDisplayName' => 'Chinese (Simplified)',
                 'code' => 'zhcn',
+                'displayCode' => 'zhcn',
                 'locale' => 'zh_CN',
                 'nativeName' => '国语（简体)',
                 'rtl' => false,
@@ -617,6 +626,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Chinese (Traditional)',
                 'enDisplayName' => 'Chinese (Traditional)',
                 'code' => 'zhtw',
+                'displayCode' => 'zhtw',
                 'locale' => 'zh_TW',
                 'nativeName' => '國語（繁體)',
                 'rtl' => false,
@@ -625,6 +635,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Croatian',
                 'enDisplayName' => 'Croatian',
                 'code' => 'hr',
+                'displayCode' => 'hr',
                 'locale' => 'hr',
                 'nativeName' => 'Hrvatski',
                 'rtl' => false,
@@ -633,6 +644,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Farsi/Persian',
                 'enDisplayName' => 'Farsi/Persian',
                 'code' => 'fa',
+                'displayCode' => 'fa',
                 'locale' => 'fa_IR',
                 'nativeName' => 'فارسی',
                 'rtl' => true,
@@ -641,6 +653,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'French',
                 'enDisplayName' => 'French',
                 'code' => 'fr',
+                'displayCode' => 'fr',
                 'locale' => 'fr_FR',
                 'nativeName' => 'Français',
                 'rtl' => false,
@@ -649,6 +662,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'German',
                 'enDisplayName' => 'German',
                 'code' => 'de',
+                'displayCode' => 'de',
                 'locale' => 'de_DE',
                 'nativeName' => 'Deutsch',
                 'rtl' => false,
@@ -657,6 +671,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'namne' => 'Gujarati',
                 'enDisplayName' => 'Gujarati',
                 'code' => 'gu',
+                'displayCode' => 'gu',
                 'locale' => 'gu',
                 'nativeName' => 'ગુજરાતી',
                 'rtl' => false,
@@ -665,6 +680,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Hausa',
                 'enDisplayName' => 'Hausa',
                 'code' => 'ha',
+                'displayCode' => 'ha',
                 'locale' => 'ha_NG',
                 'nativeName' => 'Hausa',
                 'rtl' => false,
@@ -673,6 +689,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Hindi',
                 'enDisplayName' => 'Hindi',
                 'code' => 'hi',
+                'displayCode' => 'hi',
                 'locale' => 'hi_IN',
                 'nativeName' => 'हिन्दी',
                 'rtl' => false,
@@ -681,6 +698,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Indonesian',
                 'enDisplayName' => 'Indonesian',
                 'code' => 'id',
+                'displayCode' => 'id',
                 'locale' => 'id_ID',
                 'nativeName' => 'Bahasa Indonesia',
                 'rtl' => false,
@@ -689,6 +707,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Italian',
                 'enDisplayName' => 'Italian',
                 'code' => 'it',
+                'displayCode' => 'it',
                 'locale' => 'it_IT',
                 'nativeName' => 'Italiano',
                 'rtl' => false,
@@ -697,6 +716,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Kannada',
                 'enDisplayName' => 'Kannada',
                 'code' => 'kn',
+                'displayCode' => 'kn',
                 'locale' => 'kn',
                 'nativeName' => 'ಕನ್ನಡ',
                 'rtl' => false,
@@ -705,6 +725,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Korean',
                 'enDisplayName' => 'Korean',
                 'code' => 'ko',
+                'displayCode' => 'ko',
                 'locale' => 'ko_KR',
                 'nativeName' => '한국어',
                 'rtl' => false,
@@ -713,6 +734,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Kurdish',
                 'enDisplayName' => 'Kurdish',
                 'code' => 'ku',
+                'displayCode' => 'ku',
                 'locale' => 'ku',
                 'nativeName' => 'کوردی',
                 'rtl' => true,
@@ -721,6 +743,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Lao',
                 'enDisplayName' => 'Lao',
                 'code' => 'lo',
+                'displayCode' => 'lo',
                 'locale' => 'lo',
                 'nativeName' => 'ພາສາລາວ',
                 'rtl' => false,
@@ -729,6 +752,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Maithili',
                 'enDisplayName' => 'Maithili',
                 'code' => 'mai',
+                'displayCode' => 'mai',
                 'locale' => 'mai',
                 'nativeName' => '𑒧𑒻𑒟𑒱𑒪𑒲',
                 'rtl' => false,
@@ -737,6 +761,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Marathi',
                 'enDisplayName' => 'Marathi',
                 'code' => 'mr',
+                'displayCode' => 'mr',
                 'locale' => 'mr',
                 'nativeName' => 'मराठी',
                 'rtl' => false,
@@ -745,6 +770,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Malayalam',
                 'enDisplayName' => 'Malayalam',
                 'code' => 'ml',
+                'displayCode' => 'ml',
                 'locale' => 'ml',
                 'nativeName' => 'മലയാളം',
                 'rtl' => false,
@@ -753,6 +779,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Nepali',
                 'enDisplayName' => 'Nepali',
                 'code' => 'ne',
+                'displayCode' => 'ne',
                 'locale' => 'ne_NP',
                 'nativeName' => 'नेपाली',
                 'rtl' => false,
@@ -761,6 +788,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Oriya',
                 'enDisplayName' => 'Oriya',
                 'code' => 'or',
+                'displayCode' => 'or',
                 'locale' => 'or_IN',
                 'nativeName' => 'ଓଡ଼ିଆ',
                 'rtl' => false,
@@ -769,6 +797,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Punjabi',
                 'enDisplayName' => 'Punjabi',
                 'code' => 'pa',
+                'displayCode' => 'pa',
                 'locale' => 'pa_IN',
                 'nativeName' => 'ਪੰਜਾਬੀ',
                 'rtl' => false,
@@ -777,6 +806,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Portuguese',
                 'enDisplayName' => 'Portuguese',
                 'code' => 'pt',
+                'displayCode' => 'pt',
                 'locale' => 'pt_PT',
                 'nativeName' => 'Português',
                 'rtl' => false,
@@ -785,6 +815,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Russian',
                 'enDisplayName' => 'Russian',
                 'code' => 'ru',
+                'displayCode' => 'ru',
                 'locale' => 'ru_RU',
                 'nativeName' => 'Русский',
                 'rtl' => false,
@@ -793,6 +824,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Romanian',
                 'enDisplayName' => 'Romanian',
                 'code' => 'ro',
+                'displayCode' => 'ro',
                 'locale' => 'ro_RO',
                 'nativeName' => 'Română',
                 'rtl' => false,
@@ -801,6 +833,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Slovenian',
                 'enDisplayName' => 'Slovenian',
                 'code' => 'sl',
+                'displayCode' => 'sl',
                 'locale' => 'sl_Sl',
                 'nativeName' => 'Slovenščina',
                 'rtl' => false,
@@ -809,6 +842,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Spanish',
                 'enDisplayName' => 'Spanish',
                 'code' => 'es',
+                'displayCode' => 'es',
                 'locale' => 'es',
                 'nativeName' => 'Español',
                 'rtl' => false,
@@ -817,6 +851,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Somali',
                 'enDisplayName' => 'Somali',
                 'code' => 'so',
+                'displayCode' => 'so',
                 'locale' => 'so',
                 'nativeName' => 'Soomaali',
                 'rtl' => false,
@@ -825,6 +860,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Swahili',
                 'enDisplayName' => 'Swahili',
                 'code' => 'swa',
+                'displayCode' => 'swa',
                 'locale' => 'swa',
                 'nativeName' => 'Kiswahili',
                 'rtl' => false,
@@ -833,6 +869,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Tamil',
                 'enDisplayName' => 'Tamil',
                 'code' => 'ta',
+                'displayCode' => 'ta',
                 'locale' => 'ta_IN',
                 'nativeName' => 'தமிழ்',
                 'rtl' => false,
@@ -841,6 +878,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Telugu',
                 'enDisplayName' => 'Telugu',
                 'code' => 'te',
+                'displayCode' => 'te',
                 'locale' => 'te',
                 'nativeName' => 'తెలుగు',
                 'rtl' => false,
@@ -849,6 +887,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Thai',
                 'enDisplayName' => 'Thai',
                 'code' => 'th',
+                'displayCode' => 'th',
                 'locale' => 'th',
                 'nativeName' => 'ไทย',
                 'rtl' => false,
@@ -857,6 +896,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Turkish',
                 'enDisplayName' => 'Turkish',
                 'code' => 'tr',
+                'displayCode' => 'tr',
                 'locale' => 'tr_TR',
                 'nativeName' => 'Türkçe',
                 'rtl' => false,
@@ -865,6 +905,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Urdu',
                 'enDisplayName' => 'Urdu',
                 'code' => 'ur',
+                'displayCode' => 'ur',
                 'locale' => 'ur',
                 'nativeName' => 'اردو',
                 'rtl' => true,
@@ -873,6 +914,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Vietnamese',
                 'enDisplayName' => 'Vietnamese',
                 'code' => 'vi',
+                'displayCode' => 'vi',
                 'locale' => 'vi',
                 'nativeName' => 'Tiếng Việt',
                 'rtl' => false,
@@ -881,6 +923,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'name' => 'Yoruba',
                 'enDisplayName' => 'Yoruba',
                 'code' => 'yo',
+                'displayCode' => 'yo',
                 'locale' => 'yo',
                 'nativeName' => 'Yorùbá',
                 'rtl' => false,
@@ -914,6 +957,160 @@ if ( ! function_exists( 'zume_get_language_locale' ) ) {
         }
     }
 }
+if ( ! function_exists( 'zume_get_language_display_code' ) ) {
+    function zume_get_language_display_code( $code ) {
+        global $zume_languages_by_code;
+        if ( isset( $zume_languages_by_code[$code]['displayCode'] ) ) {
+            return $zume_languages_by_code[$code]['displayCode'];
+        } else {
+            return 'en';
+        }
+    }
+}
+if ( ! function_exists( 'zume_google_locales' ) ) {
+    function zume_google_locales() {
+        $google_locales = [
+            'af',
+            'sq',
+            'am',
+            'ar',
+            'hy',
+            'az',
+            'eu',
+            'be',
+            'bs',
+            'bn',
+            'bg',
+            'my',
+            'ca',
+            'zh-hk',
+            'zh-cn',
+            'zh-tw',
+            'hr',
+            'cs',
+            'da',
+            'nl',
+            'en',
+            'et',
+            'fa',
+            'fil',
+            'fi',
+            'fr',
+            'fr-ca',
+            'gl',
+            'ka',
+            'de',
+            'el',
+            'gu',
+            'iw',
+            'hi',
+            'hu',
+            'is',
+            'id',
+            'it',
+            'ja',
+            'kn',
+            'kk',
+            'km',
+            'ko',
+            'ky',
+            'lo',
+            'lv',
+            'lt',
+            'mk',
+            'ms',
+            'ml',
+            'mr',
+            'mn',
+            'ne',
+            'no',
+            'pl',
+            'pt',
+            'pt-br',
+            'pa',
+            'ro',
+            'ru',
+            'sr',
+            'si',
+            'sk',
+            'sl',
+            'es',
+            'es-419',
+            'sw',
+            'sv',
+            'ta',
+            'te',
+            'th',
+            'tr',
+            'ua',
+            'ur',
+            'uz',
+            'vi',
+            'zu',
+        ];
+
+        return $google_locales;
+    }
+}
+if ( ! function_exists( 'zume_apple_locales' ) ) {
+    function zume_apple_locales( $type = 'locale' ) {
+        $apple_locales = [
+            'ar-ar',
+            'az-tr',
+            'bg-bg',
+            'cs-cz',
+            'da-dk',
+            'en-us',
+            'et-ee',
+            'de-de',
+            'el-gr',
+            'hu-hu',
+            'mt-mt',
+            'pl-pl',
+            'ro-ro',
+            'fi-fi',
+            'fr-ca',
+            'fr-fr',
+            'hb-hb',
+            'id-id',
+            'it-it',
+            'ja-jp',
+            'lv-lv',
+            'lt-lt',
+            'ko-kr',
+            'ms-my',
+            'nl-nl',
+            'no-no',
+            'pt-br',
+            'pt-pt',
+            'ru-ru',
+            'sk-sk',
+            'sl-si',
+            'nes-es',
+            'es-mx',
+            'sv-se',
+            'th-th',
+            'tl-ph',
+            'tr-tr',
+            'vi-vn',
+            'zh-cn',
+            'zh-hk',
+        ];
+
+        if ( $type === 'codes' ) {
+            $apple_codes = [];
+            foreach ( $apple_locales as $locale ) {
+                $code = explode( '-', $locale )[0];
+                $apple_codes[$code] = $locale;
+            }
+
+            return $apple_codes;
+        }
+
+        return $apple_locales;
+    }
+}
+
 if ( ! function_exists( 'zume_training_items' ) ) {
     function zume_training_items(): array {
 
@@ -5787,6 +5984,245 @@ class Zume_System_Log_API
     }
 }
 Zume_System_Log_API::instance();
+
+
+class Zume_User_Genmap {
+    private static $_instance = null;
+    public static function instance(){
+        if ( is_null( self::$_instance ) ) {
+            self::$_instance = new self();
+        }
+        return self::$_instance;
+    }
+
+    public function modal( $profile, $user_id ) {
+        $results = $this->tree( $user_id );
+        ?>
+        <div class="reveal full" id="modal_genmap" data-v-offset="0" data-reveal>
+            <h1>Current Genmap for <?php echo $profile['name'] ?></h1>
+            <hr>
+            <div class="grid-x grid-padding-x">
+                <div class="cell medium-9">
+                    <div id="genmap" style="width: 100%; border: 1px solid lightgrey; overflow:scroll;"><span style="padding: 1em;">No Reported Groups</span></div>
+                </div>
+                <div class="cell medium-3">
+                    <div id="genmap-details"></div>
+                </div>
+            </div>
+            <button class="close-button" data-close aria-label="Close modal" type="button">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <?php if ( $results ) {  ?>
+            <script>
+                jQuery(document).ready(function(){
+
+                    window.group_tree = [<?php echo json_encode( $this->tree( $user_id ) ) ?>][0]
+                    console.log(window.group_tree)
+
+                    let container = jQuery('#genmap')
+                    container.empty()
+
+                    var nodeTemplate = function(data) {
+                        return `
+                    <div class="title" data-item-id="${data.id}">${data.name}</div>
+                    <div class="content">${data.content}</div>
+                  `;
+                    };
+
+                    container.orgchart({
+                        'data': window.group_tree,
+                        'nodeContent': 'content',
+                        'direction': 'l2r',
+                        'nodeTemplate': nodeTemplate,
+                    });
+
+                    let container_height = window.innerHeight - 200 // because it is rotated
+                    container.height(container_height)
+
+                    container.off('click', '.node' )
+                    container.on('click', '.node', function () {
+
+                        let node = jQuery(this)
+                        let node_id = node.attr('id')
+                        console.log(node_id)
+                        open_modal_details(node_id, 'groups')
+                    })
+
+
+                    function open_modal_details( id, post_type ) {
+
+                        let spinner = ' <span class="loading-spinner active"></span> '
+                        jQuery('#genmap-details').html(spinner)
+
+                        makeRequest('GET', post_type + '/' + id, null, 'zume_training/v1/' )
+                            .then(data => {
+                                console.log(data)
+                                let container = jQuery('#genmap-details')
+                                container.empty()
+                                if (data) {
+                                    container.html(window.detail_template(post_type, data))
+                                }
+                            })
+                    }
+
+                    window.detail_template = ( post_type, data ) => {
+                        if ( post_type === 'contacts' ) {
+
+                            return `
+                        <div class="grid-x grid-padding-x">
+                          <div class="cell">
+                            <h2>${data.post_title}</h2><hr>
+                          </div>
+                          <div class="cell">
+                            Status: ${status}
+                          </div>
+                          <div class="cell">
+                            Groups:
+                            ${group_list}
+                          </div>
+                          <div class="cell">
+                            Assigned To:
+                            ${assign_to}
+                          </div>
+                          <div class="cell">
+                            Coaches: <br>
+                            ${coach_list}
+                          </div>
+                          <div class="cell"><hr>
+                            <a href="${dtMetricsProject.site_url}/${post_type}/${data.ID}" target="_blank" class="button">View Contact</a>
+                          </div>
+                        </div>
+                      `
+                        } else if ( post_type === 'groups' ) {
+
+                            return `
+                                <div class="grid-x grid-padding-x">
+                                  <div class="cell">
+                                    <h2>${data.post_title}</h2><hr>
+                                  </div>
+                                  <div class="cell">
+                                    Type: ${data.group_status}
+                                  </div>
+                                  <div class="cell">
+                                    Type: ${data.group_type}
+                                  </div>
+                                  <div class="cell">
+                                    Member Count: ${data.member_count}
+                                  </div>
+                                  <div class="cell"><hr>
+                                    <a href="https://zume5.training/${post_type}/${data.ID}" target="_blank" class="button">View Group</a>
+                                    <a href="https://zume5.training/${post_type}/${data.ID}" target="_blank" class="button">Create Child</a>
+                                  </div>
+                                </div>
+                              `
+                        }
+                    }
+
+                })
+            </script>
+        <?php }
+    }
+    public function tree( $user_id ) {
+        $query = $this->get_query( $user_id );
+        return $this->get_genmap( $query  );
+    }
+    public function get_query( $user_id ) {
+        global $wpdb;
+        $key = 'user-'.$user_id;
+        $query = $wpdb->get_results( $wpdb->prepare ( "
+                    SELECT
+                      a.ID         as id,
+                      0            as parent_id,
+                      a.post_title as name
+                    FROM wp_posts as a
+					LEFT JOIN wp_postmeta pm ON pm.post_id=a.ID AND pm.meta_key = 'assigned_to' AND pm.meta_value = %s
+                    WHERE a.post_type = 'groups'
+                    AND a.ID NOT IN (
+                      SELECT DISTINCT (p2p_from)
+                      FROM wp_p2p
+                      WHERE p2p_type = 'groups_to_groups'
+                      GROUP BY p2p_from
+                    )
+                    AND a.ID IN (
+                      SELECT DISTINCT (p2p_to)
+                      FROM wp_p2p
+                      WHERE p2p_type = 'groups_to_groups'
+                      GROUP BY p2p_to
+                    )
+					AND pm.meta_value IS NOT NULL
+                    UNION
+                    SELECT
+                      p.p2p_from  as id,
+                      p.p2p_to    as parent_id,
+                      (SELECT sub.post_title FROM wp_posts as sub WHERE sub.ID = p.p2p_from ) as name
+                    FROM wp_p2p as p
+					LEFT JOIN wp_postmeta pm2 ON pm2.post_id=p.p2p_from AND pm2.meta_key = 'assigned_to' AND pm2.meta_value = %s
+                    WHERE p.p2p_type = 'groups_to_groups'
+					AND pm2.meta_value IS NOT NULL;
+                ", $key, $key ), ARRAY_A );
+
+        return $query;
+    }
+
+    public function get_genmap( $query ) {
+
+        if ( is_wp_error( $query ) ){
+            return $this->_circular_structure_error( $query );
+        }
+        if ( empty( $query ) ) {
+            return false;
+        }
+        $menu_data = $this->prepare_menu_array( $query );
+        return $this->build_array( 0, $menu_data, 0 );
+    }
+    public function prepare_menu_array( $query ) {
+        // prepare special array with parent-child relations
+        $menu_data = array(
+            'items' => array(),
+            'parents' => array()
+        );
+
+        foreach ( $query as $menu_item )
+        {
+            $menu_data['items'][$menu_item['id']] = $menu_item;
+            $menu_data['parents'][$menu_item['parent_id']][] = $menu_item['id'];
+        }
+        return $menu_data;
+    }
+    public function build_array( $parent_id, $menu_data, $gen ) {
+        $children = [];
+        if ( isset( $menu_data['parents'][$parent_id] ) )
+        {
+            $next_gen = $gen + 1;
+            foreach ( $menu_data['parents'][$parent_id] as $item_id )
+            {
+                $children[] = $this->build_array( $item_id, $menu_data, $next_gen );
+            }
+        }
+        $array = [
+            'id' => $parent_id,
+            'name' => $menu_data['items'][ $parent_id ]['name'] ?? 'SYSTEM' ,
+            'content' => 'Gen ' . $gen ,
+            'children' => $children,
+        ];
+        return $array;
+    }
+    public function _no_results() {
+        return '<p>'. esc_attr__( 'No Results', 'disciple_tools' ) .'</p>';
+    }
+    public function _circular_structure_error( $wp_error ) {
+        $link = false;
+        $data = $wp_error->get_error_data();
+
+        if ( isset( $data['record'] ) ){
+            $link = "<a target='_blank' href=" . get_permalink( $data['record'] ) . '>Open record</a>';
+        }
+        return '<p>' . esc_html( $wp_error->get_error_message() ) . ' ' . $link . '</p>';
+    }
+}
+Zume_User_Genmap::instance();
 
 
 
