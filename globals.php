@@ -8,37 +8,59 @@
 
 if ( ! function_exists( 'zume_get_user_profile' ) ) {
     function zume_get_user_profile( $user_id = null ) {
-        if ( is_null( $user_id ) ) {
-            $user_id = get_current_user_id();
+        global $wpdb;
+
+        // return global object if already set and request is for current user
+        if ( isset( $zume_user_profile ) && $zume_user_profile['user_id'] == $user_id ) {
+            return $zume_user_profile;
         }
 
+        // establish user_id
+        $current_user_id = get_current_user_id();
+        if ( is_null( $user_id ) ) {
+            $user_id = $current_user_id;
+        }
+
+        // validate user_id exists
+        if ( $user_id !== $current_user_id ) {
+           $user_row = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM wp_users WHERE ID = %d', $user_id ) );
+           if ( empty( $user_row ) ) {
+               return false;
+           }
+        }
+
+        // get contact_id and validate exists
         $contact_id = zume_get_user_contact_id( $user_id );
+        if ( empty( $contact_id ) ) {
+            return false;
+        }
 
-        global $wpdb;
-        $name = $wpdb->get_var( $wpdb->prepare( 'SELECT post_title FROM wp_posts WHERE ID = %d', $contact_id ) );
-
+        // build contact meta array
         $contact_meta_query = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM wp_postmeta WHERE post_id = %d', $contact_id ), ARRAY_A );
         $contact_meta = [];
         foreach ( $contact_meta_query as $value ) {
             $contact_meta[$value['meta_key']] = $value['meta_value'];
         }
 
+        // build user profile elements
+        $name = $wpdb->get_var( $wpdb->prepare( 'SELECT post_title FROM wp_posts WHERE ID = %d', $contact_id ) );
         $email = $contact_meta['user_email'] ?? '';
         $phone = $contact_meta['user_phone'] ?? '';
         $timezone = $contact_meta['user_timezone'] ?? '';
         $user_friend_key = $contact_meta['user_friend_key'] ?? '';
         $user_ui_language = $contact_meta['user_ui_language'] ?? '';
-
         $language = zume_get_user_language( $user_id );
         $location = zume_get_user_location( $user_id );
 
+        // get coaching connections
+        $coaches = [];
         $coaching_contact_id = $wpdb->get_var( $wpdb->prepare(
             "SELECT post_id
                 FROM wp_3_postmeta
                 WHERE meta_key = 'trainee_user_id'
                   AND meta_value = %s",
             $user_id ) );
-        $coaches = $wpdb->get_results( $wpdb->prepare(
+        $coach_list = $wpdb->get_results( $wpdb->prepare(
             "SELECT p.ID as contact_id, pm.meta_value as user_id, p.post_title as name
                 FROM wp_3_p2p p2
                 LEFT JOIN wp_3_posts p ON p2.p2p_to=p.ID
@@ -46,12 +68,8 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
                 WHERE p2p_from = %d
                   AND p2p_type = 'contacts_to_contacts'",
             $coaching_contact_id ), ARRAY_A );
-        if ( empty( $coaches ) ) {
-            $coaches = [];
-        } else {
-            $coaches_raw = $coaches;
-            $coaches = [];
-            foreach ( $coaches_raw as $key => $value ) {
+        if ( ! empty( $coach_list ) ) {
+            foreach ( $coach_list as $key => $value ) {
                 $coaches[$value['user_id']] = [];
                 $coaches[$value['user_id']]['contact_id'] = $value['contact_id'];
                 $coaches[$value['user_id']]['user_id'] = $value['user_id'];
@@ -59,7 +77,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
             }
         }
 
-        if ( $user_id == get_current_user_id() ) {
+        if ( $user_id == $current_user_id ) {
             // user is current user, build global variable
             global $zume_user_profile; // sets a global variable for user_profile
             $zume_user_profile = [
@@ -4569,11 +4587,11 @@ class Zume_Global_Endpoints {
     {
         global $wpdb;
         $params = dt_recursive_sanitize_array( $request->get_params() );
-        if ( ! isset( $params['id'] ) ) {
-            return new WP_Error( __METHOD__, 'Id required', array( 'status' => 401 ) );
+        if ( ! isset( $params['id'], $params['user_id'] ) ) {
+            return new WP_Error( __METHOD__, 'Id and user_id required', array( 'status' => 401 ) );
         }
 
-        $user_id = $this->_get_user_id( $params );
+        $user_id = zume_validate_user_id_request( $params['user_id'] );
 
         $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM wp_dt_post_user_meta WHERE id = %d AND user_id = %d", $params['id'], $user_id ), ARRAY_A );
         $data = maybe_unserialize( $row['meta_value'] );
@@ -4591,11 +4609,11 @@ class Zume_Global_Endpoints {
     {
         global $wpdb;
         $params = dt_recursive_sanitize_array( $request->get_params() );
-        if ( ! isset( $params['id'] ) ) {
-            return new WP_Error( __METHOD__, 'Id required', array( 'status' => 401 ) );
+        if ( ! isset( $params['id'], $params['user_id'] ) ) {
+            return new WP_Error( __METHOD__, 'Id and user_id required', array( 'status' => 401 ) );
         }
 
-        $user_id = $this->_get_user_id( $params );
+        $user_id = zume_validate_user_id_request( $params['user_id'] );
 
         $fields = [
             'id' => $params['id'],
@@ -4610,36 +4628,35 @@ class Zume_Global_Endpoints {
 
     /** Host */
     public function list_host( WP_REST_Request $request ) {
-        if ( ! is_user_logged_in() ) {
-            return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
-        }
         $params = dt_recursive_sanitize_array( $request->get_params() );
-        $user_id = $this->_get_user_id( $params );
+        if ( ! isset( $params['user_id'] ) ) {
+            return new WP_Error( __METHOD__, 'User_id required.', array( 'status' => 401 ) );
+        }
+        $user_id = zume_validate_user_id_request( $params['user_id'] );
 
         return zume_get_user_host( $user_id );
     }
     public function create_host( WP_REST_Request $request ) {
-        if ( ! is_user_logged_in() ) {
-            return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
-        }
         $params = dt_recursive_sanitize_array( $request->get_params() );
-        if ( ! isset( $params['type'], $params['subtype'] ) && 'training' === $params['type'] ) {
-            return new WP_Error( __METHOD__, 'Type and subtype required. Type must be training.', array( 'status' => 401 ) );
+        if ( ! isset( $params['type'], $params['subtype'], $params['user_id'] ) ) {
+            return new WP_Error( __METHOD__, 'Type, subtype, and user_id required.', array( 'status' => 401 ) );
         }
-        $user_id = $this->_get_user_id( $params );
+        if ( 'training' !== $params['type'] ) {
+            return new WP_Error( __METHOD__, 'Type must be training.', array( 'status' => 401 ) );
+        }
+        $user_id = zume_validate_user_id_request( $params['user_id'] );
 
         return zume_log_insert( $params['type'], $params['subtype'], [ 'user_id' => $user_id ] );
     }
     public function delete_host( WP_REST_Request $request ) {
-        global $wpdb;
-        if ( ! is_user_logged_in() ) {
-            return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
-        }
         $params = dt_recursive_sanitize_array( $request->get_params() );
-        if ( ! isset( $params['type'], $params['subtype'] ) && 'training' === $params['type'] ) {
-            return new WP_Error( __METHOD__, 'Type and subtype required. Type must be training.', array( 'status' => 401 ) );
+        if ( ! isset( $params['type'], $params['subtype'], $params['user_id'] ) ) {
+            return new WP_Error( __METHOD__, 'Type, subtype, and user_id required.', array( 'status' => 401 ) );
         }
-        $user_id = $this->_get_user_id( $params );
+        if ( 'training' !== $params['type'] ) {
+            return new WP_Error( __METHOD__, 'Type must be training.', array( 'status' => 401 ) );
+        }
+        $user_id = zume_validate_user_id_request( $params['user_id'] );
 
         $fields = [
             'type' => $params['type'],
@@ -4652,40 +4669,47 @@ class Zume_Global_Endpoints {
         return $delete;
     }
 
-    public function _get_user_id( $params ) {
-        if ( ! is_user_logged_in() ) {
-            return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
-        }
-        if ( isset( $params['user_id'] ) ) {
-            $profile = zume_get_user_profile( $params['user_id'] );
-            if ( is_wp_error( $profile ) ) {
-                return new WP_Error( __METHOD__, 'Not a zume user', array( 'status' => 401 ) );
-            }
-            if ( (int) $profile['user_id'] === get_current_user_id() ) {
-                // if user id matches current user id
-                return get_current_user_id();
-            } else if ( (int) $profile['user_id'] !== get_current_user_id() && ( current_user_can( 'dt_list_users' ) || current_user_can( 'dt_edit_users' ) ) ) {
-                // if user id does not match current user id and current user can list or edit users
-                return (int) $params['user_id'];
-            } else if ( (int) $profile['user_id'] !== get_current_user_id() && in_array( get_current_user_id(), array_keys( $profile['coaches'] ) ) ) {
-                // if user id does not match current user id and current user is a user coach
-                return (int) $params['user_id'];
-            }
-            else if ( $profile['coaching_contact_id '] ) {
-                global $wpdb;
-                $is_shared = $wpdb->get_var( $wpdb->prepare( "SELECT count(*) FROM wp_dt_share WHERE user_id = %d AND post_id = %d", get_current_user_id(), $profile['coaching_contact_id '] ) );
-                if ( $is_shared ) {
-                    return (int) $params['user_id'];
-                }
-            } else {
-                return new WP_Error( __METHOD__, 'Permissions not found for this user_id', array( 'status' => 401 ) );
-            }
-        }
-        return get_current_user_id();
-    }
-
 }
 Zume_Global_Endpoints::instance();
+
+/**
+ * Checks if current user has the right to view the user id
+ * - valid if user id matches current user id
+ * - valid if user id does not match current user id and current user can list or edit users
+ * - valid if user id does not match current user id and current user is a user coach
+ * - valid if user id does not match current user id and current user has been shared the user id
+ * - invalid if user id does not match current user id and current user does not have permissions
+ *
+ * @param $user_id
+ * @return int|WP_Error
+ */
+function zume_validate_user_id_request( $user_id ) {
+    if ( ! is_user_logged_in() ) {
+        return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
+    }
+    if ( $profile = zume_get_user_profile( $user_id ) ) {
+        $current_user_id = get_current_user_id();
+        if ( (int) $profile['user_id'] === $current_user_id ) {
+            // if user id matches current user id
+            return (int) $user_id;
+        } else if ( (int) $profile['user_id'] !== $current_user_id && ( current_user_can( 'dt_list_users' ) || current_user_can( 'dt_edit_users' ) ) ) {
+            // if user id does not match current user id and current user can list or edit users
+            return (int) $user_id;
+        } else if ( (int) $profile['user_id'] !== $current_user_id && in_array( $current_user_id, array_keys( $profile['coaches'] ) ) ) {
+            // if user id does not match current user id and current user is a user coach
+            return (int) $user_id;
+        }  else if ( $profile['coaching_contact_id '] ) {
+            global $wpdb;
+            $is_shared = $wpdb->get_var( $wpdb->prepare( "SELECT count(*) FROM wp_dt_share WHERE user_id = %d AND post_id = %d", $current_user_id, $profile['coaching_contact_id '] ) );
+            if ( $is_shared ) {
+                return (int) $user_id;
+            }
+        }
+        return new WP_Error( __METHOD__, 'Permissions not found for this user_id', array( 'status' => 401 ) );
+    } else {
+        return new WP_Error( __METHOD__, 'User not found', array( 'status' => 401 ) );
+    }
+}
 
 
 function zume_log_insert( string $type, string $subtype, array $data = [], $log_once = false) {

@@ -231,13 +231,13 @@ class Zume_Tile_Basics {
 
                     if ( jQuery(this).hasClass('zume_button_green') ) {
                         jQuery(this).removeClass('zume_button_green')
-                        makeRequest('DELETE', 'mawl', { type: type, subtype: subtype, user_id: <?php echo $this_post['trainee_user_id'] ?> }, 'zume_system/v1' ).done( function( data ) {
+                        makeRequest('DELETE', 'mawl', { type: type, subtype: subtype, user_id: <?php echo $this_post['trainee_user_id'] ?> }, 'zume_funnel/v1' ).done( function( data ) {
                             console.log(data)
 
                         })
                     } else {
                         jQuery(this).addClass('zume_button_green')
-                        makeRequest('POST', 'mawl', { type: type, subtype: subtype, user_id: <?php echo $this_post['trainee_user_id'] ?>  }, 'zume_system/v1' ).done( function( data ) {
+                        makeRequest('POST', 'mawl', { type: type, subtype: subtype, user_id: <?php echo $this_post['trainee_user_id'] ?>  }, 'zume_funnel/v1' ).done( function( data ) {
                             console.log(data)
                         })
                     }

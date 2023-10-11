@@ -99,25 +99,58 @@ class Zume_Charts_API
             ]
         );
         register_rest_route(
-            $namespace, '/simulate', [
-                'methods'  => [ 'GET', 'POST' ],
-                'callback' => [ $this, 'training_elements' ],
-                'permission_callback' => function () {
-                    return $this->has_permission( $this->coach_permissions );
-                }
+            $this->namespace, '/mawl', [
+                [
+                    'methods'  => 'GET',
+                    'callback' => [ $this, 'list_mawl' ],
+                    'permission_callback' => function () {
+                        return $this->has_permission( $this->coach_permissions );
+                    }
+                ],
             ]
         );
+        register_rest_route(
+            $this->namespace, '/mawl', [
+                [
+                    'methods'  => 'POST',
+                    'callback' => [ $this, 'create_mawl' ],
+                    'permission_callback' => function () {
+                        return $this->has_permission( $this->coach_permissions );
+                    }
+                ],
+            ]
+        );
+        register_rest_route(
+            $this->namespace, '/mawl', [
+                [
+                    'methods'  => 'DELETE',
+                    'callback' => [ $this, 'delete_mawl' ],
+                    'permission_callback' => function () {
+                        return $this->has_permission( $this->coach_permissions );
+                    }
+                ],
+            ]
+        );
+//        register_rest_route(
+//            $namespace, '/simulate', [
+//                'methods'  => [ 'GET', 'POST' ],
+//                'callback' => [ $this, 'training_elements' ],
+//                'permission_callback' => function () {
+//                    return $this->has_permission( $this->coach_permissions );
+//                }
+//            ]
+//        );
 
         // dev
-        register_rest_route(
-            $namespace, '/sample', [
-                'methods'  => [ 'GET', 'POST' ],
-                'callback' => [ $this, 'sample' ],
-                'permission_callback' => function () {
-                    return $this->has_permission( $this->coach_permissions );
-                }
-            ]
-        );
+//        register_rest_route(
+//            $namespace, '/sample', [
+//                'methods'  => [ 'GET', 'POST' ],
+//                'callback' => [ $this, 'sample' ],
+//                'permission_callback' => function () {
+//                    return $this->has_permission( $this->coach_permissions );
+//                }
+//            ]
+//        );
     }
     public function has_permission( $permissions = [] ) {
         $pass = false;
@@ -1701,9 +1734,9 @@ class Zume_Charts_API
     }
 
     // dev
-    public function sample( WP_REST_Request $request ) {
-        return Zume_Views::sample( dt_recursive_sanitize_array( $request->get_params() ) );
-    }
+//    public function sample( WP_REST_Request $request ) {
+//        return Zume_Views::sample( dt_recursive_sanitize_array( $request->get_params() ) );
+//    }
 
     public function location_goals() {
         $data = DT_Mapping_Module::instance()->data();
@@ -2022,6 +2055,47 @@ class Zume_Charts_API
         return $data;
     }
 
+    public function list_mawl( WP_REST_Request $request ) {
+        $params = dt_recursive_sanitize_array( $request->get_params() );
+        if ( ! isset( $params['user_id'] ) ) {
+            return new WP_Error( __METHOD__, 'User_id required.', array( 'status' => 401 ) );
+        }
+        $user_id = zume_validate_user_id_request( $params['user_id'] );
+
+        return zume_get_user_host( $user_id );
+    }
+    public function create_mawl( WP_REST_Request $request ) {
+        $params = dt_recursive_sanitize_array( $request->get_params() );
+        if ( ! isset( $params['type'], $params['subtype'], $params['user_id'] ) ) {
+            return new WP_Error( __METHOD__, 'Type, subtype, and user_id required.', array( 'status' => 401 ) );
+        }
+        if ( 'coaching' !== $params['type'] ) {
+            return new WP_Error( __METHOD__, 'Type must be coaching.', array( 'status' => 401 ) );
+        }
+        $user_id = zume_validate_user_id_request( $params['user_id'] );
+
+        return zume_log_insert( $params['type'], $params['subtype'], [ 'user_id' => $user_id ] );
+    }
+    public function delete_mawl( WP_REST_Request $request ) {
+        $params = dt_recursive_sanitize_array( $request->get_params() );
+        if ( ! isset( $params['type'], $params['subtype'], $params['user_id'] ) ) {
+            return new WP_Error( __METHOD__, 'Type, subtype, and user_id required.', array( 'status' => 401 ) );
+        }
+        if ( 'coaching' !== $params['type'] ) {
+            return new WP_Error( __METHOD__, 'Type must be coaching.', array( 'status' => 401 ) );
+        }
+        $user_id = zume_validate_user_id_request( $params['user_id'] );
+
+        $fields = [
+            'type' => $params['type'],
+            'subtype' => $params['subtype'],
+            'user_id' => $user_id,
+        ];
+
+        $delete = $wpdb->delete( 'wp_dt_reports', $fields );
+
+        return $delete;
+    }
 
     public function authorize_url( $authorized ){
         if ( isset( $_SERVER['REQUEST_URI'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), $this->namespace  ) !== false ) {
