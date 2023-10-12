@@ -399,9 +399,51 @@ if ( ! function_exists( 'zume_get_user_mawl' ) ) {
         ];
     }
 }
+if ( ! function_exists( 'zume_get_user_friends' ) ) {
+    function zume_get_user_friends( $user_id = null ) {
+        if ( is_null( $user_id ) ) {
+            $user_id = get_current_user_id();
+        }
+        $contact_id = zume_get_user_contact_id( $user_id );
+
+        // query user friends
+        global $wpdb;
+        $from = $wpdb->get_results($wpdb->prepare(
+                "SELECT p.post_title as name, p.ID as contact_id, um.user_id
+                FROM wp_p2p p2
+                LEFT JOIN wp_posts p ON p.ID=p2.p2p_to
+                LEFT JOIN wp_usermeta um ON um.meta_value=p.ID AND um.meta_key = 'wp_corresponds_to_contact'
+                WHERE p2.p2p_type = 'contacts_to_relation'
+                AND p2.p2p_from = %d",
+            $contact_id ), ARRAY_A);
+
+        $to = $wpdb->get_results($wpdb->prepare(
+            "SELECT p.post_title as name, p.ID as contact_id, um.user_id
+                FROM wp_p2p p2
+                LEFT JOIN wp_posts p ON p.ID=p2.p2p_from
+                LEFT JOIN wp_usermeta um ON um.meta_value=p.ID AND um.meta_key = 'wp_corresponds_to_contact'
+                WHERE p2.p2p_type = 'contacts_to_relation'
+                AND p2.p2p_to = %d",
+            $contact_id ), ARRAY_A);
+
+        if ( empty( $from ) && empty( $to ) ) {
+            return [];
+        }
+
+        $friends = [];
+        foreach ( $from as $row ) {
+            $friends[$row['contact_id']] = $row;
+        }
+        foreach ( $to as $row ) {
+            $friends[$row['contact_id']] = $row;
+        }
+
+        return $friends;
+    }
+}
 if ( ! function_exists( 'zume_get_user_commitments' ) ) {
     // open, closed, all
-    function zume_get_user_commitments(  $user_id = null, $status = 'open' )
+    function zume_get_user_commitments( $user_id = null, $status = 'open', $category = 'custom' )
     {
         if ( is_null( $user_id ) ) {
             $user_id = get_current_user_id();
@@ -422,6 +464,10 @@ if ( ! function_exists( 'zume_get_user_commitments' ) ) {
             }
 
             if ( 'closed' === $status && !isset( $meta['status'] ) ) {
+                continue;
+            }
+
+            if ( 'custom' !== $category && $category !== $result['category'] ) {
                 continue;
             }
 
@@ -4770,10 +4816,12 @@ class Zume_Global_Endpoints {
 
         $params = dt_recursive_sanitize_array( $request->get_params() );
 
-        if ( isset( $params['user_id'] ) ) {
-            $user_id = $params['user_id'];
-        } else {
-            $user_id = get_current_user_id();
+        if ( ! isset( $params['user_id'] ) ) {
+            return new WP_Error( __METHOD__, 'User_id required', array( 'status' => 401 ) );
+        }
+        $user_id = zume_validate_user_id_request( $params['user_id'] );
+        if ( is_wp_error( $user_id ) ) {
+            return $user_id;
         }
 
         $status = 'open';
@@ -4781,7 +4829,13 @@ class Zume_Global_Endpoints {
             $status = $params['status'];
         }
 
-        return zume_get_user_commitments( $user_id, $status );
+        if ( isset( $params['category'] ) ) {
+            $category = $params['category'];
+        } else {
+            $category = 'custom';
+        }
+
+        return zume_get_user_commitments( $user_id, $status, $category );
     }
     public function update_commitment( WP_REST_Request $request )
     {
@@ -4792,6 +4846,9 @@ class Zume_Global_Endpoints {
         }
 
         $user_id = zume_validate_user_id_request( $params['user_id'] );
+        if ( is_wp_error( $user_id ) ) {
+            return $user_id;
+        }
 
         $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM wp_dt_post_user_meta WHERE id = %d AND user_id = %d", $params['id'], $user_id ), ARRAY_A );
         $data = maybe_unserialize( $row['meta_value'] );
@@ -4836,6 +4893,9 @@ class Zume_Global_Endpoints {
             return new WP_Error( __METHOD__, 'User_id required.', array( 'status' => 401 ) );
         }
         $user_id = zume_validate_user_id_request( $params['user_id'] );
+        if ( is_wp_error( $user_id ) ) {
+            return $user_id;
+        }
 
         return zume_get_user_host( $user_id );
     }
@@ -4851,6 +4911,9 @@ class Zume_Global_Endpoints {
             return new WP_Error( __METHOD__, 'Type must be training.', array( 'status' => 401 ) );
         }
         $user_id = zume_validate_user_id_request( $params['user_id'] );
+        if ( is_wp_error( $user_id ) ) {
+            return $user_id;
+        }
 
         return zume_log_insert( $params['type'], $params['subtype'], [ 'user_id' => $user_id ] );
     }
@@ -4866,6 +4929,9 @@ class Zume_Global_Endpoints {
             return new WP_Error( __METHOD__, 'Type must be training.', array( 'status' => 401 ) );
         }
         $user_id = zume_validate_user_id_request( $params['user_id'] );
+        if ( is_wp_error( $user_id ) ) {
+            return $user_id;
+        }
 
         $fields = [
             'type' => $params['type'],
