@@ -4816,12 +4816,13 @@ class Zume_Global_Endpoints {
 
         $params = dt_recursive_sanitize_array( $request->get_params() );
 
-        if ( ! isset( $params['user_id'] ) ) {
-            return new WP_Error( __METHOD__, 'User_id required', array( 'status' => 401 ) );
-        }
-        $user_id = zume_validate_user_id_request( $params['user_id'] );
-        if ( is_wp_error( $user_id ) ) {
-            return $user_id;
+        if ( isset( $params['user_id'] ) ) {
+            $user_id = zume_validate_user_id_request( $params['user_id'] );
+            if ( is_wp_error( $user_id ) ) {
+                return $user_id;
+            }
+        } else {
+            $user_id = get_current_user_id();
         }
 
         $status = 'open';
