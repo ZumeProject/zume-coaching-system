@@ -4776,8 +4776,12 @@ class Zume_Global_Endpoints {
 
         global $wpdb;
         $params = dt_recursive_sanitize_array( $request->get_params() );
-        $user_id = $params['user_id'];
-        if ( empty( $user_id ) ) {
+        if ( isset( $params['user_id'] ) ) {
+            $user_id = zume_validate_user_id_request( $params['user_id'] );
+            if ( is_wp_error( $user_id ) ) {
+                return $user_id;
+            }
+        } else {
             $user_id = get_current_user_id();
         }
         $contact_id = zume_get_user_contact_id( $user_id );
@@ -4787,11 +4791,11 @@ class Zume_Global_Endpoints {
             'post_id' => $contact_id,
             'meta_key' => 'tasks',
             'meta_value' => maybe_serialize([
-                'note' => $params['note'],
-                'question' => $params['question'],
-                'answer' => $params['answer'],
+                'note' => $params['note'] ?? '',
+                'question' => $params['question'] ?? '',
+                'answer' => $params['answer'] ?? '',
             ]),
-            'date' => $params['date'],
+            'date' => $params['date'] ?? date( 'Y-m-d H:i:s' ),
             'category' => $params['category'] ?? 'custom',
         ];
 

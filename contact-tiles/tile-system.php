@@ -52,7 +52,7 @@ class Zume_Tile_System  {
         ?>
         <div class="cell small-12 medium-4">
             <button class="button expanded" data-open="modal_activity">User Activities <?php echo !empty( $profile['activities'] ) ? '('. $profile['activities'] . ')': ''; ?></button>
-            <button class="button expanded" data-open="modal_commitments">Commitments <?php echo !empty( $profile['commitments'] ) ? '('. $profile['commitments'] . ')': ''; ?></button>
+            <button class="button expanded" id="open_commitments">Commitments <?php echo !empty( $profile['commitments'] ) ? '('. $profile['commitments'] . ')': ''; ?></button>
             <button class="button expanded" data-open="modal_reports">Reports <?php echo !empty( $profile['reports'] ) ? '('. $profile['reports'] . ')': ''; ?></button>
             <button class="button expanded" data-open="modal_genmap">Church GenMap <?php echo !empty( $profile['churches'] ) ? '('. $profile['churches'] . ')': ''; ?></button>
             <button class="button expanded" data-open="modal_localized_vision">Localized Vision</button>
@@ -106,51 +106,104 @@ class Zume_Tile_System  {
             <h1>Commitments for <?php echo $profile['name'] ?></h1>
             <hr>
             <div class="grid-x grid-padding-x">
-
                 <div class="cell medium-8">
-                    <h3>Active</h3>
-                    <div class="grid-x">
-                        <?php
-                        foreach( $active_commitments as $active_commitment ) {
-                            ?>
-                            <div class="cell">
-                                <span ><?php echo $active_commitment['note'] ?></span>
-                                <div class="button-group no-gaps" style="border-radius:0; border:0; width:100%;">
-                                    <a class="button" style="border-radius:0;">Completed</a>
-                                    <a class="button alert" style="border-radius:0;">Delete</a>
-                                </div>
-                            </div>
-                            <?php
-                        }
-                        ?>
+                    <div class="grid-x grid-padding-x" >
+                        <div class="cell" style="background: lightgrey; padding: 1em;"><h2>Active</h2></div>
+                        <div class="cell"><br></div>
                     </div>
-                    <h3>Completed</h3>
-                    <div class="grid-x">
-                        <?php
-                        foreach( $completed_commitments as $completed_commitment ) {
-                            ?>
-                            <div class="cell">
-                                <div class="button-group no-gaps expanded" style="border-radius:0; width:100%;">
-                                    <span class="button hollow" style="border-radius:0;"><?php echo $completed_commitment['note'] ?></span>
-                                </div>
-                            </div>
-                            <?php
-                        }
-                        ?>
+                    <div class="grid-x grid-padding-x active-commitments"></div>
+                    <div class="grid-x grid-padding-x" >
+                        <div class="cell" style="background: lightgrey; padding: 1em;"><h2>Completed</h2></div>
+                        <div class="cell"><br></div>
                     </div>
-
+                    <div class="grid-x grid-padding-x completed-commitments"></div>
                 </div>
                 <div class="cell medium-4">
                     <h3>Add New</h3>
-                    <p style="display:none;"><?php echo $profile['name'] ?> can add commitments through the post-training plan. You can add here and it will show up on their list.</p>
+                    <p > You can add commitments here and it will show up on <?php echo $profile['name'] ?>'s list.</p>
                     <textarea id="commitment-note" placeholder="Enter a new commitment"></textarea>
-                    <button class="button" id="commitment-add">Add Commitment</button>
+                    <button class="button commitment-add">Add Commitment</button> <span class="commitment-indicator loading-spinner"></span>
                 </div>
             </div>
             <button class="close-button" data-close aria-label="Close modal" type="button">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+        <script>
+            jQuery(document).ready(function(){
+                jQuery('#open_commitments').on('click', function(){
+                    window.commitments();
+                })
+                jQuery('.commitment-add').on('click', function(){
+                    window.commitments_add();
+                })
+
+                window.commitments = () => {
+                    console.log('cta_commitments')
+
+                    makeRequest('GET', 'commitments', { user_id: window.trainee_profile.user_id, status: 'all' }, 'zume_system/v1').done(function (data) {
+                        let active_commitments = jQuery('.active-commitments')
+                        let completed_commitments = jQuery('.completed-commitments')
+                        active_commitments.empty()
+                        completed_commitments.empty()
+                        if (data) {
+                            jQuery.each(data, function (i, v) {
+                                if ( v.question !== '' && v.answer !== '' && v.status === 'open') {
+                                    active_commitments.append(`<div class="cell medium-9"><strong>Question:</strong> ${v.question}<br><strong>Answer:</strong> ${v.answer}</br> ${v.due_date}</div><div class="cell medium-3"> <button class="button complete-commitment" value="${v.id}">Complete</button> <button class="button delete-commitment" value="${v.id}">Delete</button></div><div class="cell"><hr></div>`)
+                                }
+                                else if ( v.note !== '' && v.status === 'open') {
+                                    active_commitments.append(`<div class="cell medium-9">${v.note}</br> ${v.due_date}</div><div class="cell medium-3"><button class="button complete-commitment" value="${v.id}">Complete</button> <button class="button delete-commitment" value="${v.id}">Delete</button></div><div class="cell"><hr></div>`)
+                                }
+                                if ( v.question !== '' && v.answer !== '' && v.status === 'closed') {
+                                    completed_commitments.append(`<div class="cell medium-9"><strong>Question:</strong> ${v.question}<br><strong>Answer:</strong> ${v.answer}</br>  ${v.due_date}</div><div class="cell medium-3"></div><div class="cell"><hr></div>`)
+                                }
+                                else if ( v.note !== '' && v.status === 'closed') {
+                                    completed_commitments.append(`<div class="cell medium-9">${v.note}</br> ${v.due_date}</div><div class="cell medium-3"></div><div class="cell"><hr></div>`)
+                                }
+                            })
+                        }
+
+                        jQuery('.complete-commitment').on('click', function () {
+                            let id = jQuery(this).val()
+                            let data = {
+                                id: id,
+                                user_id: window.trainee_profile.user_id
+                            }
+                            makeRequest('PUT', 'commitment', data, 'zume_system/v1').done(function (data) {
+                                window.commitments()
+                            })
+                        })
+
+                        jQuery('.delete-commitment').on('click', function () {
+                            let id = jQuery(this).val()
+                            let data = {
+                                id: id,
+                                user_id: window.trainee_profile.user_id
+                            }
+                            makeRequest('DELETE', 'commitment', data, 'zume_system/v1').done(function (data) {
+                                window.commitments()
+                            })
+                        })
+
+                    })
+
+                    jQuery('#modal_commitments').foundation('open')
+                }
+                window.commitments_add = () => {
+                    jQuery('.commitment-indicator.loading-spinner').addClass('active')
+                    let note = jQuery('#commitment-note').val()
+                    let data = {
+                        note: note,
+                        user_id: window.trainee_profile.user_id
+                    }
+                    makeRequest('POST', 'commitment', data, 'zume_system/v1').done(function (data) {
+                        jQuery('#commitment-note').val('')
+                        jQuery('.commitment-indicator.loading-spinner').removeClass('active')
+                        window.commitments()
+                    })
+                }
+            })
+        </script>
         <?php
     }
     private function _modal_genmap( $profile, $user_id ) {

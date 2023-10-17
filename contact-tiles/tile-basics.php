@@ -109,16 +109,6 @@ class Zume_Tile_Basics {
             <?php $this->_modal_mawl( $this_post, $log ) ?>
         </div>
         <?php
-        /**
-         * Hide the Details Title if training id is present.
-         */
-        ?>
-        <style>
-            #details-tile {
-                display:none;
-            }
-        </style>
-        <?php
     }
 
     private function _modal_host( $this_post, $activity ) {

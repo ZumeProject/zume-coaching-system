@@ -50,10 +50,9 @@ class Zume_Coaching_Tile
         return $fields;
     }
     public function dt_details_additional_section( $section, $post_type ) {
-        // Hide Details Tile
-
         // Basics
         if ( $post_type === 'contacts' && $section === 'basics' ) {
+            $this->modifications( get_the_ID(), $post_type );
             Zume_Tile_Basics::instance()->get( get_the_ID(), $post_type );
         }
         // Funnel Tile
@@ -68,6 +67,32 @@ class Zume_Coaching_Tile
         if ( $post_type === 'contacts' && $section === 'communication' ) {
             Zume_Tile_Communication::instance()->get( get_the_ID(), $post_type );
         }
+    }
+
+    public function modifications( $post_id, $post_type ) {
+        $this_post = DT_Posts::get_post( $post_type, $post_id );
+        if ( !isset( $this_post['trainee_user_id'] ) ) {
+            return;
+        }
+        $trainee_profile = zume_get_user_profile( $this_post['trainee_user_id'] );
+        /**
+         * Hide the Details Title if training id is present.
+         */
+        ?>
+        <style>
+            #details-tile {
+                display:none;
+            }
+        </style>
+        <?php
+        /**
+         * Add the trainee profile to the page.
+         */
+        ?>
+        <script>
+            window.trainee_profile = [<?php echo json_encode( $trainee_profile ); ?>][0];
+        </script>
+        <?php
     }
 
     public function add_api_routes() {
