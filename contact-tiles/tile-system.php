@@ -149,16 +149,16 @@ class Zume_Tile_System  {
                         if (data) {
                             jQuery.each(data, function (i, v) {
                                 if ( v.question !== '' && v.answer !== '' && v.status === 'open') {
-                                    active_commitments.append(`<div class="cell medium-9"><strong>Question:</strong> ${v.question}<br><strong>Answer:</strong> ${v.answer}</br> ${v.due_date}</div><div class="cell medium-3"> <button class="button complete-commitment" value="${v.id}">Complete</button> <button class="button delete-commitment" value="${v.id}">Delete</button></div><div class="cell"><hr></div>`)
+                                    active_commitments.append(`<div class="cell medium-9"><strong>Question:</strong> ${v.question}<br><strong>Answer:</strong> ${v.answer}</br><strong>Due Date:</strong> ${v.due_date}<br><strong>Status:</strong> ${v.status}</div><div class="cell medium-3"> <button class="button complete-commitment" value="${v.id}">Complete</button> <button class="button delete-commitment" value="${v.id}">Delete</button></div><div class="cell"><hr></div>`)
                                 }
                                 else if ( v.note !== '' && v.status === 'open') {
-                                    active_commitments.append(`<div class="cell medium-9">${v.note}</br> ${v.due_date}</div><div class="cell medium-3"><button class="button complete-commitment" value="${v.id}">Complete</button> <button class="button delete-commitment" value="${v.id}">Delete</button></div><div class="cell"><hr></div>`)
+                                    active_commitments.append(`<div class="cell medium-9"><strong>Note:</strong> ${v.note}</br><strong>Due Date:</strong> ${v.due_date}<br><strong>Status:</strong> ${v.status}</div><div class="cell medium-3"><button class="button complete-commitment" value="${v.id}">Complete</button> <button class="button delete-commitment" value="${v.id}">Delete</button></div><div class="cell"><hr></div>`)
                                 }
                                 if ( v.question !== '' && v.answer !== '' && v.status === 'closed') {
-                                    completed_commitments.append(`<div class="cell medium-9"><strong>Question:</strong> ${v.question}<br><strong>Answer:</strong> ${v.answer}</br>  ${v.due_date}</div><div class="cell medium-3"></div><div class="cell"><hr></div>`)
+                                    completed_commitments.append(`<div class="cell medium-9"><strong>Question:</strong> ${v.question}<br><strong>Answer:</strong> ${v.answer}</br><strong>Due Date:</strong> ${v.due_date}<br><strong>Status:</strong> ${v.status}</div><div class="cell medium-3"></div><div class="cell"><hr></div>`)
                                 }
                                 else if ( v.note !== '' && v.status === 'closed') {
-                                    completed_commitments.append(`<div class="cell medium-9">${v.note}</br> ${v.due_date}</div><div class="cell medium-3"></div><div class="cell"><hr></div>`)
+                                    completed_commitments.append(`<div class="cell medium-9"><strong>Note:</strong> ${v.note}</br><strong>Due Date:</strong> ${v.due_date}<br><strong>Status:</strong> ${v.status}</div><div class="cell medium-3"></div><div class="cell"><hr></div>`)
                                 }
                             })
                         }
