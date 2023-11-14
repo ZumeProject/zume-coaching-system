@@ -330,10 +330,13 @@ class Zume_Charts_API
                 $trend = 0;
                 break;
             case 'coach_requests':
+
+                // missing query by date range
+
                 $label = 'Coach Requests';
                 $description = 'Coach requests in this period of time';
-                $value = 0;
-                $goal = 0;
+                $value = 40;
+                $goal = 30;
                 $trend = 0;
                 break;
             case 'has_plan':
@@ -344,11 +347,12 @@ class Zume_Charts_API
                 $trend = 0;
                 break;
             case 'no_plan':
+                // lookup the query
                 $label = 'Has No Plan';
                 $description = 'Total number of registrants who have no plan.';
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
+                $value = 2;
+                $goal = 4;
+                $trend = 4;
                 $valence = NULL;
                 break;
             case 'no_friends':
