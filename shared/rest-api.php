@@ -335,7 +335,7 @@ class Zume_Charts_API
 
                 $label = 'Coach Requests';
                 $description = 'Coach requests in this period of time';
-                $value = 40;
+                $value = 0;
                 $goal = 30;
                 $trend = 0;
                 break;
@@ -358,7 +358,7 @@ class Zume_Charts_API
             case 'no_friends':
                 $label = 'Has No Friends';
                 $description = 'Total number of registrants who have not invited any friends.';
-                $value = 0;
+                $value = Zume_Queries::query_total_has_no_friends();
                 $goal = 0;
                 $trend = 0;
                 break;

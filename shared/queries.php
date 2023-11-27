@@ -195,7 +195,8 @@ class Zume_Queries {
                     SELECT r.user_id, MAX(r.value) as stage FROM wp_dt_reports r
                     WHERE r.type = 'stage' and r.subtype = 'current_level' and r.value >= 4
                     GROUP BY r.user_id
-                ) as tb;");
+                ) as tb;"
+        );
 
         if ( $results ) {
             return (int) $results;
@@ -203,4 +204,21 @@ class Zume_Queries {
             return 0;
         }
     }
+
+    public static function query_total_has_no_friends() : int {
+        global $wpdb;
+        $results = $wpdb->get_var(
+            "SELECT
+                COUNT(DISTINCT object_id) - (SELECT COUNT(DISTINCT object_id)
+                FROM wp_dt_activity_log
+                WHERE meta_key = 'contacts_to_relation') AS friendless_users
+            FROM wp_dt_activity_log;"
+        );
+
+        if ( $results ) {
+            return (int) $results;
+        } else {
+            return 0;
+        }
+}
 }
