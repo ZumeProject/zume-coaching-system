@@ -358,14 +358,14 @@ class Zume_Charts_API
             case 'no_friends':
                 $label = 'Has No Friends';
                 $description = 'Total number of registrants who have not invited any friends.';
-                $value = Zume_Queries::query_total_has_no_friends();
+                $value = Zume_Queries::query_total_has_no_friends( 1 );
                 $goal = 0;
                 $trend = 0;
                 break;
             case 'no_coach':
                 $label = 'Has Not Requested a Coach';
                 $description = 'Total number of registrants who have not requested a coach.';
-                $value = Zume_Queries::query_total_has_no_coach();
+                $value = Zume_Queries::query_total_has_no_coach( 1 );
                 $goal = 0;
                 $trend = 0;
                 break;
