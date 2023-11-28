@@ -4,7 +4,7 @@ if ( !defined( 'ABSPATH' ) ) { exit; } // Exit if accessed directly.
 class Zume_Queries {
 
     // this is a reusable query that gets the user_id, post_id (contact_id), stage, and report id (rid) from the reports table.
-    public static $query_for_user_stage = "SELECT r.user_id, r.post_id, MAX(r.value) as stage, MAX(r.id) as rid FROM wp_dt_reports r
+    public static $query_for_user_stage = "SELECT r.user_id, r.post_id, r.post_id as contact_id, MAX(r.value) as stage, MAX(r.id) as rid FROM wp_dt_reports r
                                                   WHERE r.type = 'stage' and r.subtype = 'current_level'
                                                   GROUP BY r.user_id, r.post_id";
 
@@ -22,11 +22,17 @@ class Zume_Queries {
                 GROUP BY tb.stage;"
             ,  ARRAY_A );
 
+        $stages = [];
+
         if ( empty( $results ) ) {
-            return [];
+            return $stages;
         }
 
-        return $results;
+        foreach( $results as $result ) {
+            $stages[ $result['stage'] ] = $result;
+        }
+
+        return $stages;
     }
 
     public static function stage_by_location( array $range = [ 1 ] ) {
@@ -126,7 +132,7 @@ class Zume_Queries {
 
         return $results;
     }
-    
+
     /**
      * Training subtype counts for all *heard* reports.
      *
@@ -186,7 +192,7 @@ class Zume_Queries {
                     $query_for_user_stage
                 ) as tb
             WHERE tb.stage >= 4;"
-            ;");
+            );
 
         if ( $results ) {
             return (int) $results;
