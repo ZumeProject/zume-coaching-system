@@ -365,7 +365,7 @@ class Zume_Charts_API
             case 'no_coach':
                 $label = 'Has Not Requested a Coach';
                 $description = 'Total number of registrants who have not requested a coach.';
-                $value = 0;
+                $value = Zume_Queries::query_total_has_no_coach();
                 $goal = 0;
                 $trend = 0;
                 break;

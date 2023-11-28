@@ -209,9 +209,9 @@ class Zume_Queries {
         global $wpdb;
         $results = $wpdb->get_var(
             "SELECT
-                COUNT(DISTINCT object_id) - (SELECT COUNT(DISTINCT object_id)
+                COUNT( DISTINCT object_id ) - ( SELECT COUNT( DISTINCT object_id )
                 FROM wp_dt_activity_log
-                WHERE meta_key = 'contacts_to_relation') AS friendless_users
+                WHERE meta_key = 'contacts_to_relation' ) AS friendless_users
             FROM wp_dt_activity_log;"
         );
 
@@ -220,5 +220,22 @@ class Zume_Queries {
         } else {
             return 0;
         }
-}
+    }
+
+    public static function query_total_has_no_coach() : int {
+        global $wpdb;
+        $results = $wpdb->get_var(
+            "SELECT
+                COUNT( DISTINCT object_id ) - ( SELECT COUNT( DISTINCT meta_value )
+                FROM wp_3_postmeta
+                WHERE meta_key = 'trainee_user_id' ) AS friendless_users
+        FROM wp_dt_activity_log;"
+        );
+
+        if ( $results ) {
+            return (int) $results;
+        } else {
+            return 0;
+        }
+    }
 }
