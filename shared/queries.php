@@ -3,33 +3,24 @@ if ( !defined( 'ABSPATH' ) ) { exit; } // Exit if accessed directly.
 
 class Zume_Queries {
 
-//    public static function list( $params ) {
-//        global $wpdb;
-//
-//        $list = $wpdb->get_results( $wpdb->prepare(
-//            "
-//                    SELECT ID, display_name, user_registered
-//                    FROM $wpdb->users
-//                    ORDER BY user_registered DESC
-//                    LIMIT 100
-//                    ", ARRAY_A ) );
-//
-//        return $list;
-//    }
+    // this is a reusable query that gets the user_id, post_id (contact_id), stage, and report id (rid) from the reports table.
+    public static $query_for_user_stage = "SELECT r.user_id, r.post_id, MAX(r.value) as stage, MAX(r.id) as rid FROM wp_dt_reports r
+                                                  WHERE r.type = 'stage' and r.subtype = 'current_level'
+                                                  GROUP BY r.user_id, r.post_id";
+
 
     public static function stage_totals() {
         global $wpdb;
+        $query_for_user_stage = self::$query_for_user_stage;
 
         $results = $wpdb->get_results(
             "SELECT tb.stage, count(tb.user_id) as total
                 FROM
                 (
-                    SELECT r.user_id, MAX(r.value) as stage FROM wp_dt_reports r
-                    WHERE r.type = 'stage' and r.subtype = 'current_level'
-                    GROUP BY r.user_id
+                   $query_for_user_stage
                 ) as tb
                 GROUP BY tb.stage;"
-            , ARRAY_A );
+            ,  ARRAY_A );
 
         if ( empty( $results ) ) {
             return [];
@@ -107,6 +98,7 @@ class Zume_Queries {
 
     public static function stage_by_boundary( array $range, float $north, float $south, float $east, float $west ) {
         global $wpdb;
+        $query_for_user_stage = self::$query_for_user_stage;
 
         if( count( $range ) > 1 ) {
             $range = '(' . implode( ',', $range ) . ')';
@@ -118,9 +110,7 @@ class Zume_Queries {
             "SELECT p.post_title as name, tb.user_id, tb.post_id,  'groups' as post_type, tb.stage, lgm.label, lgm.grid_id, lgm.lng, lgm.lat, lgm.level
             FROM
             (
-              SELECT r.user_id, r.post_id, MAX(r.value) as stage, MAX(r.id) as rid FROM wp_dt_reports r
-              WHERE r.type = 'stage' and r.subtype = 'current_level'
-              GROUP BY r.user_id, r.post_id
+              $query_for_user_stage
             ) as tb
             LEFT JOIN wp_posts p ON p.ID=tb.post_id
             LEFT JOIN wp_dt_location_grid_meta lgm ON lgm.post_id=tb.post_id AND lgm.post_type='contacts'
@@ -188,14 +178,16 @@ class Zume_Queries {
      */
     public static function query_total_practitioners() : int {
         global $wpdb;
+        $query_for_user_stage = self::$query_for_user_stage;
+
         $results = $wpdb->get_var(
             "SELECT count(*) as practitioners
                 FROM
                 (
-                    SELECT r.user_id, MAX(r.value) as stage FROM wp_dt_reports r
-                    WHERE r.type = 'stage' and r.subtype = 'current_level' and r.value >= 4
-                    GROUP BY r.user_id
-                ) as tb;");
+                    $query_for_user_stage
+                ) as tb
+            WHERE tb.stage >= 4;"
+            ;");
 
         if ( $results ) {
             return (int) $results;
