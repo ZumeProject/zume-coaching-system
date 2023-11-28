@@ -31,6 +31,7 @@ class Zume_Queries {
 
     public static function stage_by_location( array $range = [ 1 ] ) {
         global $wpdb;
+        $query_for_user_stage = self::$query_for_user_stage;
 
         if( count( $range ) > 1 ) {
             $range = '(' . implode( ',', $range ) . ')';
@@ -42,13 +43,43 @@ class Zume_Queries {
             "SELECT p.post_title as name, tb.user_id, tb.post_id, 'contacts' as post_type, tb.stage, lgm.label, lgm.grid_id, lgm.lng, lgm.lat, lgm.level
             FROM
             (
-              SELECT r.user_id, r.post_id, MAX(r.value) as stage, MAX(r.id) as rid FROM wp_dt_reports r
-              WHERE r.type = 'stage' and r.subtype = 'current_level'
-              GROUP BY r.user_id, r.post_id
+              $query_for_user_stage
             ) as tb
             LEFT JOIN wp_posts p ON p.ID=tb.post_id
             LEFT JOIN wp_dt_location_grid_meta lgm ON lgm.post_id=tb.post_id AND lgm.post_type='contacts'
             WHERE tb.stage IN $range;", ARRAY_A );
+
+        if ( empty( $results ) ) {
+            return [];
+        }
+
+        return $results;
+    }
+
+    public static function stage_by_boundary( array $range, float $north, float $south, float $east, float $west ) {
+        global $wpdb;
+        $query_for_user_stage = self::$query_for_user_stage;
+
+        if( count( $range ) > 1 ) {
+            $range = '(' . implode( ',', $range ) . ')';
+        } else {
+            $range = '(' . $range[0] . ')';
+        }
+
+        $results = $wpdb->get_results(
+            "SELECT p.post_title as name, tb.user_id, tb.post_id,  'groups' as post_type, tb.stage, lgm.label, lgm.grid_id, lgm.lng, lgm.lat, lgm.level
+            FROM
+            (
+              $query_for_user_stage
+            ) as tb
+            LEFT JOIN wp_posts p ON p.ID=tb.post_id
+            LEFT JOIN wp_dt_location_grid_meta lgm ON lgm.post_id=tb.post_id AND lgm.post_type='contacts'
+            WHERE tb.stage IN $range
+            AND lgm.lat > $south
+            AND lgm.lat < $north
+            AND lgm.lng > $west
+            AND lgm.lng < $east
+            ;", ARRAY_A );
 
         if ( empty( $results ) ) {
             return [];
@@ -95,39 +126,7 @@ class Zume_Queries {
 
         return $results;
     }
-
-    public static function stage_by_boundary( array $range, float $north, float $south, float $east, float $west ) {
-        global $wpdb;
-        $query_for_user_stage = self::$query_for_user_stage;
-
-        if( count( $range ) > 1 ) {
-            $range = '(' . implode( ',', $range ) . ')';
-        } else {
-            $range = '(' . $range[0] . ')';
-        }
-
-        $results = $wpdb->get_results(
-            "SELECT p.post_title as name, tb.user_id, tb.post_id,  'groups' as post_type, tb.stage, lgm.label, lgm.grid_id, lgm.lng, lgm.lat, lgm.level
-            FROM
-            (
-              $query_for_user_stage
-            ) as tb
-            LEFT JOIN wp_posts p ON p.ID=tb.post_id
-            LEFT JOIN wp_dt_location_grid_meta lgm ON lgm.post_id=tb.post_id AND lgm.post_type='contacts'
-            WHERE tb.stage IN $range
-            AND lgm.lat > $south
-            AND lgm.lat < $north
-            AND lgm.lng > $west
-            AND lgm.lng < $east
-            ;", ARRAY_A );
-
-        if ( empty( $results ) ) {
-            return [];
-        }
-
-        return $results;
-    }
-
+    
     /**
      * Training subtype counts for all *heard* reports.
      *
