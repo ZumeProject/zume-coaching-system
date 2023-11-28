@@ -247,10 +247,10 @@ class Zume_Queries {
 
         $stage_list = self::stage_list( $stage );
 
-        $count = 0;
+        $count = count( $stage_list );
         foreach( $has_friends as $value ) {
             if ( isset( $stage_list[$value]) ) {
-                $count++;
+                $count--;
             }
         }
 
