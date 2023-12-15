@@ -198,22 +198,23 @@ if ( ! function_exists( 'zume_get_user_language' ) ) {
         if ( is_null( $user_id ) ) {
             $user_id = get_current_user_id();
         }
-        global $zume_languages_by_locale;
-        if ( empty( $zume_languages_by_locale ) ) {
-            $zume_languages_by_locale = zume_languages( 'locale' );
+        global $zume_languages_by_code;
+        if ( empty( $zume_languages_by_code ) ) {
+            $zume_languages_by_code = zume_languages( 'code' );
         }
 
-        $locale = get_user_meta( $user_id, 'locale', true );
-        if ( $user_id == get_current_user_id() && empty( $locale ) ) {
-            update_user_meta( $user_id, 'locale', zume_current_language() );
-            $locale = zume_current_language();
+        $contact_id = zume_get_user_contact_id( $user_id );
+        $language_code = get_post_meta( $contact_id, 'user_ui_language', true );
+        if ( $user_id == get_current_user_id() && empty( $language_code ) ) {
+            $language_code = zume_current_language();
+            update_post_meta( $contact_id, 'user_ui_language', $language_code );
         }
 
-        if ( ! $locale ) {
-            $locale = 'en';
+        if ( ! $language_code ) {
+            $language_code = 'en';
         }
 
-        return isset( $zume_languages_by_locale[$locale] ) ? $zume_languages_by_locale[$locale] : $zume_languages_by_locale['en'];
+        return isset( $zume_languages_by_code[$language_code] ) ? $zume_languages_by_code[$language_code] : $zume_languages_by_code['en'];
     }
 }
 if ( ! function_exists( 'zume_get_user_location' ) ) {
