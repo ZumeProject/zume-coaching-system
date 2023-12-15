@@ -23,10 +23,10 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
 
         // validate user_id exists
         if ( $user_id !== $current_user_id ) {
-           $user_row = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM wp_users WHERE ID = %d', $user_id ) );
-           if ( empty( $user_row ) ) {
-               return false;
-           }
+            $user_row = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM wp_users WHERE ID = %d', $user_id ) );
+            if ( empty( $user_row ) ) {
+                return false;
+            }
         }
 
         // get contact_id and validate exists
@@ -48,9 +48,11 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
         $phone = $contact_meta['user_phone'] ?? '';
         $timezone = $contact_meta['user_timezone'] ?? '';
         $user_friend_key = $contact_meta['user_friend_key'] ?? '';
+        $user_preferred_language = $contact_meta['user_preferred_language'] ?? '';
         $user_ui_language = $contact_meta['user_ui_language'] ?? '';
         $language = zume_get_user_language( $user_id );
         $location = zume_get_user_location( $user_id );
+        $contact_preference = get_post_meta( $contact_id, 'user_contact_preference' );
 
         // get coaching connections
         $coaches = [];
@@ -59,7 +61,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
                 FROM wp_3_postmeta
                 WHERE meta_key = 'trainee_user_id'
                   AND meta_value = %s",
-            $user_id ) );
+        $user_id ) );
         $coach_list = $wpdb->get_results( $wpdb->prepare(
             "SELECT p.ID as contact_id, pm.meta_value as user_id, p.post_title as name
                 FROM wp_3_p2p p2
@@ -67,7 +69,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
                 LEFT JOIN wp_3_postmeta pm ON pm.post_id = p.ID AND pm.meta_key = 'corresponds_to_user'
                 WHERE p2p_from = %d
                   AND p2p_type = 'contacts_to_contacts'",
-            $coaching_contact_id ), ARRAY_A );
+        $coaching_contact_id ), ARRAY_A );
         if ( ! empty( $coach_list ) ) {
             foreach ( $coach_list as $key => $value ) {
                 $coaches[$value['user_id']] = [];
@@ -93,6 +95,8 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
                 'coaches' => $coaches,
                 'friend_key' => $user_friend_key,
                 'ui_language' => $user_ui_language,
+                'preferred_language' => $user_preferred_language,
+                'contact_preference' => empty( $contact_preference ) ? [] : $contact_preference,
             ];
             return $zume_user_profile;
         } else {
@@ -110,6 +114,8 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
                 'coaches' => $coaches,
                 'friend_key' => $user_friend_key,
                 'ui_language' => $user_ui_language,
+                'preferred_language' => $user_preferred_language,
+                'contact_preference' => empty( $contact_preference ) ? [] : $contact_preference,
             ];
         }
     }
