@@ -369,10 +369,10 @@ class Zume_Charts_API
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'no_updated_profile':
+            case 'no_updated_profiles':
                 $label = 'Has Not Updated Profile';
                 $description = 'Total number of registrants who have not updated their profile.';
-                $value = 0;
+                $value = Zume_Queries::query_total_no_updated_profiles( 1 );
                 $goal = 0;
                 $trend = 0;
                 break;

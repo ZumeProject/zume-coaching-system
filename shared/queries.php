@@ -277,4 +277,17 @@ class Zume_Queries {
         }
     }
 
+    public static function query_total_no_updated_profiles( int $stage = 1 ) : int {
+            global $wpdb;
+            $stage_list = self::stage_list( $stage );
+            $has_profile_complete = $wpdb->get_col(
+                "SELECT DISTINCT(user_id) FROM `wp_dt_reports`
+                WHERE type = 'system'
+                and subtype = 'set_profile';" );
+            $total_users = count( $stage_list );
+            $total_has_profile_complete = count( $has_profile_complete );
+            $result = $total_users - $total_has_profile_complete;
+            return $result;
+        }
+
 }
