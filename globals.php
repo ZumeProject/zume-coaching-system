@@ -44,6 +44,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
 
         // build user profile elements
         $name = $wpdb->get_var( $wpdb->prepare( 'SELECT post_title FROM wp_posts WHERE ID = %d', $contact_id ) );
+        $has_set_name = !empty( zume_get_user_log( $user_id, 'system', 'set_profile_name' ) );
         $email = $contact_meta['user_email'] ?? '';
         $phone = $contact_meta['user_phone'] ?? '';
         $timezone = $contact_meta['user_timezone'] ?? '';
@@ -84,6 +85,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
             global $zume_user_profile; // sets a global variable for user_profile
             $zume_user_profile = [
                 'name' => $name,
+                'has_set_name' => $has_set_name,
                 'user_id' => $user_id,
                 'contact_id' => $contact_id,
                 'coaching_contact_id' => $coaching_contact_id,
@@ -103,6 +105,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
             // if user is not current user, return array
             return [
                 'name' => $name,
+                'has_set_name' => $has_set_name,
                 'user_id' => $user_id,
                 'contact_id' => $contact_id,
                 'coaching_contact_id' => $coaching_contact_id,
@@ -574,14 +577,32 @@ if ( ! function_exists( 'zume_get_user_id_by_contact_id' ) ) {
     }
 }
 if ( ! function_exists( 'zume_get_user_log' ) ) {
-    function zume_get_user_log( $user_id ) {
+    /**
+     * Get the user's log. $type and $subtype optionally filter the logs
+     * down to the that type and subtype of log
+     *
+     * @param int $user_id
+     * @param string $type
+     * @param string $subtype
+     */
+    function zume_get_user_log( $user_id, $type = null, $subtype = null ) {
         global $wpdb;
-        $results = $wpdb->get_results( $wpdb->prepare(
-            "SELECT CONCAT( r.type, '_', r.subtype ) as log_key, r.*
-                FROM wp_dt_reports r
-                WHERE r.user_id = %s
-                AND r.post_type = 'zume'
-                ", $user_id ), ARRAY_A );
+
+        $sql = $wpdb->prepare( "SELECT CONCAT( r.type, '_', r.subtype ) as log_key, r.*
+            FROM wp_dt_reports r
+            WHERE r.user_id = %s
+            AND r.post_type = 'zume'
+        ", $user_id );
+
+        if ( !empty( $type ) ) {
+            $sql .= $wpdb->prepare( "AND r.type = %s\n", $type );
+        }
+
+        if ( !empty( $subtype ) ) {
+            $sql .= $wpdb->prepare( "AND r.subtype = %s", $subtype );
+        }
+
+        $results = $wpdb->get_results( $sql, ARRAY_A );
 
         if ( is_array( $results ) ) {
             return $results;
