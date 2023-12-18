@@ -148,8 +148,6 @@ class Zume_Funnel_Registrant extends Zume_Funnel_Chart_Base
                     })
                     window.spin_add()
                     makeRequest('GET', 'total', { stage: "registrant", key: "set_profile", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        data.label = 'Set Profile'
-                        data.description = 'Description'
                         jQuery('.'+data.key).html(window.template_single_map(data))
                         window.click_listener( data )
                         window.spin_remove()

@@ -396,7 +396,11 @@ class Zume_Charts_API
                     'value_idle' => zume_format_int( 0 ),
                     'value_out' => zume_format_int( 0 ),
                 ];
-
+            case 'set_profile':
+                $label = 'Set Profile';
+                $description = 'Description';
+                $value = Zume_Queries::query_set_profile_last_30_days( 1 );
+                break;
             default:
                 $value = 0;
                 $goal = 0;

@@ -290,4 +290,14 @@ class Zume_Queries {
             return $result;
         }
 
+    public static function query_set_profile_last_30_days( int $stage = 1 ) : int {
+        global $wpdb;
+        $timestamp = strtotime( '-3 months' );
+        $result = $wpdb->get_var( $wpdb->prepare(
+            "SELECT COUNT(*) FROM `wp_dt_reports`
+            WHERE subtype = 'set_profile'
+            AND timestamp > %d;", $timestamp) );
+        return $result;
+    }
+
 }
