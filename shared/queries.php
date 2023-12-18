@@ -292,7 +292,7 @@ class Zume_Queries {
 
     public static function query_set_profile_last_30_days( int $stage = 1 ) : int {
         global $wpdb;
-        $timestamp = strtotime( '-3 months' );
+        $timestamp = strtotime( '-30 days' );
         $result = $wpdb->get_var( $wpdb->prepare(
             "SELECT COUNT(*) FROM `wp_dt_reports`
             WHERE subtype = 'set_profile'
