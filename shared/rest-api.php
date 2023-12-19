@@ -335,7 +335,7 @@ class Zume_Charts_API
 
                 $label = 'Coach Requests';
                 $description = 'Coach requests in this period of time';
-                $value = 0;
+                $value = Zume_Queries::query_requested_coach_last_30_days( 1 );
                 $goal = 30;
                 $trend = 0;
                 break;
@@ -350,7 +350,7 @@ class Zume_Charts_API
                 // lookup the query
                 $label = 'Has No Plan';
                 $description = 'Total number of registrants who have no plan.';
-                $value = 2;
+                $value = 0;
                 $goal = 4;
                 $trend = 4;
                 $valence = NULL;

@@ -293,11 +293,37 @@ class Zume_Queries {
     public static function query_set_profile_last_30_days( int $stage = 1 ) : int {
         global $wpdb;
         $timestamp = strtotime( '-30 days' );
-        $result = $wpdb->get_var( $wpdb->prepare(
-            "SELECT COUNT(*) FROM `wp_dt_reports`
+        $set_profile = $wpdb->get_col( $wpdb->prepare(
+            "SELECT DISTINCT(user_id) FROM `wp_dt_reports`
             WHERE subtype = 'set_profile'
             AND timestamp > %d;", $timestamp) );
-        return $result;
+
+        $stage_list = self::stage_list( $stage );
+        $count = 0;
+        foreach( $set_profile as $value ) {
+            if ( isset( $stage_list[$value] ) ) {
+                $count++;
+            }
+        }
+        return $count;
+    }
+
+    public static function query_requested_coach_last_30_days( int $stage = 1 ) : int {
+        global $wpdb;
+        $timestamp = strtotime( '-30 days' );
+        $requested_a_coach = $wpdb->get_col( $wpdb->prepare(
+            "SELECT DISTINCT(user_id) FROM `wp_dt_reports`
+            WHERE subtype = 'requested_a_coach'
+            AND timestamp > %d;", $timestamp) );
+
+        $stage_list = self::stage_list( $stage );
+        $count = 0;
+        foreach( $requested_a_coach as $value ) {
+            if ( isset( $stage_list[$value] ) ) {
+                $count++;
+            }
+        }
+        return $count;
     }
 
 }
