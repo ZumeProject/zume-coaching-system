@@ -290,9 +290,20 @@ class Zume_Queries {
             return $result;
         }
 
-    public static function query_set_profile_last_30_days( int $stage = 1 ) : int {
+    public static function query_set_profile_last_n_days() : int {
+        $stage = 1;
+        if ( $_GET['stage'] ) {
+            $list = zume_funnel_stages( true );
+            $stage = (int)$list[$_GET['stage']]['value'];
+        }
+
+        $range = 30;
+        if ( $_GET['range'] ) {
+            $range = (int)$_GET['range'];
+        }
+
         global $wpdb;
-        $timestamp = strtotime( '-30 days' );
+        $timestamp = strtotime( "-$range days" );
         $set_profile = $wpdb->get_col( $wpdb->prepare(
             "SELECT DISTINCT(user_id) FROM `wp_dt_reports`
             WHERE subtype = 'set_profile'
@@ -308,14 +319,24 @@ class Zume_Queries {
         return $count;
     }
 
-    public static function query_requested_coach_last_30_days( int $stage = 1 ) : int {
+    public static function query_requested_coach_last_n_days() : int {
+        $stage = 1;
+        if ( $_GET['stage'] ) {
+            $list = zume_funnel_stages( true );
+            $stage = (int)$list[$_GET['stage']]['value'];
+        }
+
+        $range = 30;
+        if ( $_GET['range'] ) {
+            $range = (int)$_GET['range'];
+        }
+
         global $wpdb;
-        $timestamp = strtotime( '-30 days' );
+        $timestamp = strtotime( "-$range days" );
         $requested_a_coach = $wpdb->get_col( $wpdb->prepare(
             "SELECT DISTINCT(user_id) FROM `wp_dt_reports`
             WHERE subtype = 'requested_a_coach'
             AND timestamp > %d;", $timestamp) );
-
         $stage_list = self::stage_list( $stage );
         $count = 0;
         foreach( $requested_a_coach as $value ) {

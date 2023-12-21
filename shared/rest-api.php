@@ -335,7 +335,7 @@ class Zume_Charts_API
 
                 $label = 'Coach Requests';
                 $description = 'Coach requests in this period of time';
-                $value = Zume_Queries::query_requested_coach_last_30_days( 1 );
+                $value = Zume_Queries::query_requested_coach_last_n_days();
                 $goal = 30;
                 $trend = 0;
                 break;
@@ -399,7 +399,7 @@ class Zume_Charts_API
             case 'set_profile':
                 $label = 'Set Profile';
                 $description = 'Description';
-                $value = Zume_Queries::query_set_profile_last_30_days( 1 );
+                $value = Zume_Queries::query_set_profile_last_n_days();
                 break;
             default:
                 $value = 0;

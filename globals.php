@@ -1494,8 +1494,8 @@ if ( ! function_exists( 'zume_training_items' ) ) {
     }
 }
 if ( ! function_exists( 'zume_funnel_stages' ) ) {
-    function zume_funnel_stages(): array {
-        return [
+    function zume_funnel_stages( $associated = false ): array {
+        $list = [
             0 => [
                 'key' => 'anonymous',
                 'value' => 0,
@@ -1619,6 +1619,15 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
                 ],
             ],
         ];
+
+        if ( $associated ) {
+            $new_list = $list;
+            $list = [];
+            foreach( $new_list as $value ) {
+                $list[$value['key']] = $value;
+            }
+        }
+        return $list;
     }
 }
 if ( ! function_exists( 'zume_mirror_url' ) ) {
