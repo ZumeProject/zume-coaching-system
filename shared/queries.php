@@ -336,10 +336,39 @@ class Zume_Queries {
         $requested_a_coach = $wpdb->get_col( $wpdb->prepare(
             "SELECT DISTINCT(user_id) FROM `wp_dt_reports`
             WHERE subtype = 'requested_a_coach'
-            AND timestamp > %d;", $timestamp) );
+            AND timestamp > %d;", $timestamp ) );
         $stage_list = self::stage_list( $stage );
         $count = 0;
         foreach( $requested_a_coach as $value ) {
+            if ( isset( $stage_list[$value] ) ) {
+                $count++;
+            }
+        }
+        return $count;
+    }
+
+    public static function query_invited_friends_last_n_days() : int {
+        $stage =  1;
+        if ( $_GET['stage'] ) {
+            $list = zume_funnel_stages( true );
+            $stage = (int)$list[$_GET['stage']]['value'];
+        }
+
+        $range = 30;
+        if ( $_GET['range'] ) {
+            $range = (int)$_GET['range'];
+        }
+
+        global $wpdb;
+        $timestamp = strtotime( "-$range days" );
+        $invited_friends = $wpdb->get_col( $wpdb->prepare(
+            "SELECT DISTINCT(user_id) FROM `wp_dt_reports`
+            WHERE subtype = 'invited_friends'
+            AND timestamp > %d;", $timestamp
+        ) );
+        $stage_list = self::stage_list( $stage );
+        $count = 0;
+        foreach( $invited_friends as $value ) {
             if ( isset( $stage_list[$value] ) ) {
                 $count++;
             }

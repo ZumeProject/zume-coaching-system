@@ -401,6 +401,11 @@ class Zume_Charts_API
                 $description = 'Description';
                 $value = Zume_Queries::query_set_profile_last_n_days();
                 break;
+            case 'invited_friends':
+                $label = 'Invited Friends';
+                $description = 'Description';
+                $value = Zume_Queries::query_invited_friends_last_n_days();
+                break;
             default:
                 $value = 0;
                 $goal = 0;
@@ -1430,7 +1435,6 @@ class Zume_Charts_API
         ];
 
     }
-
     public function location_funnel( ) {
         $data = DT_Mapping_Module::instance()->data();
         $funnel = zume_funnel_stages();
