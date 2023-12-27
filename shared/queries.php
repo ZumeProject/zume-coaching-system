@@ -376,4 +376,31 @@ class Zume_Queries {
         return $count;
     }
 
+    public static function flow_in_last_n_days() : int {
+        $stage = 1;
+        if ( $_GET['stage'] ) {
+            $list = zume_funnel_stages( true );
+            $stage = (int)$list[$_GET['stage']]['value'];
+        }
+
+        $range = 30;
+        if ( $_GET['range'] ) {
+            $range = (int)$_GET['range'];
+        }
+
+        global $wpdb;
+        $timestamp = strtotime( "-$range days" );
+        $flow_in = $wpdb->get_var( $wpdb->prepare(
+            "SELECT COUNT(DISTINCT(user_id)) FROM `wp_dt_reports`
+            WHERE value = %d
+            AND subtype = 'current_level'
+            AND timestamp > %d;", $stage, $timestamp
+        ) );
+        return $flow_in;
+    }
+
+    public static function flow_out_last_n_days() : int {
+        return 0;
+    }
+
 }
