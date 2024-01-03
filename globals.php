@@ -6077,11 +6077,14 @@ class Zume_System_Log_API
         }
 
         if ( $highest_logged_stage < $current_stage ) {
-            $report['type'] = 'stage';
-            $report['subtype'] = 'current_level';
-            $report['value'] = $current_stage;
-            $report['hash'] = hash('sha256', maybe_serialize( $report )  . time() );
-            $added_log[] = self::insert( $report, true, false );
+
+            for ( $i = $current_stage + 1; $i <= $highest_logged_stage; $i++ ) {
+                $report['type'] = 'stage';
+                $report['subtype'] = 'current_level';
+                $report['value'] = $i;
+                $report['hash'] = hash('sha256', maybe_serialize( $report )  . time() );
+                $added_log[] = self::insert( $report, true, false );
+            }
         }
 
         return $added_log;
@@ -6207,6 +6210,7 @@ class Zume_User_Genmap {
                         </div>
                       `
                         } else if ( post_type === 'groups' ) {
+                            const origin = (new URL(location.href)).origin
 
                             return `
                                 <div class="grid-x grid-padding-x">
@@ -6223,8 +6227,8 @@ class Zume_User_Genmap {
                                     Member Count: ${data.member_count}
                                   </div>
                                   <div class="cell"><hr>
-                                    <a href="https://zume5.training/${post_type}/${data.ID}" target="_blank" class="button">View Group</a>
-                                    <a href="https://zume5.training/${post_type}/${data.ID}" target="_blank" class="button">Create Child</a>
+                                    <a href="${origin}/${post_type}/${data.ID}" target="_blank" class="button">View Group</a>
+                                    <a href="${origin}/${post_type}/${data.ID}" target="_blank" class="button">Create Child</a>
                                   </div>
                                 </div>
                               `
