@@ -335,7 +335,7 @@ class Zume_Charts_API
 
                 $label = 'Coach Requests';
                 $description = 'Coach requests in this period of time';
-                $value = 40;
+                $value = Zume_Queries::query_requested_coach_last_n_days();
                 $goal = 30;
                 $trend = 0;
                 break;
@@ -350,7 +350,7 @@ class Zume_Charts_API
                 // lookup the query
                 $label = 'Has No Plan';
                 $description = 'Total number of registrants who have no plan.';
-                $value = 2;
+                $value = 0;
                 $goal = 4;
                 $trend = 4;
                 $valence = NULL;
@@ -358,21 +358,21 @@ class Zume_Charts_API
             case 'no_friends':
                 $label = 'Has No Friends';
                 $description = 'Total number of registrants who have not invited any friends.';
-                $value = 0;
+                $value = Zume_Queries::query_total_has_no_friends( 1 );
                 $goal = 0;
                 $trend = 0;
                 break;
             case 'no_coach':
                 $label = 'Has Not Requested a Coach';
                 $description = 'Total number of registrants who have not requested a coach.';
-                $value = 0;
+                $value = Zume_Queries::query_total_has_no_coach( 1 );
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'no_updated_profile':
+            case 'no_updated_profiles':
                 $label = 'Has Not Updated Profile';
                 $description = 'Total number of registrants who have not updated their profile.';
-                $value = 0;
+                $value = Zume_Queries::query_total_no_updated_profiles( 1 );
                 $goal = 0;
                 $trend = 0;
                 break;
@@ -390,13 +390,22 @@ class Zume_Charts_API
                     'key' => $params['key'],
                     'stage' => $params['stage'],
                     'label' => 'Flow',
-                    'description' => 'People moving in and out of thise stage.',
+                    'description' => 'People moving in and out of this stage.',
                     'link' => '',
-                    'value_in' => zume_format_int( 0 ),
+                    'value_in' => zume_format_int( Zume_Queries::flow_in_last_n_days() ),
                     'value_idle' => zume_format_int( 0 ),
-                    'value_out' => zume_format_int( 0 ),
+                    'value_out' => zume_format_int( Zume_Queries::flow_out_last_n_days() ),
                 ];
-
+            case 'set_profile':
+                $label = 'Set Profile';
+                $description = 'Description';
+                $value = Zume_Queries::query_set_profile_last_n_days();
+                break;
+            case 'invited_friends':
+                $label = 'Invited Friends';
+                $description = 'Description';
+                $value = Zume_Queries::query_invited_friends_last_n_days();
+                break;
             default:
                 $value = 0;
                 $goal = 0;
@@ -486,7 +495,7 @@ class Zume_Charts_API
                     'key' => $params['key'],
                     'stage' => $params['stage'],
                     'label' => 'Flow',
-                    'description' => 'People moving in and out of thise stage.',
+                    'description' => 'People moving in and out of this stage.',
                     'link' => '',
                     'value_in' => zume_format_int( 0 ),
                     'value_idle' => zume_format_int( 0 ),
@@ -589,7 +598,7 @@ class Zume_Charts_API
                     'key' => $params['key'],
                     'stage' => $params['stage'],
                     'label' => 'Flow',
-                    'description' => 'People moving in and out of thise stage.',
+                    'description' => 'People moving in and out of this stage.',
                     'link' => '',
                     'value_in' => zume_format_int( 0 ),
                     'value_idle' => zume_format_int( 0 ),
@@ -714,7 +723,7 @@ class Zume_Charts_API
                     'key' => $params['key'],
                     'stage' => $params['stage'],
                     'label' => 'Flow',
-                    'description' => 'People moving in and out of thise stage.',
+                    'description' => 'People moving in and out of this stage.',
                     'link' => '',
                     'value_in' => zume_format_int( 0 ),
                     'value_idle' => zume_format_int( 0 ),
@@ -837,7 +846,7 @@ class Zume_Charts_API
                     'key' => $params['key'],
                     'stage' => $params['stage'],
                     'label' => 'Flow',
-                    'description' => 'People moving in and out of thise stage.',
+                    'description' => 'People moving in and out of this stage.',
                     'link' => '',
                     'value_in' => zume_format_int( 0 ),
                     'value_idle' => zume_format_int( 0 ),
@@ -959,7 +968,7 @@ class Zume_Charts_API
                     'key' => $params['key'],
                     'stage' => $params['stage'],
                     'label' => 'Flow',
-                    'description' => 'People moving in and out of thise stage.',
+                    'description' => 'People moving in and out of this stage.',
                     'link' => '',
                     'value_in' => zume_format_int( 0 ),
                     'value_idle' => zume_format_int( 0 ),
@@ -1426,7 +1435,6 @@ class Zume_Charts_API
         ];
 
     }
-
     public function location_funnel( ) {
         $data = DT_Mapping_Module::instance()->data();
         $funnel = zume_funnel_stages();

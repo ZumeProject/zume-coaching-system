@@ -35,6 +35,32 @@ class Zume_Queries {
         return $stages;
     }
 
+    public static function stage_list( $stage = 1 ) {
+        global $wpdb;
+        $query_for_user_stage = self::$query_for_user_stage;
+
+        $results = $wpdb->get_results( $wpdb->prepare(
+            "SELECT *
+                FROM
+                (
+                   $query_for_user_stage
+                ) as tb
+            WHERE tb.stage = %d;", $stage )
+            ,  ARRAY_A );
+
+        $stages = [];
+
+        if ( empty( $results ) ) {
+            return $stages;
+        }
+
+        foreach( $results as $result ) {
+            $stages[ $result['user_id'] ] = $result;
+        }
+
+        return $stages;
+    }
+
     public static function stage_by_location( array $range = [ 1 ] ) {
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
@@ -200,4 +226,181 @@ class Zume_Queries {
             return 0;
         }
     }
+
+    public static function query_total_has_no_friends( int $stage = 1 ) : int {
+        global $wpdb;
+
+        $has_friends = $wpdb->get_col(
+            "SELECT DISTINCT(tb.user_id)
+            FROM (
+            SELECT pm1.meta_value as user_id
+            FROM wp_p2p p1
+            LEFT JOIN wp_postmeta pm1 ON pm1.post_id = p1.p2p_from AND pm1.meta_key = 'corresponds_to_user'
+            WHERE p1.p2p_type = 'contacts_to_relation' AND pm1.meta_value IS NOT NULL
+            UNION ALL
+            SELECT pm2.meta_value as user_id
+            FROM wp_p2p p2
+            LEFT JOIN wp_postmeta pm2 ON pm2.post_id = p2.p2p_to AND pm2.meta_key = 'corresponds_to_user'
+            WHERE p2.p2p_type = 'contacts_to_relation' AND pm2.meta_value IS NOT NULL
+            ) as tb;"
+        );
+
+        $stage_list = self::stage_list( $stage );
+
+        $count = count( $stage_list );
+        foreach( $has_friends as $value ) {
+            if ( isset( $stage_list[$value]) ) {
+                $count--;
+            }
+        }
+
+        return $count;
+    }
+
+    public static function query_total_has_no_coach( int $stage = 1 ) : int {
+        global $wpdb;
+
+        $results = $wpdb->get_var( $wpdb->prepare(
+            "SELECT COUNT(user_id)
+            FROM (
+                SELECT r.user_id, r.post_id as contact_id, MAX(r.value) as stage, MAX(r.id) as rid FROM wp_dt_reports r
+                WHERE r.type = 'stage' and r.subtype = 'current_level'
+                GROUP BY r.user_id, r.post_id
+            ) as tb
+            LEFT JOIN wp_3_postmeta pm ON pm.meta_value = tb.user_id AND pm.meta_key = 'trainee_user_id'
+            WHERE tb.stage = %d AND pm.post_id IS NULL;", $stage ) );
+
+        if ( $results ) {
+            return (int) $results;
+        } else {
+            return 0;
+        }
+    }
+
+    public static function query_total_no_updated_profiles( int $stage = 1 ) : int {
+            global $wpdb;
+            $stage_list = self::stage_list( $stage );
+            $has_profile_complete = $wpdb->get_col(
+                "SELECT DISTINCT(user_id) FROM `wp_dt_reports`
+                WHERE type = 'system'
+                and subtype = 'set_profile';" );
+            $total_users = count( $stage_list );
+            $total_has_profile_complete = count( $has_profile_complete );
+            $result = $total_users - $total_has_profile_complete;
+            return $result;
+        }
+
+    public static function query_set_profile_last_n_days() : int {
+        $stage = 1;
+        if ( $_GET['stage'] ) {
+            $list = zume_funnel_stages( true );
+            $stage = (int)$list[$_GET['stage']]['value'];
+        }
+
+        $range = 30;
+        if ( $_GET['range'] ) {
+            $range = (int)$_GET['range'];
+        }
+
+        global $wpdb;
+        $timestamp = strtotime( "-$range days" );
+        $set_profile = $wpdb->get_col( $wpdb->prepare(
+            "SELECT DISTINCT(user_id) FROM `wp_dt_reports`
+            WHERE subtype = 'set_profile'
+            AND timestamp > %d;", $timestamp) );
+
+        $stage_list = self::stage_list( $stage );
+        $count = 0;
+        foreach( $set_profile as $value ) {
+            if ( isset( $stage_list[$value] ) ) {
+                $count++;
+            }
+        }
+        return $count;
+    }
+
+    public static function query_requested_coach_last_n_days() : int {
+        $stage = 1;
+        if ( $_GET['stage'] ) {
+            $list = zume_funnel_stages( true );
+            $stage = (int)$list[$_GET['stage']]['value'];
+        }
+
+        $range = 30;
+        if ( $_GET['range'] ) {
+            $range = (int)$_GET['range'];
+        }
+
+        global $wpdb;
+        $timestamp = strtotime( "-$range days" );
+        $requested_a_coach = $wpdb->get_col( $wpdb->prepare(
+            "SELECT DISTINCT(user_id) FROM `wp_dt_reports`
+            WHERE subtype = 'requested_a_coach'
+            AND timestamp > %d;", $timestamp ) );
+        $stage_list = self::stage_list( $stage );
+        $count = 0;
+        foreach( $requested_a_coach as $value ) {
+            if ( isset( $stage_list[$value] ) ) {
+                $count++;
+            }
+        }
+        return $count;
+    }
+
+    public static function query_invited_friends_last_n_days() : int {
+        $stage =  1;
+        if ( $_GET['stage'] ) {
+            $list = zume_funnel_stages( true );
+            $stage = (int)$list[$_GET['stage']]['value'];
+        }
+
+        $range = 30;
+        if ( $_GET['range'] ) {
+            $range = (int)$_GET['range'];
+        }
+
+        global $wpdb;
+        $timestamp = strtotime( "-$range days" );
+        $invited_friends = $wpdb->get_col( $wpdb->prepare(
+            "SELECT DISTINCT(user_id) FROM `wp_dt_reports`
+            WHERE subtype = 'invited_friends'
+            AND timestamp > %d;", $timestamp
+        ) );
+        $stage_list = self::stage_list( $stage );
+        $count = 0;
+        foreach( $invited_friends as $value ) {
+            if ( isset( $stage_list[$value] ) ) {
+                $count++;
+            }
+        }
+        return $count;
+    }
+
+    public static function flow_in_last_n_days() : int {
+        $stage = 1;
+        if ( $_GET['stage'] ) {
+            $list = zume_funnel_stages( true );
+            $stage = (int)$list[$_GET['stage']]['value'];
+        }
+
+        $range = 30;
+        if ( $_GET['range'] ) {
+            $range = (int)$_GET['range'];
+        }
+
+        global $wpdb;
+        $timestamp = strtotime( "-$range days" );
+        $flow_in = $wpdb->get_var( $wpdb->prepare(
+            "SELECT COUNT(DISTINCT(user_id)) FROM `wp_dt_reports`
+            WHERE value = %d
+            AND subtype = 'current_level'
+            AND timestamp > %d;", $stage, $timestamp
+        ) );
+        return $flow_in;
+    }
+
+    public static function flow_out_last_n_days() : int {
+        return 0;
+    }
+
 }
