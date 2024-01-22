@@ -743,7 +743,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
             ),
             'gu' => array(
-                'namne' => 'Gujarati',
+                'name' => 'Gujarati',
                 'enDisplayName' => 'Gujarati',
                 'code' => 'gu',
                 'displayCode' => 'gu',
