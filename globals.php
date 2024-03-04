@@ -62,7 +62,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
                 FROM {$table_prefix}3_postmeta
                 WHERE meta_key = 'trainee_user_id'
                   AND meta_value = %s",
-            $user_id ) );
+        $user_id ) );
         $coach_list = $wpdb->get_results( $wpdb->prepare(
             "SELECT p.ID as contact_id, pm.meta_value as user_id, p.post_title as name
                 FROM {$table_prefix}3_p2p p2
@@ -70,7 +70,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
                 LEFT JOIN {$table_prefix}3_postmeta pm ON pm.post_id = p.ID AND pm.meta_key = 'corresponds_to_user'
                 WHERE p2p_from = %d
                   AND p2p_type = 'contacts_to_contacts'",
-            $coaching_contact_id ), ARRAY_A );
+        $coaching_contact_id ), ARRAY_A );
         if ( ! empty( $coach_list ) ) {
             foreach ( $coach_list as $key => $value ) {
                 $coaches[$value['user_id']] = [];
@@ -1201,7 +1201,7 @@ if ( ! function_exists( 'zume_training_items' ) ) {
         $training_items = [
             '1' => [
                 'key' => '01',
-                'name' => __( 'god-uses-ordinary-people', 'zume' ),
+                'name' => 'god-uses-ordinary-people',
                 'title' => __( 'God Uses Ordinary People', 'zume' ),
                 'description' => __( "You'll see how God uses ordinary people doing simple things to make a big impact.", 'zume' ),
                 'type' => 'concept',
@@ -1382,7 +1382,7 @@ if ( ! function_exists( 'zume_training_items' ) ) {
             '21' => [
                 'key' => '21',
                 'name' => '3-3-group-meeting-pattern',
-                'title' => __( '3/3 Group Meeting Pattern', 'zume' ),
+                'title' => __( '3/3 Group Meeting', 'zume' ),
                 'description' => __( "A 3/3 Group is a way for followers of Jesus to meet, pray, learn, grow, fellowship and practice obeying and sharing what they've learned. In this way, a 3/3 Group is not just a small group but a Simple Church.", 'zume' ),
                 'type' => 'tool',
                 'host' => true,
@@ -1435,7 +1435,7 @@ if ( ! function_exists( 'zume_training_items' ) ) {
             ],
             '27' => [
                 'key' => '27',
-                'name' => '',
+                'name' => 'three-month-plan',
                 'title' => __( 'Three-Month Plan', 'zume' ),
                 'description' => __( 'Create and share your plan for how you will implement the Zúme tools over the next three months.', 'zume' ),
                 'type' => 'tool',
