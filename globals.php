@@ -147,6 +147,8 @@ if ( ! function_exists( 'zume_get_user_stage' ) ) {
                 6 => false,
             ];
 
+            $user_state = [];
+
             foreach ( $log as $value ) {
                 if ( 'registered' == $value['subtype'] ) {
                     $funnel_steps[1] = true;
@@ -165,6 +167,45 @@ if ( ! function_exists( 'zume_get_user_stage' ) ) {
                 }
                 if ( 'seeing_generational_fruit' == $value['subtype'] ) {
                     $funnel_steps[6] = true;
+                }
+                if ( 'plan_created' == $value['subtype'] ) {
+                    $user_state[$value['subtype']] = true;
+                }
+                if ( 'joined_online_training' == $value['subtype'] ) {
+                    $user_state[$value['subtype']] = true;
+                }
+                if ( 'set_profile' == $value['subtype'] ) {
+                    $user_state[$value['subtype']] = true;
+                }
+                if ( 'invited_friends' == $value['subtype'] ) {
+                    $user_state[$value['subtype']] = true;
+                }
+                if ( 'requested_a_coach' == $value['subtype'] ) {
+                    $user_state[$value['subtype']] = true;
+                }
+                if ( 'set_profile_location' == $value['subtype'] ) {
+                    $user_state[$value['subtype']] = true;
+                }
+                if ( 'set_profile_phone' == $value['subtype'] ) {
+                    $user_state[$value['subtype']] = true;
+                }
+                if ( 'set_profile_name' == $value['subtype'] ) {
+                    $user_state[$value['subtype']] = true;
+                }
+                if ( 'training_26_heard' == $value['log_key'] ) {
+                    $user_state['can_create_3_month_plan'] = true;
+                }
+                if ( 'made_3_month_plan' == $value['subtype'] ) {
+                    $user_state[$value['subtype']] = true;
+                }
+                if ( 'completed_3_month_plan' == $value['subtype'] ) {
+                    $user_state[$value['subtype']] = true;
+                }
+                if ( 'join_community' == $value['subtype'] ) {
+                    $user_state[$value['subtype']] = true;
+                }
+                if ( 'first_practitioner_report' == $value['subtype'] ) {
+                    $user_state[$value['subtype']] = true;
                 }
             }
 
@@ -188,6 +229,7 @@ if ( ! function_exists( 'zume_get_user_stage' ) ) {
         if ( $number_only ) {
             return $stage['value'];
         } else {
+            $stage['state'] = $user_state;
             return $stage;
         }
     }
@@ -1034,11 +1076,11 @@ if ( ! function_exists( 'zume_languages' ) ) {
             ),
             'pl ' => array(
                 'name' => 'Polish',
-                'enDisplayName' => 'Polski',
+                'enDisplayName' => 'Polish',
                 'code' => 'pl',
                 'displayCode' => 'pl',
                 'locale' => 'pl_PL',
-                'nativeName' => '',
+                'nativeName' => 'Polski',
                 'rtl' => false,
                 'feature_flags' => [
                     'language_selector' => true,
@@ -1480,302 +1522,368 @@ if ( ! function_exists( 'zume_training_items' ) ) {
         $training_items = [
             '1' => [
                 'key' => '01',
+                'key_int' => 1,
                 'slug' => 'god-uses-ordinary-people',
                 'title' => __( 'God Uses Ordinary People', 'zume' ),
                 'description' => __( "You'll see how God uses ordinary people doing simple things to make a big impact.", 'zume' ),
                 'type' => 'concept',
                 'host' => true,
                 'mawl' => false,
+                'script' => 34,
             ],
             '2' => [
                 'key' => '02',
+                'key_int' => 2,
                 'slug' => 'definition-of-disciple-and-church',
-                'title' => __( 'Simple Definition of Disciple and Church', 'zume' ),
+                'title' => __( 'Disciples and the Church', 'zume' ),
                 'description' => __( 'Discover the essence of being a disciple, making a disciple, and what is the church.', 'zume' ),
                 'type' => 'concept',
                 'host' => true,
                 'mawl' => false,
+                'script' => 35,
             ],
             '3' => [
                 'key' => '03',
+                'key_int' => 3,
                 'slug' => 'spiritual-breathing-is-hearing-and-obeying-god',
-                'title' => __( 'Spiritual Breathing is Hearing and Obeying God', 'zume' ),
+                'title' => __( 'Hearing and Obeying God', 'zume' ),
                 'description' => __( 'Being a disciple means we hear from God and we obey God.', 'zume' ),
                 'type' => 'concept',
                 'host' => true,
                 'mawl' => false,
+                'script' => 36,
             ],
             '4' => [
                 'key' => '04',
+                'key_int' => 4,
                 'slug' => 'soaps-bible-reading',
                 'title' => __( 'SOAPS Bible Reading', 'zume' ),
                 'description' => __( 'A tool for daily Bible study that helps you understand, obey, and share God’s Word.', 'zume' ),
                 'type' => 'tool',
                 'host' => true,
                 'mawl' => true,
+                'script' => 37,
             ],
             '5' => [
                 'key' => '05',
+                'key_int' => 5,
                 'slug' => 'accountability-groups',
                 'title' => __( 'Accountability Groups', 'zume' ),
                 'description' => __( 'A tool for two or three people of the same gender to meet weekly and encourage each other in areas that are going well and reveal areas that need correction.', 'zume' ),
                 'type' => 'tool',
                 'host' => true,
                 'mawl' => true,
+                'script' => 38,
             ],
             '6' => [
                 'key' => '06',
+                'key_int' => 6,
                 'slug' => 'consumer-vs-producer-lifestyle',
-                'title' => __( 'Consumer vs Producer Lifestyle', 'zume' ),
+                'title' => __( 'Producer not Consumer', 'zume' ),
                 'description' => __( "You'll discover the four main ways God makes everyday followers more like Jesus.", 'zume' ),
                 'type' => 'concept',
                 'host' => true,
                 'mawl' => false,
+                'script' => 39,
             ],
             '7' => [
                 'key' => '07',
+                'key_int' => 7,
                 'slug' => 'how-to-spend-an-hour-in-prayer',
                 'title' => __( 'How to Spend an Hour in Prayer', 'zume' ),
                 'description' => __( 'See how easy it is to spend an hour in prayer.', 'zume' ),
                 'type' => 'tool',
                 'host' => true,
                 'mawl' => true,
+                'script' => 40,
             ],
             '8' => [
                 'key' => '08',
+                'key_int' => 8,
                 'slug' => 'relational-stewardship-list-of-100',
                 'title' => __( 'Relational Stewardship – List of 100', 'zume' ),
                 'description' => __( 'A tool designed to help you be a good steward of your relationships.', 'zume' ),
                 'type' => 'tool',
                 'host' => true,
                 'mawl' => true,
+                'script' => 41,
             ],
             '9' => [
                 'key' => '09',
-                'slug' => 'the-kingdom-economy',
-                'title' => __( 'The Kingdom Economy', 'zume' ),
+                'key_int' => 9,
+                'slug' => 'the-spiritual-economy',
+                'title' => __( 'Spiritual Economy', 'zume' ),
                 'description' => __( "Learn how God's economy is different from the world's. God invests more in those who are faithful with what they've already been given.", 'zume' ),
                 'type' => 'concept',
                 'host' => true,
                 'mawl' => false,
+                'script' => 42,
             ],
             '10' => [
                 'key' => '10',
+                'key_int' => 10,
                 'slug' => 'the-gospel-and-how-to-share-it',
                 'title' => __( 'The Gospel and How to Share It', 'zume' ),
                 'description' => __( 'Learn a way to share God’s Good News from the beginning of humanity all the way to the end of this age.', 'zume' ),
                 'type' => 'tool',
                 'host' => true,
                 'mawl' => true,
+                'script' => 43,
             ],
             '11' => [
                 'key' => '11',
+                'key_int' => 11,
                 'slug' => 'baptism-and-how-to-do-it',
                 'title' => __( 'Baptism and How To Do It', 'zume' ),
                 'description' => __( 'Jesus said, “Go and make disciples of all nations, BAPTIZING them in the name of the Father and of the Son and of the Holy Spirit…” Learn how to put this into practice.', 'zume' ),
                 'type' => 'tool',
                 'host' => true,
                 'mawl' => true,
+                'script' => 44,
             ],
             '12' => [
                 'key' => '12',
+                'key_int' => 12,
                 'slug' => 'prepare-your-3-minute-testimony',
                 'title' => __( 'Prepare Your 3-Minute Testimony', 'zume' ),
                 'description' => __( 'Learn how to share your testimony in three minutes by sharing how Jesus has impacted your life.', 'zume' ),
                 'type' => 'tool',
                 'host' => true,
                 'mawl' => true,
+                'script' => 45,
             ],
             '13' => [
                 'key' => '13',
+                'key_int' => 13,
                 'slug' => 'vision-casting-the-greatest-blessing',
                 'title' => __( 'Vision Casting the Greatest Blessing', 'zume' ),
                 'description' => __( 'Learn a simple pattern of making not just one follower of Jesus but entire spiritual families who multiply for generations to come.', 'zume' ),
                 'type' => 'tool',
                 'host' => true,
                 'mawl' => true,
+                'script' => 46,
             ],
             '14' => [
                 'key' => '14',
+                'key_int' => 14,
                 'slug' => 'duckling-discipleship-leading-sooner',
                 'title' => __( 'Duckling Discipleship – Leading Immediately', 'zume' ),
                 'description' => __( 'Learn what ducklings have to do with disciple-making.', 'zume' ),
                 'type' => 'concept',
                 'host' => true,
                 'mawl' => false,
+                'script' => 47,
             ],
             '15' => [
                 'key' => '15',
+                'key_int' => 15,
                 'slug' => 'eyes-to-see-where-the-kingdom-isnt',
                 'title' => __( 'Eyes to See Where the Kingdom Isn’t', 'zume' ),
                 'description' => __( 'Begin to see where God’s Kingdom isn’t. These are usually the places where God wants to work the most.', 'zume' ),
                 'type' => 'concept',
                 'host' => true,
                 'mawl' => false,
+                'script' => 48,
             ],
             '16' => [
                 'key' => '16',
+                'key_int' => 16,
                 'slug' => 'the-lords-supper-and-how-to-lead-it',
                 'title' => __( 'The Lord’s Supper and How To Lead It', 'zume' ),
                 'description' => __( 'It’s a simple way to celebrate our intimate connection and ongoing relationship with Jesus. Learn a simple way to celebrate.', 'zume' ),
                 'type' => 'tool',
                 'host' => true,
                 'mawl' => true,
+                'script' => 49,
             ],
             '17' => [
                 'key' => '17',
+                'key_int' => 17,
                 'slug' => 'prayer-walking',
                 'title' => __( 'Prayer Walking and How To Do It', 'zume' ),
                 'description' => __( "It’s a simple way to obey God’s command to pray for others. And it's just what it sounds like — praying to God while walking around!", 'zume' ),
                 'type' => 'tool',
                 'host' => true,
                 'mawl' => true,
+                'script' => 50,
             ],
             '18' => [
                 'key' => '18',
+                'key_int' => 18,
                 'slug' => 'a-person-of-peace-and-how-to-find-one',
                 'title' => __( 'A Person of Peace and How To Find One', 'zume' ),
                 'description' => __( "Learn who a person of peace might be and how to know when you've found one.", 'zume' ),
                 'type' => 'concept',
                 'host' => true,
                 'mawl' => false,
+                'script' => 51,
             ],
             '19' => [
                 'key' => '19',
-                'slug' => 'the-bless-prayer-pattern',
-                'title' => __( 'The BLESS Prayer Pattern', 'zume' ),
-                'description' => __( 'Practice a simple mnemonic to remind you of ways to pray for others.', 'zume' ),
-                'type' => 'tool',
-                'host' => true,
-                'mawl' => true,
-            ],
-            '20' => [
-                'key' => '20',
+                'key_int' => 19,
                 'slug' => 'faithfulness-is-better-than-knowledge',
                 'title' => __( 'Faithfulness is Better Than Knowledge', 'zume' ),
                 'description' => __( "It's important what disciples know — but it's much more important what they DO with what they know.", 'zume' ),
                 'type' => 'concept',
                 'host' => true,
                 'mawl' => false,
+                'script' => 52,
+            ],
+            '20' => [
+                'key' => '20',
+                'key_int' => 20,
+                'slug' => 'the-bless-prayer-pattern',
+                'title' => __( 'The BLESS Prayer Pattern', 'zume' ),
+                'description' => __( 'Practice a simple mnemonic to remind you of ways to pray for others.', 'zume' ),
+                'type' => 'tool',
+                'host' => true,
+                'mawl' => true,
+                'script' => false,
             ],
             '21' => [
                 'key' => '21',
+                'key_int' => 21,
                 'slug' => '3-3-group-meeting-pattern',
                 'title' => __( '3/3 Group Meeting', 'zume' ),
                 'description' => __( "A 3/3 Group is a way for followers of Jesus to meet, pray, learn, grow, fellowship and practice obeying and sharing what they've learned. In this way, a 3/3 Group is not just a small group but a Simple Church.", 'zume' ),
                 'type' => 'tool',
                 'host' => true,
                 'mawl' => true,
+                'script' => 53,
             ],
             '22' => [
                 'key' => '22',
+                'key_int' => 22,
                 'slug' => 'training-cycle-for-maturing-disciples',
                 'title' => __( 'Training Cycle for Maturing Disciples', 'zume' ),
                 'description' => 'Learn the training cycle and consider how it applies to disciple making.',
                 'type' => 'tool',
                 'host' => true,
                 'mawl' => true,
+                'script' => 54,
             ],
             '23' => [
                 'key' => '23',
+                'key_int' => 23,
                 'slug' => 'leadership-cells',
                 'title' => __( 'Leadership Cells', 'zume' ),
                 'description' => __( 'A Leadership Cell is a way someone who feels called to lead can develop their leadership by practicing serving.', 'zume' ),
                 'type' => 'concept',
                 'host' => true,
                 'mawl' => false,
+                'script' => 55,
             ],
             '24' => [
                 'key' => '24',
+                'key_int' => 24,
                 'slug' => 'expect-non-sequential-growth',
                 'title' => __( 'Expect Non-Sequential Growth', 'zume' ),
                 'description' => __( "See how disciple making doesn't have to be linear. Multiple things can happen at the same time.", 'zume' ),
                 'type' => 'concept',
                 'host' => true,
                 'mawl' => false,
+                'script' => 56,
             ],
             '25' => [
                 'key' => '25',
+                'key_int' => 25,
                 'slug' => 'pace-of-multiplication-matters',
                 'title' => __( 'Pace of Multiplication Matters', 'zume' ),
                 'description' => __( 'Multiplying matters and multiplying quickly matters even more. See why pace matters.', 'zume' ),
                 'type' => 'concept',
                 'host' => true,
                 'mawl' => false,
+                'script' => 57,
             ],
             '26' => [
                 'key' => '26',
+                'key_int' => 26,
                 'slug' => 'always-part-of-two-churches',
                 'title' => __( 'Always Part of Two Churches', 'zume' ),
                 'description' => __( "Learn how to obey Jesus' commands by going AND staying.", 'zume' ),
                 'type' => 'concept',
                 'host' => true,
                 'mawl' => true,
+                'script' => 58,
             ],
             '27' => [
                 'key' => '27',
+                'key_int' => 27,
                 'slug' => 'three-month-plan',
                 'title' => __( 'Three-Month Plan', 'zume' ),
                 'description' => __( 'Create and share your plan for how you will implement the Zúme tools over the next three months.', 'zume' ),
                 'type' => 'tool',
                 'host' => true,
                 'mawl' => false,
+                'script' => false,
             ],
             '28' => [
                 'key' => '28',
+                'key_int' => 28,
                 'slug' => 'coaching-checklist',
                 'title' => __( 'Coaching Checklist', 'zume' ),
                 'description' => __( 'A powerful tool you can use to quickly assess your own strengths and vulnerabilities when it comes to making disciples who multiply.', 'zume' ),
                 'type' => 'tool',
                 'host' => true,
                 'mawl' => false,
+                'script' => 60,
             ],
             '29' => [
                 'key' => '29',
+                'key_int' => 29,
                 'slug' => 'leadership-in-networks',
                 'title' => __( 'Leadership in Networks', 'zume' ),
                 'description' => __( 'Learn how multiplying churches stay connected and live life together as an extended, spiritual family.', 'zume' ),
                 'type' => 'concept',
                 'host' => true,
                 'mawl' => false,
+                'script' => 61,
             ],
             '30' => [
                 'key' => '30',
+                'key_int' => 30,
                 'slug' => 'peer-mentoring-groups',
                 'title' => __( 'Peer Mentoring Groups', 'zume' ),
                 'description' => __( 'This is a group that consists of people who are leading and starting 3/3 Groups. It also follows a 3/3 format and is a powerful way to assess the spiritual health of God’s work in your area.', 'zume' ),
                 'type' => 'concept',
                 'host' => true,
                 'mawl' => false,
+                'script' => 62,
             ],
             '31' => [
                 'key' => '31',
+                'key_int' => 31,
                 'slug' => 'four-fields-tool',
                 'title' => __( 'Four Fields Tool', 'zume' ),
                 'description' => __( 'The four fields diagnostic chart is a simple tool to be used by a leadership cell to reflect on the status of current efforts and the kingdom activity around them.', 'zume' ),
                 'type' => 'tool',
                 'host' => true,
                 'mawl' => true,
+                'script' => false,
             ],
             '32' => [
                 'key' => '32',
+                'key_int' => 32,
                 'slug' => 'generational-mapping',
                 'title' => __( 'Generational Mapping', 'zume' ),
                 'description' => __( 'Generation mapping is another simple tool to help leaders in a movement understand the growth around them.', 'zume' ),
                 'type' => 'tool',
                 'host' => true,
                 'mawl' => true,
+                'script' => false,
             ],
         ];
 
         $list = [];
         foreach ( $training_items as $training_item ) {
             $index = $training_item['key'];
-            $list[] = [
+            $list[$training_item['key_int']] = [
                 'key' => $index,
+                'key_int' = $training_item['key_int'],
                 'type' => $training_item['type'],
                 'title' => $training_item['title'],
                 'slug' => $training_item['slug'],
+                'script' => $training_item['script'],
                 'description' => $training_item['description'],
                 'host' => $training_item['host'] ? [
                     [
