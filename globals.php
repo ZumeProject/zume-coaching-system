@@ -1879,7 +1879,7 @@ if ( ! function_exists( 'zume_training_items' ) ) {
             $index = $training_item['key'];
             $list[$training_item['key_int']] = [
                 'key' => $index,
-                'key_int' = $training_item['key_int'],
+                'key_int' => $training_item['key_int'],
                 'type' => $training_item['type'],
                 'title' => $training_item['title'],
                 'slug' => $training_item['slug'],
