@@ -93,6 +93,7 @@ class Zume_Coaching {
     }
 
     private function __construct() {
+        $this->define_constants();
         /* setup query access to zume.training site reports table */
         global $wpdb;
         $wpdb->zume_reports = 'wp_dt_reports';
@@ -119,6 +120,7 @@ class Zume_Coaching {
         if ( is_admin() ) {
             add_filter( 'plugin_row_meta', [ $this, 'plugin_description_links' ], 10, 4 );
         }
+
     }
     public function plugin_description_links( $links_array, $plugin_file_name, $plugin_data, $status ) {
         if ( strpos( $plugin_file_name, basename( __FILE__ ) ) ) {
@@ -143,5 +145,13 @@ class Zume_Coaching {
         _doing_it_wrong( 'zume_coaching::' . esc_html( $method ), 'Method does not exist.', '0.1' );
         unset( $method, $args );
         return null;
+    }
+    public function define_constants() {
+        if ( !defined( 'ZUME_LANGUAGE_COOKIE' ) ) {
+            define( 'ZUME_LANGUAGE_COOKIE', 'zume_language' );
+        }
+        if ( !defined( 'ZUME_EMAIL_HEADER' ) ) {
+            define( 'ZUME_EMAIL_HEADER', 'X-Zume-Email-System' );
+        }
     }
 }

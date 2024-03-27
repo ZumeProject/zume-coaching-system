@@ -58,15 +58,15 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
         $coaches = [];
         $coaching_contact_id = $wpdb->get_var( $wpdb->prepare(
             "SELECT post_id
-                FROM {$table_prefix}3_postmeta
+                FROM zume_3_postmeta
                 WHERE meta_key = 'trainee_user_id'
                   AND meta_value = %s",
         $user_id ) );
         $coach_list = $wpdb->get_results( $wpdb->prepare(
             "SELECT p.ID as contact_id, pm.meta_value as user_id, p.post_title as name
-                FROM {$table_prefix}3_p2p p2
-                LEFT JOIN {$table_prefix}3_posts p ON p2.p2p_to=p.ID
-                LEFT JOIN {$table_prefix}3_postmeta pm ON pm.post_id = p.ID AND pm.meta_key = 'corresponds_to_user'
+                FROM zume_3_p2p p2
+                LEFT JOIN zume_3_posts p ON p2.p2p_to=p.ID
+                LEFT JOIN zume_3_postmeta pm ON pm.post_id = p.ID AND pm.meta_key = 'corresponds_to_user'
                 WHERE p2p_from = %d
                   AND p2p_type = 'contacts_to_contacts'",
         $coaching_contact_id ), ARRAY_A );
@@ -1305,7 +1305,12 @@ if ( ! function_exists( 'zume_language_codes' ) ) {
 }
 if ( ! function_exists('zume_get_language_cookie') ) {
     function zume_get_language_cookie() {
-        return isset( $_COOKIE[ZUME_LANGUAGE_COOKIE] ) ? sanitize_key( $_COOKIE[ZUME_LANGUAGE_COOKIE] ) : '';
+        if ( defined( 'ZUME_LANGUAGE_COOKIE' ) ) {
+            return isset( $_COOKIE[ZUME_LANGUAGE_COOKIE] ) ? sanitize_key( $_COOKIE[ZUME_LANGUAGE_COOKIE] ) : '';
+        }
+        else {
+            return 'en';
+        }
     }
 }
 if ( ! function_exists( 'zume_get_language_locale' ) ) {
