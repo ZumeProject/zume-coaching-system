@@ -66,9 +66,9 @@ class Zume_Training_API
         }
         foreach( $postmeta_rows as $row ) {
             if ( 'location_grid' === $row['meta_key'] ) {
-                $fields['location_grid'][] = $wpdb->get_row("SELECT * FROM wp_dt_location_grid WHERE grid_id = {$row['meta_value']}", ARRAY_A);
+                $fields['location_grid'][] = $wpdb->get_row("SELECT * FROM zume_dt_location_grid WHERE grid_id = {$row['meta_value']}", ARRAY_A);
             } else if ( 'location_grid_meta' === $row['meta_key'] ) {
-                $fields['location_grid_meta'][] = $wpdb->get_row("SELECT * FROM wp_dt_location_grid_meta WHERE grid_meta_id = {$row['meta_value']}", ARRAY_A);
+                $fields['location_grid_meta'][] = $wpdb->get_row("SELECT * FROM zume_dt_location_grid_meta WHERE grid_meta_id = {$row['meta_value']}", ARRAY_A);
             }
             else {
                 $fields[ $row['meta_key'] ] = $row['meta_value'];

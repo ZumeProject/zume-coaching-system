@@ -96,8 +96,8 @@ class Zume_Coaching {
         $this->define_constants();
         /* setup query access to zume.training site reports table */
         global $wpdb;
-        $wpdb->zume_reports = 'wp_dt_reports';
-        $wpdb->zume_activity = 'wp_dt_activity_log';
+        $wpdb->zume_reports = 'zume_dt_reports';
+        $wpdb->zume_activity = 'zume_dt_activity_log';
         $wpdb->dt_movement_log = 'wp_3_dt_movement_log'; // @remove temp support for legacy movement log
         /* end custom table setup */
 

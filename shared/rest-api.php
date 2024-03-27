@@ -1612,12 +1612,12 @@ class Zume_Charts_API
                 FROM
                 (
                    SELECT r.user_id, MAX(r.value) as stage, (
-						SELECT grid_id FROM wp_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
-					) as grid_id FROM wp_dt_reports r
+						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
+					) as grid_id FROM zume_dt_reports r
                    WHERE r.type = 'stage' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
-                LEFT JOIN wp_dt_location_grid lg ON lg.grid_id=tb.grid_id
+                LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
                 WHERE tb.stage IN $range
             ) as t0
             GROUP BY t0.admin0_grid_id
@@ -1628,12 +1628,12 @@ class Zume_Charts_API
                 FROM
                 (
                    SELECT r.user_id, MAX(r.value) as stage, (
-						SELECT grid_id FROM wp_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
-					) as grid_id FROM wp_dt_reports r
+						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
+					) as grid_id FROM zume_dt_reports r
                    WHERE r.type = 'stage' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
-                LEFT JOIN wp_dt_location_grid lg ON lg.grid_id=tb.grid_id
+                LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
                 WHERE tb.stage IN $range
             ) as t1
             GROUP BY t1.admin1_grid_id
@@ -1644,12 +1644,12 @@ class Zume_Charts_API
                 FROM
                 (
                    SELECT r.user_id, MAX(r.value) as stage, (
-						SELECT grid_id FROM wp_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
-					) as grid_id FROM wp_dt_reports r
+						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
+					) as grid_id FROM zume_dt_reports r
                    WHERE r.type = 'stage' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
-                LEFT JOIN wp_dt_location_grid lg ON lg.grid_id=tb.grid_id
+                LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
                 WHERE tb.stage IN $range
             ) as t2
             GROUP BY t2.admin2_grid_id
@@ -1660,12 +1660,12 @@ class Zume_Charts_API
                 FROM
                 (
                    SELECT r.user_id, MAX(r.value) as stage, (
-						SELECT grid_id FROM wp_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
-					) as grid_id FROM wp_dt_reports r
+						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
+					) as grid_id FROM zume_dt_reports r
                    WHERE r.type = 'stage' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
-                LEFT JOIN wp_dt_location_grid lg ON lg.grid_id=tb.grid_id
+                LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
                 WHERE tb.stage IN $range
             ) as t3
             GROUP BY t3.admin3_grid_id;
@@ -1771,12 +1771,12 @@ class Zume_Charts_API
                 FROM
                 (
                    SELECT r.user_id, MAX(r.value) as stage, (
-						SELECT grid_id FROM wp_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
-					) as grid_id FROM wp_dt_reports r
+						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
+					) as grid_id FROM zume_dt_reports r
                    WHERE r.type = 'stage' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
-                LEFT JOIN wp_dt_location_grid lg ON lg.grid_id=tb.grid_id
+                LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
                 WHERE tb.stage IN $range
             ) as t0
             GROUP BY t0.admin0_grid_id
@@ -1787,12 +1787,12 @@ class Zume_Charts_API
                 FROM
                 (
                    SELECT r.user_id, MAX(r.value) as stage, (
-						SELECT grid_id FROM wp_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
-					) as grid_id FROM wp_dt_reports r
+						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
+					) as grid_id FROM zume_dt_reports r
                    WHERE r.type = 'stage' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
-                LEFT JOIN wp_dt_location_grid lg ON lg.grid_id=tb.grid_id
+                LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
                 WHERE tb.stage IN $range
             ) as t1
             GROUP BY t1.admin1_grid_id
@@ -1803,12 +1803,12 @@ class Zume_Charts_API
                 FROM
                 (
                    SELECT r.user_id, MAX(r.value) as stage, (
-						SELECT grid_id FROM wp_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
-					) as grid_id FROM wp_dt_reports r
+						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
+					) as grid_id FROM zume_dt_reports r
                    WHERE r.type = 'stage' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
-                LEFT JOIN wp_dt_location_grid lg ON lg.grid_id=tb.grid_id
+                LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
                 WHERE tb.stage IN $range
             ) as t2
             GROUP BY t2.admin2_grid_id
@@ -1819,12 +1819,12 @@ class Zume_Charts_API
                 FROM
                 (
                    SELECT r.user_id, MAX(r.value) as stage, (
-						SELECT grid_id FROM wp_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
-					) as grid_id FROM wp_dt_reports r
+						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
+					) as grid_id FROM zume_dt_reports r
                    WHERE r.type = 'stage' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
-                LEFT JOIN wp_dt_location_grid lg ON lg.grid_id=tb.grid_id
+                LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
                 WHERE tb.stage IN $range
             ) as t3
             GROUP BY t3.admin3_grid_id;
@@ -1851,9 +1851,9 @@ class Zume_Charts_API
             SELECT t0.admin0_grid_id as grid_id, count(t0.admin0_grid_id) as count
             FROM (
                 SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id
-                FROM wp_dt_location_grid_meta lgm
+                FROM zume_dt_location_grid_meta lgm
                 LEFT JOIN wp_postmeta pm ON pm.post_id=lgm.post_id AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
-                LEFT JOIN wp_dt_location_grid lg ON lg.grid_id=lgm.grid_id
+                LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=lgm.grid_id
                 WHERE lgm.post_type = 'groups'
             ) as t0
             GROUP BY t0.admin0_grid_id
@@ -1861,9 +1861,9 @@ class Zume_Charts_API
             SELECT t1.admin1_grid_id as grid_id, count(t1.admin1_grid_id) as count
             FROM (
                 SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id
-                FROM wp_dt_location_grid_meta lgm
+                FROM zume_dt_location_grid_meta lgm
                 LEFT JOIN wp_postmeta pm ON pm.post_id=lgm.post_id AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
-                LEFT JOIN wp_dt_location_grid lg ON lg.grid_id=lgm.grid_id
+                LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=lgm.grid_id
                 WHERE lgm.post_type = 'groups'
             ) as t1
             GROUP BY t1.admin1_grid_id
@@ -1871,9 +1871,9 @@ class Zume_Charts_API
             SELECT t2.admin2_grid_id as grid_id, count(t2.admin2_grid_id) as count
             FROM (
                 SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id
-                FROM wp_dt_location_grid_meta lgm
+                FROM zume_dt_location_grid_meta lgm
                 LEFT JOIN wp_postmeta pm ON pm.post_id=lgm.post_id AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
-                LEFT JOIN wp_dt_location_grid lg ON lg.grid_id=lgm.grid_id
+                LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=lgm.grid_id
                 WHERE lgm.post_type = 'groups'
             ) as t2
             GROUP BY t2.admin2_grid_id
@@ -1881,9 +1881,9 @@ class Zume_Charts_API
             SELECT t3.admin3_grid_id as grid_id, count(t3.admin3_grid_id) as count
             FROM (
                 SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id
-                FROM wp_dt_location_grid_meta lgm
+                FROM zume_dt_location_grid_meta lgm
                 LEFT JOIN wp_postmeta pm ON pm.post_id=lgm.post_id AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
-                LEFT JOIN wp_dt_location_grid lg ON lg.grid_id=lgm.grid_id
+                LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=lgm.grid_id
                 WHERE lgm.post_type = 'groups'
             ) as t3
             GROUP BY t3.admin3_grid_id;
@@ -2081,6 +2081,7 @@ class Zume_Charts_API
         return zume_log_insert( $params['type'], $params['subtype'], [ 'user_id' => $user_id ] );
     }
     public function delete_mawl( WP_REST_Request $request ) {
+        global $wpdb;
         $params = dt_recursive_sanitize_array( $request->get_params() );
         if ( ! isset( $params['type'], $params['subtype'], $params['user_id'] ) ) {
             return new WP_Error( __METHOD__, 'Type, subtype, and user_id required.', array( 'status' => 401 ) );
@@ -2096,7 +2097,7 @@ class Zume_Charts_API
             'user_id' => $user_id,
         ];
 
-        $delete = $wpdb->delete( 'wp_dt_reports', $fields );
+        $delete = $wpdb->delete( 'zume_dt_reports', $fields );
 
         return $delete;
     }
