@@ -1303,6 +1303,11 @@ if ( ! function_exists( 'zume_language_codes' ) ) {
         return array_keys( $zume_languages_by_code );
     }
 }
+if ( ! function_exists('zume_get_language_cookie') ) {
+    function zume_get_language_cookie() {
+        return isset( $_COOKIE[ZUME_LANGUAGE_COOKIE] ) ? sanitize_key( $_COOKIE[ZUME_LANGUAGE_COOKIE] ) : '';
+    }
+}
 if ( ! function_exists( 'zume_get_language_locale' ) ) {
     function zume_get_language_locale( $code ) {
         global $zume_languages_by_code;
@@ -1948,6 +1953,16 @@ if ( ! function_exists( 'zume_training_items' ) ) {
             ];
         }
 
+        return $list;
+    }
+}
+if ( ! function_exists('zume_training_items_by_script') ) {
+    function zume_training_items_by_script(): array {
+        $training_items = zume_training_items();
+        $list = [];
+        foreach ( $training_items as $training_item ) {
+            $list[$training_item['script']] = $training_item;
+        }
         return $list;
     }
 }
