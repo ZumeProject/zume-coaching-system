@@ -5947,6 +5947,7 @@ if ( ! class_exists('Zume_System_Log_API') ) {
                 'type' => $type,
                 'subtype' => $subtype,
                 'value' => 0,
+                'payload' => null,
                 'lng' => null,
                 'lat' => null,
                 'level' => null,
@@ -5981,6 +5982,7 @@ if ( ! class_exists('Zume_System_Log_API') ) {
             self::_prepare_post_id($report, $data);
             self::_prepare_time_end($report, $data);
             self::_prepare_value($report, $data, $log);
+            self::_prepare_payload($report, $data, $log);
 
             $report['hash'] = hash('sha256', maybe_serialize($report) . time());
             $added_log[] = self::insert($report, true, false);
@@ -6086,6 +6088,13 @@ if ( ! class_exists('Zume_System_Log_API') ) {
             return $report;
         }
 
+        private static function _prepare_payload( &$report, $data, $log ) {
+            if ( isset( $data['payload'] ) && !empty( $data['payload'] ) ) {
+                $report['payload'] = $data['payload'];
+            }
+
+            return $report;
+        }
 
         public static function _add_additional_log_actions(&$added_log, $data, $log)
         {
