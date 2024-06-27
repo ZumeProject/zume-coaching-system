@@ -2577,6 +2577,41 @@ if ( ! function_exists( 'zume_current_language' ) ) {
         return $url['lang_code'] ?? '';
     }
 }
+if ( ! function_exists( 'zume_get_url_pieces') ) {
+    function zume_get_url_pieces( $url = null ) {
+
+        if ( !$url ) {
+            $url = dt_get_url_path();
+        }
+
+        $dt_url = new DT_URL( $url );
+
+        $codes = zume_language_codes();
+
+        $path = isset( $dt_url->parsed_url['path'] ) ? $dt_url->parsed_url['path'] : '';
+
+        $url_parts = explode( '/', $path );
+
+        $lang_code = 'en';
+        if ( in_array( $url_parts[0], $codes ) ) {
+            $lang_code = array_shift( $url_parts );
+        }
+        $path = implode( '/', $url_parts );
+
+        return [
+            'lang_code' => (string) $lang_code ?? 'en',
+            'path' => $path,
+            'url_parts' => ( $url_parts ) ? $url_parts : [],
+        ];
+    }
+}
+if ( ! function_exists( 'zume_set_language_cookie' ) ) {
+    function zume_set_language_cookie( string $lang, array $args = [] ) {
+        if ( zume_get_language_cookie() !== $lang ) {
+            setcookie( ZUME_LANGUAGE_COOKIE, $lang, 0, '/' );
+        }
+    }
+}
 if ( ! function_exists( 'zume_format_int' ) ) {
     function zume_format_int( $int )
     {
