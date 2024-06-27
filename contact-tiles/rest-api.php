@@ -52,8 +52,8 @@ class Zume_Training_API
         $params = dt_recursive_sanitize_array($request->get_params());
 
         global $wpdb;
-        $post_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM wp_posts WHERE ID = %d", $params['id'] ), ARRAY_A );
-        $postmeta_rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM wp_postmeta WHERE post_id = %d", $params['id'] ), ARRAY_A );
+        $post_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM zume_posts WHERE ID = %d", $params['id'] ), ARRAY_A );
+        $postmeta_rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM zume_postmeta WHERE post_id = %d", $params['id'] ), ARRAY_A );
         $connections = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM wp_p2p WHERE p2p_from = %d OR p2p_to = %d", $params['id'], $params['id'] ), ARRAY_A );
 
         $fields = [

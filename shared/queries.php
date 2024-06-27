@@ -51,7 +51,7 @@ class Zume_Queries {
             (
               $query_for_user_stage
             ) as tb
-            LEFT JOIN wp_posts p ON p.ID=tb.post_id
+            LEFT JOIN zume_posts p ON p.ID=tb.post_id
             LEFT JOIN zume_dt_location_grid_meta lgm ON lgm.post_id=tb.post_id AND lgm.post_type='contacts'
             WHERE tb.stage IN $range;", ARRAY_A );
 
@@ -78,7 +78,7 @@ class Zume_Queries {
             (
               $query_for_user_stage
             ) as tb
-            LEFT JOIN wp_posts p ON p.ID=tb.post_id
+            LEFT JOIN zume_posts p ON p.ID=tb.post_id
             LEFT JOIN zume_dt_location_grid_meta lgm ON lgm.post_id=tb.post_id AND lgm.post_type='contacts'
             WHERE tb.stage IN $range
             AND lgm.lat > $south
@@ -99,8 +99,8 @@ class Zume_Queries {
 
         $results = $wpdb->get_results(
             "SELECT p.ID as post_id, p.post_title as name, 'groups' as post_type, lgm.grid_id, lgm.lng, lgm.lat, lgm.level, lgm.source, lgm.label
-            FROM wp_posts p
-            LEFT JOIN wp_postmeta pm ON pm.post_id=p.ID AND pm.meta_key = 'location_grid_meta'
+            FROM zume_posts p
+            LEFT JOIN zume_postmeta pm ON pm.post_id=p.ID AND pm.meta_key = 'location_grid_meta'
             LEFT JOIN zume_dt_location_grid_meta lgm ON lgm.grid_meta_id=pm.meta_value
             WHERE p.post_type = 'groups';", ARRAY_A );
 
@@ -116,8 +116,8 @@ class Zume_Queries {
 
         $results = $wpdb->get_results(
             "SELECT p.ID, p.post_title as name, 'groups' as post_type, lgm.grid_id, lgm.lng, lgm.lat, lgm.level, lgm.source, lgm.label
-            FROM wp_posts p
-            LEFT JOIN wp_postmeta pm ON pm.post_id=p.ID AND pm.meta_key = 'location_grid_meta'
+            FROM zume_posts p
+            LEFT JOIN zume_postmeta pm ON pm.post_id=p.ID AND pm.meta_key = 'location_grid_meta'
             LEFT JOIN zume_dt_location_grid_meta lgm ON lgm.grid_meta_id=pm.meta_value
             WHERE p.post_type = 'groups'
             AND lgm.lat > $south
@@ -165,9 +165,9 @@ class Zume_Queries {
         global $wpdb;
         $results = $wpdb->get_var(
             "SELECT count(*) as count
-                    FROM wp_posts p
-                    JOIN wp_postmeta pm ON pm.post_id=p.ID AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
-                    JOIN wp_postmeta pm2 ON pm2.post_id=p.ID AND pm2.meta_key = 'group_status' AND pm2.meta_value = 'active'
+                    FROM zume_posts p
+                    JOIN zume_postmeta pm ON pm.post_id=p.ID AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
+                    JOIN zume_postmeta pm2 ON pm2.post_id=p.ID AND pm2.meta_key = 'group_status' AND pm2.meta_value = 'active'
                     WHERE post_type = 'groups';"
         );
         if ( $results ) {

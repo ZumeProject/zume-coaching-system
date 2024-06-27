@@ -1852,7 +1852,7 @@ class Zume_Charts_API
             FROM (
                 SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id
                 FROM zume_dt_location_grid_meta lgm
-                LEFT JOIN wp_postmeta pm ON pm.post_id=lgm.post_id AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
+                LEFT JOIN zume_postmeta pm ON pm.post_id=lgm.post_id AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=lgm.grid_id
                 WHERE lgm.post_type = 'groups'
             ) as t0
@@ -1862,7 +1862,7 @@ class Zume_Charts_API
             FROM (
                 SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id
                 FROM zume_dt_location_grid_meta lgm
-                LEFT JOIN wp_postmeta pm ON pm.post_id=lgm.post_id AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
+                LEFT JOIN zume_postmeta pm ON pm.post_id=lgm.post_id AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=lgm.grid_id
                 WHERE lgm.post_type = 'groups'
             ) as t1
@@ -1872,7 +1872,7 @@ class Zume_Charts_API
             FROM (
                 SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id
                 FROM zume_dt_location_grid_meta lgm
-                LEFT JOIN wp_postmeta pm ON pm.post_id=lgm.post_id AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
+                LEFT JOIN zume_postmeta pm ON pm.post_id=lgm.post_id AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=lgm.grid_id
                 WHERE lgm.post_type = 'groups'
             ) as t2
@@ -1882,7 +1882,7 @@ class Zume_Charts_API
             FROM (
                 SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id
                 FROM zume_dt_location_grid_meta lgm
-                LEFT JOIN wp_postmeta pm ON pm.post_id=lgm.post_id AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
+                LEFT JOIN zume_postmeta pm ON pm.post_id=lgm.post_id AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=lgm.grid_id
                 WHERE lgm.post_type = 'groups'
             ) as t3
