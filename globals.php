@@ -706,6 +706,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'English',
                 'rtl' => false,
                 'flag' => '🇺🇸',
+                'population' => 500000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -723,6 +724,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'አማርኛ',
                 'rtl' => false,
                 'flag' => '🇪🇹',
+                'population' => 22000000,
                 'feature_flags' => [
                     'language_selector' => false,
                     'pieces_pages' => false,
@@ -740,6 +742,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'العربية',
                 'rtl' => true,
                 'flag' => '🇸🇦',
+                'population' => 230000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -757,6 +760,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'العربية - الأردن',
                 'rtl' => true,
                 'flag' => '🇯🇴',
+                'population' => 0,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => false,
@@ -774,6 +778,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'العربية - الأردن',
                 'rtl' => true,
                 'flag' => '🇹🇳',
+                'population' => 0,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -791,6 +796,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'العربية - الأردن',
                 'rtl' => true,
                 'flag' => '🇲🇦',
+                'population' => 0,
                 'feature_flags' => [
                     'language_selector' => false,
                     'pieces_pages' => false,
@@ -808,6 +814,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Armenian',
                 'rtl' => false,
                 'flag' => '🇦🇲',
+                'population' => 5300000,
                 'feature_flags' => [
                     'language_selector' => false,
                     'pieces_pages' => false,
@@ -825,6 +832,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Azerbaijani',
                 'rtl' => false,
                 'flag' => '🇦🇿',
+                'population' => 24000000,
                 'feature_flags' => [
                     'language_selector' => false,
                     'pieces_pages' => false,
@@ -842,6 +850,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Sign Language',
                 'rtl' => false,
                 'flag' => '🤟',
+                'population' => 15360000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -859,6 +868,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'বাংলা',
                 'rtl' => false,
                 'flag' => '🇮🇳',
+                'population' => 215000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => false,
@@ -876,6 +886,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'भोजपुरी',
                 'rtl' => false,
                 'flag' => '🇮🇳',
+                'population' => 40000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => false,
@@ -893,6 +904,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Bosanski',
                 'rtl' => false,
                 'flag' => '🇧🇦',
+                'population' => 2600000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -910,6 +922,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'български език',
                 'rtl' => false,
                 'flag' => '🇧🇬',
+                'population' => 15000000,
                 'feature_flags' => [
                     'language_selector' => false,
                     'pieces_pages' => false,
@@ -927,6 +940,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'မြန်မာဘာသာ',
                 'rtl' => false,
                 'flag' => '🇲🇲',
+                'population' => 42000000,
                 'feature_flags' => [
                     'language_selector' => false,
                     'pieces_pages' => false,
@@ -944,6 +958,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => '粵語（繁體)',
                 'rtl' => false,
                 'flag' => '🇭🇰',
+                'population' => 72000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -961,6 +976,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => '简体中文',
                 'rtl' => false,
                 'flag' => '🇨🇳',
+                'population' => 1300000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -978,6 +994,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => '中國傳統的',
                 'rtl' => false,
                 'flag' => '🇹🇼',
+                'population' => 0,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -995,6 +1012,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Hrvatski',
                 'rtl' => false,
                 'flag' => '🇭🇷',
+                'population' => 6000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -1012,6 +1030,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Faroese',
                 'rtl' => false,
                 'flag' => '🇫🇴',
+                'population' => 69000,
                 'feature_flags' => [
                     'language_selector' => false,
                     'pieces_pages' => false,
@@ -1029,6 +1048,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Français',
                 'rtl' => false,
                 'flag' => '🇫🇷',
+                'population' => 321000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -1046,6 +1066,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Deutsch',
                 'rtl' => false,
                 'flag' => '🇩🇪',
+                'population' => 229000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -1063,6 +1084,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'ગુજરાતી',
                 'rtl' => false,
                 'flag' => '🇮🇳',
+                'population' => 210000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => false,
@@ -1080,6 +1102,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Hausa',
                 'rtl' => false,
                 'flag' => '🇳🇬',
+                'population' => 88000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => false,
@@ -1097,6 +1120,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'हिन्दी',
                 'rtl' => false,
                 'flag' => '🇮🇳',
+                'population' => 615000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -1114,6 +1138,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Bahasa Indonesia',
                 'rtl' => false,
                 'flag' => '🇮🇩',
+                'population' => 200000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -1131,6 +1156,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Italiano',
                 'rtl' => false,
                 'flag' => '🇮🇹',
+                'population' => 64600000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -1148,6 +1174,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => '日本語',
                 'rtl' => false,
                 'flag' => '🇯🇵',
+                'population' => 126000000,
                 'feature_flags' => [
                     'language_selector' => false,
                     'pieces_pages' => false,
@@ -1165,6 +1192,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'ಕನ್ನಡ',
                 'rtl' => false,
                 'flag' => '🇮🇳',
+                'population' => 47000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -1182,6 +1210,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => '한국어',
                 'rtl' => false,
                 'flag' => '🇰🇷',
+                'population' => 75000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => false,
@@ -1199,6 +1228,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'کوردی',
                 'rtl' => true,
                 'flag' => '🇮🇶',
+                'population' => 26000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => false,
@@ -1216,6 +1246,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'ພາສາລາວ',
                 'rtl' => false,
                 'flag' => '🇱🇦',
+                'population' => 3000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => false,
@@ -1233,6 +1264,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Latviešu',
                 'rtl' => false,
                 'flag' => '🇱🇻',
+                'population' => 1200000,
                 'feature_flags' => [
                     'language_selector' => false,
                     'pieces_pages' => false,
@@ -1250,6 +1282,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => '𑒧𑒻𑒟𑒱𑒪𑒲',
                 'rtl' => false,
                 'flag' => '🇮🇳',
+                'population' => 50000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => false,
@@ -1267,6 +1300,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'മലയാളം',
                 'rtl' => false,
                 'flag' => '🇮🇳',
+                'population' => 35000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -1284,6 +1318,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'मराठी',
                 'rtl' => false,
                 'flag' => '🇮🇳',
+                'population' => 83000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -1301,6 +1336,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Монгол',
                 'rtl' => false,
                 'flag' => '🇲🇳',
+                'population' => 9000000,
                 'feature_flags' => [
                     'language_selector' => false,
                     'pieces_pages' => false,
@@ -1318,6 +1354,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'नेपाली',
                 'rtl' => false,
                 'flag' => '🇳🇵',
+                'population' => 32000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => false,
@@ -1335,6 +1372,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'ଓଡ଼ିଆ',
                 'rtl' => false,
                 'flag' => '🇮🇳',
+                'population' => 50000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => false,
@@ -1352,6 +1390,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'فارسی',
                 'rtl' => true,
                 'flag' => '🇮🇷',
+                'population' => 62000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => false,
@@ -1369,6 +1408,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Polski',
                 'rtl' => false,
                 'flag' => '🇵🇱',
+                'population' => 43000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -1386,6 +1426,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Português',
                 'rtl' => false,
                 'flag' => '🇵🇹',
+                'population' => 300000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -1403,6 +1444,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'ਪੰਜਾਬੀ',
                 'rtl' => false,
                 'flag' => '🇮🇳',
+                'population' => 210000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -1420,6 +1462,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'ਪੰਜਾਬੀ (ਪੱਛਮੀ)',
                 'rtl' => false,
                 'flag' => '🇵🇰',
+                'population' => 80000000,
                 'feature_flags' => [
                     'language_selector' => false,
                     'pieces_pages' => false,
@@ -1437,6 +1480,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Русский',
                 'rtl' => false,
                 'flag' => '🇷🇺',
+                'population' => 258000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -1454,6 +1498,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Română',
                 'rtl' => false,
                 'flag' => '🇷🇴',
+                'population' => 25000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => false,
@@ -1471,6 +1516,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Slovenščina',
                 'rtl' => false,
                 'flag' => '🇸🇮',
+                'population' => 2500000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -1488,6 +1534,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Soomaali',
                 'rtl' => false,
                 'flag' => '🇸🇴',
+                'population' => 24000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => false,
@@ -1505,6 +1552,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Español',
                 'rtl' => false,
                 'flag' => '🇪🇸',
+                'population' => 500000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -1522,6 +1570,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Español (España)',
                 'rtl' => false,
                 'flag' => '🇪🇸',
+                'population' => 0,
                 'feature_flags' => [
                     'language_selector' => false,
                     'pieces_pages' => false,
@@ -1539,6 +1588,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Kiswahili',
                 'rtl' => false,
                 'flag' => '🇹🇿',
+                'population' => 200000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => false,
@@ -1556,6 +1606,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'தமிழ்',
                 'rtl' => false,
                 'flag' => '🇮🇳',
+                'population' => 89000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -1573,6 +1624,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'తెలుగు',
                 'rtl' => false,
                 'flag' => '🇮🇳',
+                'population' => 96000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => true,
@@ -1590,6 +1642,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'ไทย',
                 'rtl' => false,
                 'flag' => '🇹🇭',
+                'population' => 69000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => false,
@@ -1607,6 +1660,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Türkçe',
                 'rtl' => false,
                 'flag' => '🇹🇷',
+                'population' => 80000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => false,
@@ -1624,6 +1678,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Україна',
                 'rtl' => true,
                 'flag' => '🇺🇦',
+                'population' => 45000000,
                 'feature_flags' => [
                     'language_selector' => false,
                     'pieces_pages' => false,
@@ -1641,6 +1696,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'اردو',
                 'rtl' => true,
                 'flag' => '🇵🇰',
+                'population' => 230000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => false,
@@ -1658,6 +1714,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Tiếng Việt',
                 'rtl' => false,
                 'flag' => '🇻🇳',
+                'population' => 85000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => false,
@@ -1675,6 +1732,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'nativeName' => 'Yorùbá',
                 'rtl' => false,
                 'flag' => '🇳🇬',
+                'population' => 47000000,
                 'feature_flags' => [
                     'language_selector' => true,
                     'pieces_pages' => false,
@@ -5661,14 +5719,14 @@ if ( ! class_exists( 'Zume_Global_Endpoints' ) ) {
                 $namespace, '/user_data/profile', [
                     'methods' => [ 'GET', 'POST' ],
                     'callback' => [ $this, 'user_data_profile' ],
-                    'permission_callback' => '__return_true',
+                    'permission_callback' => 'is_user_logged_in',
                 ]
             );
             register_rest_route(
                 $namespace, '/user_data/stage', [
                     'methods' => [ 'GET', 'POST' ],
                     'callback' => [ $this, 'user_data_stage' ],
-                    'permission_callback' => '__return_true',
+                    'permission_callback' => 'is_user_logged_in',
                 ]
             );
 
@@ -5679,35 +5737,35 @@ if ( ! class_exists( 'Zume_Global_Endpoints' ) ) {
                 $namespace, '/commitment', [
                     'methods' => 'POST',
                     'callback' => [ $this, 'create_commitment' ],
-                    'permission_callback' => '__return_true',
+                    'permission_callback' => 'is_user_logged_in',
                 ]
             );
             register_rest_route(
                 $namespace, '/commitments', [
                     'methods' => 'GET',
                     'callback' => [ $this, 'list_commitments' ],
-                    'permission_callback' => '__return_true',
+                    'permission_callback' => 'is_user_logged_in',
                 ]
             );
             register_rest_route(
                 $namespace, '/commitment', [
                     'methods' => 'UPDATE',
                     'callback' => [ $this, 'update_commitment' ],
-                    'permission_callback' => '__return_true',
+                    'permission_callback' => 'is_user_logged_in',
                 ]
             );
             register_rest_route(
                 $namespace, '/commitment', [
                     'methods' => 'PUT',
                     'callback' => [ $this, 'complete_commitment' ],
-                    'permission_callback' => '__return_true',
+                    'permission_callback' => 'is_user_logged_in',
                 ]
             );
             register_rest_route(
                 $namespace, '/commitment', [
                     'methods' => 'DELETE',
                     'callback' => [ $this, 'delete_commitment' ],
-                    'permission_callback' => '__return_true',
+                    'permission_callback' => 'is_user_logged_in',
                 ]
             );
             /**
@@ -5717,21 +5775,21 @@ if ( ! class_exists( 'Zume_Global_Endpoints' ) ) {
                 $namespace, '/host', [
                     'methods' => 'GET',
                     'callback' => [ $this, 'list_host' ],
-                    'permission_callback' => '__return_true',
+                    'permission_callback' => 'is_user_logged_in',
                 ]
             );
             register_rest_route(
                 $namespace, '/host', [
                     'methods' => 'POST',
                     'callback' => [ $this, 'create_host' ],
-                    'permission_callback' => '__return_true',
+                    'permission_callback' => 'is_user_logged_in',
                 ]
             );
             register_rest_route(
                 $namespace, '/host', [
                     'methods' => 'DELETE',
                     'callback' => [ $this, 'delete_host' ],
-                    'permission_callback' => '__return_true',
+                    'permission_callback' => 'is_user_logged_in',
                 ]
             );
         }
@@ -5748,10 +5806,6 @@ if ( ! class_exists( 'Zume_Global_Endpoints' ) ) {
 
         public function create_commitment( WP_REST_Request $request )
         {
-            if ( ! is_user_logged_in() ) {
-                return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
-            }
-
             global $wpdb, $table_prefix;
             $params = dt_recursive_sanitize_array( $request->get_params() );
             if ( isset( $params['user_id'] ) ) {
@@ -5792,10 +5846,6 @@ if ( ! class_exists( 'Zume_Global_Endpoints' ) ) {
         }
         public function list_commitments( WP_REST_Request $request )
         {
-            if ( ! is_user_logged_in() ) {
-                return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
-            }
-
             $params = dt_recursive_sanitize_array( $request->get_params() );
 
             if ( isset( $params['user_id'] ) ) {
@@ -5899,9 +5949,6 @@ if ( ! class_exists( 'Zume_Global_Endpoints' ) ) {
 
         /** Host */
         public function list_host( WP_REST_Request $request ) {
-            if ( ! is_user_logged_in() ) {
-                return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
-            }
             $params = dt_recursive_sanitize_array( $request->get_params() );
             if ( ! isset( $params['user_id'] ) ) {
                 return new WP_Error( __METHOD__, 'User_id required.', array( 'status' => 401 ) );
@@ -5914,9 +5961,6 @@ if ( ! class_exists( 'Zume_Global_Endpoints' ) ) {
             return zume_get_user_host( $user_id );
         }
         public function create_host( WP_REST_Request $request ) {
-            if ( ! is_user_logged_in() ) {
-                return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
-            }
             $params = dt_recursive_sanitize_array( $request->get_params() );
             if ( ! isset( $params['type'], $params['subtype'], $params['user_id'] ) ) {
                 return new WP_Error( __METHOD__, 'Type, subtype, and user_id required.', array( 'status' => 401 ) );
@@ -5933,9 +5977,6 @@ if ( ! class_exists( 'Zume_Global_Endpoints' ) ) {
         }
         public function delete_host( WP_REST_Request $request ) {
             global $wpdb, $table_prefix;
-            if ( ! is_user_logged_in() ) {
-                return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
-            }
             $params = dt_recursive_sanitize_array( $request->get_params() );
             if ( ! isset( $params['type'], $params['subtype'], $params['user_id'] ) ) {
                 return new WP_Error( __METHOD__, 'Type, subtype, and user_id required.', array( 'status' => 401 ) );
@@ -6040,14 +6081,14 @@ if ( ! class_exists('Zume_System_Log_API') ) {
                 $namespace, '/log', [
                     'methods' => ['POST'],
                     'callback' => [$this, 'rest_log'],
-                    'permission_callback' => '__return_true'
+                    'permission_callback' => 'is_user_logged_in'
                 ]
             );
             register_rest_route(
                 $namespace, '/log', [
                     'methods' => ['GET'],
                     'callback' => [$this, 'get_log'],
-                    'permission_callback' => '__return_true'
+                    'permission_callback' => 'is_user_logged_in'
                 ]
             );
         }
