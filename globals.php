@@ -66,7 +66,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
                 FROM zume_3_postmeta
                 WHERE meta_key = 'trainee_user_id'
                   AND meta_value = %s",
-        $user_id ) );
+            $user_id ) );
         $coach_list = $wpdb->get_results( $wpdb->prepare(
             "SELECT p.ID as contact_id, pm.meta_value as user_id, p.post_title as name
                 FROM zume_3_p2p p2
@@ -74,7 +74,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
                 LEFT JOIN zume_3_postmeta pm ON pm.post_id = p.ID AND pm.meta_key = 'corresponds_to_user'
                 WHERE p2p_from = %d
                   AND p2p_type = 'contacts_to_contacts'",
-        $coaching_contact_id ), ARRAY_A );
+            $coaching_contact_id ), ARRAY_A );
         if ( ! empty( $coach_list ) ) {
             foreach ( $coach_list as $key => $value ) {
                 $communication_apps = $wpdb->get_results( $wpdb->prepare(
@@ -693,7 +693,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
      * @return array
      */
     function zume_languages( $type = 'code' ) {
-        global $zume_languages_by_code, $zume_languages_by_locale, $zume_languages_full_list;
+        global $zume_languages_by_code, $zume_languages_by_locale, $zume_languages_full_list, $zume_languages_v5_ready;
         $list = array(
             'en' => array(
                 'name' => 'English',
@@ -708,14 +708,14 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'population' => 500000000,
                 'enable_flags' => [
                     'version_4_available' => true,
-                        // has a published version in zume 4.0
-                        // if version 5 not ready, then language will be listed and redirect to legacy.zume.training
+                    // has a published version in zume 4.0
+                    // if version 5 not ready, then language will be listed and redirect to legacy.zume.training
                     'translator_enabled' => true,
-                        // enables the translator app to begin translation
+                    // enables the translator app to begin translation
                     'version_5_ready' => true,
-                        // publishes publicly the version 5.0 system with minimum support
-                        // has translated (weblate, scripts, activities, videos, files)
-                        // allows the language to show up in the selection  list, and disables redirect to 4.0
+                    // publishes publicly the version 5.0 system with minimum support
+                    // has translated (weblate, scripts, activities, videos, files)
+                    // allows the language to show up in the selection  list, and disables redirect to 4.0
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
@@ -1809,6 +1809,9 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 $zume_languages_by_code[$lang['code']] = $lang;
                 $zume_languages_by_locale[$lang['locale']] = $lang;
             }
+            if ( $lang['enable_flags']['version_5_ready'] ) {
+                $zume_languages_v5_ready[$lang['code']] = $lang;
+            }
             if ( $lang['enable_flags']['translator_enabled'] ) {
                 $zume_languages_full_list[$lang['code']] = $lang;
             }
@@ -1816,6 +1819,9 @@ if ( ! function_exists( 'zume_languages' ) ) {
 
         if ( $type === 'full' ) {
             return $zume_languages_full_list;
+        }
+        else if ( $type === 'v5_only' ) {
+            return $zume_languages_v5_ready;
         }
         else if ( $type === 'locale' ) {
             return $zume_languages_by_locale;
