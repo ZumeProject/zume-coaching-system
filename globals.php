@@ -687,7 +687,6 @@ if ( ! function_exists( 'zume_get_user_log' ) ) {
         }
     }
 }
-
 if ( ! function_exists( 'zume_languages' ) ) {
     /**
      * @param $type string 'code' or 'locale' or 'full'
@@ -707,12 +706,19 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇺🇸',
                 'population' => 500000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    // has a published version in zume 4.0
+                    // if version 5 not ready, then language will be listed and redirect to legacy.zume.training
+                    'translator_enabled' => true,
+                    // enables the translator app to begin translation
+                    'version_5_ready' => true,
+                    // publishes publicly the version 5.0 system with minimum support
+                    // has translated (weblate, scripts, activities, videos, files)
+                    // allows the language to show up in the selection  list, and disables redirect to 4.0
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'am' => array(
                 'name' => 'Amharic',
@@ -725,12 +731,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇪🇹',
                 'population' => 22000000,
-                'feature_flags' => [
-                    'language_selector' => false,
+                'enable_flags' => [
+                    'version_4_available' => false,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'ar' => array(
                 'name' => 'Arabic',
@@ -743,12 +750,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => true,
                 'flag' => '🇸🇦',
                 'population' => 230000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'ar_jo' => array(
                 'name' => 'Arabic (Jordanian)',
@@ -761,12 +769,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => true,
                 'flag' => '🇯🇴',
                 'population' => 0,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'ar_tn' => array(
                 'name' => 'Arabic (Tunisian)',
@@ -779,12 +788,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => true,
                 'flag' => '🇹🇳',
                 'population' => 0,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'ar_ma' => array(
                 'name' => 'Arabic (Moroccan)',
@@ -797,12 +807,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => true,
                 'flag' => '🇲🇦',
                 'population' => 0,
-                'feature_flags' => [
-                    'language_selector' => false,
+                'enable_flags' => [
+                    'version_4_available' => false,
+                    'translator_enabled' => false,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => false,
             ),
             'hy' => array(
                 'name' => 'Armenian',
@@ -815,12 +826,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇦🇲',
                 'population' => 5300000,
-                'feature_flags' => [
-                    'language_selector' => false,
+                'enable_flags' => [
+                    'version_4_available' => false,
+                    'translator_enabled' => false,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => false,
             ),
             'az' => array(
                 'name' => 'Azerbaijani',
@@ -833,12 +845,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇦🇿',
                 'population' => 24000000,
-                'feature_flags' => [
-                    'language_selector' => false,
+                'enable_flags' => [
+                    'version_4_available' => false,
+                    'translator_enabled' => false,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => false,
             ),
             'asl' => array(
                 'name' => 'American Sign Language',
@@ -851,12 +864,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🤟',
                 'population' => 15360000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => true,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'bn' => array(
                 'name' => 'Bengali (India)',
@@ -869,12 +883,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇮🇳',
                 'population' => 215000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'bho' => array(
                 'name' => 'Bhojpuri',
@@ -887,12 +902,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇮🇳',
                 'population' => 40000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'bs' => array(
                 'name' => 'Bosnian',
@@ -905,12 +921,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇧🇦',
                 'population' => 2600000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => true,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'bg' => array(
                 'name' => 'Bulgarian',
@@ -923,12 +940,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇧🇬',
                 'population' => 15000000,
-                'feature_flags' => [
-                    'language_selector' => false,
+                'enable_flags' => [
+                    'version_4_available' => false,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => false,
             ),
             'my' => array(
                 'name' => 'Burmese',
@@ -941,12 +959,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇲🇲',
                 'population' => 42000000,
-                'feature_flags' => [
-                    'language_selector' => false,
+                'enable_flags' => [
+                    'version_4_available' => false,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => false,
             ),
             'zhhk' => array(
                 'name' => 'Cantonese (Traditional)',
@@ -959,12 +978,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇭🇰',
                 'population' => 72000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'zhcn' => array(
                 'name' => 'Chinese (Simplified)',
@@ -977,12 +997,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇨🇳',
                 'population' => 1300000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'zhtw' => array(
                 'name' => 'Chinese (Traditional)',
@@ -995,12 +1016,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇹🇼',
                 'population' => 0,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => true,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'hr' => array(
                 'name' => 'Croatian',
@@ -1013,12 +1035,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇭🇷',
                 'population' => 6000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => true,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'fo' => array(
                 'name' => 'Faroese',
@@ -1031,12 +1054,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇫🇴',
                 'population' => 69000,
-                'feature_flags' => [
-                    'language_selector' => false,
+                'enable_flags' => [
+                    'version_4_available' => false,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => false,
             ),
             'fr' => array(
                 'name' => 'French',
@@ -1049,12 +1073,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇫🇷',
                 'population' => 321000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'de' => array(
                 'name' => 'German',
@@ -1067,12 +1092,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇩🇪',
                 'population' => 229000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => true,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'gu' => array(
                 'name' => 'Gujarati',
@@ -1085,12 +1111,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇮🇳',
                 'population' => 210000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'ha' => array(
                 'name' => 'Hausa',
@@ -1103,12 +1130,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇳🇬',
                 'population' => 88000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'hi' => array(
                 'name' => 'Hindi',
@@ -1121,12 +1149,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇮🇳',
                 'population' => 615000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'id' => array(
                 'name' => 'Indonesian',
@@ -1139,12 +1168,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇮🇩',
                 'population' => 200000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'it' => array(
                 'name' => 'Italian',
@@ -1157,12 +1187,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇮🇹',
                 'population' => 64600000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => true,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'ja' => array(
                 'name' => 'Japanese',
@@ -1175,12 +1206,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇯🇵',
                 'population' => 126000000,
-                'feature_flags' => [
-                    'language_selector' => false,
+                'enable_flags' => [
+                    'version_4_available' => false,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => false,
             ),
             'kn' => array(
                 'name' => 'Kannada',
@@ -1193,12 +1225,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇮🇳',
                 'population' => 47000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'ko' => array(
                 'name' => 'Korean',
@@ -1211,12 +1244,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇰🇷',
                 'population' => 75000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'ku' => array(
                 'name' => 'Kurdish',
@@ -1229,12 +1263,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => true,
                 'flag' => '🇮🇶',
                 'population' => 26000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'lo' => array(
                 'name' => 'Lao',
@@ -1247,12 +1282,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇱🇦',
                 'population' => 3000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'lv' => array(
                 'name' => 'Latvian',
@@ -1265,12 +1301,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇱🇻',
                 'population' => 1200000,
-                'feature_flags' => [
-                    'language_selector' => false,
+                'enable_flags' => [
+                    'version_4_available' => false,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => false,
             ),
             'mai' => array(
                 'name' => 'Maithili',
@@ -1283,12 +1320,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇮🇳',
                 'population' => 50000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'ml' => array(
                 'name' => 'Malayalam',
@@ -1301,12 +1339,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇮🇳',
                 'population' => 35000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'mr' => array(
                 'name' => 'Marathi',
@@ -1319,12 +1358,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇮🇳',
                 'population' => 83000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'mn' => array(
                 'name' => 'Mongolian',
@@ -1337,12 +1377,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇲🇳',
                 'population' => 9000000,
-                'feature_flags' => [
-                    'language_selector' => false,
+                'enable_flags' => [
+                    'version_4_available' => false,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => false,
             ),
             'ne' => array(
                 'name' => 'Nepali',
@@ -1355,12 +1396,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇳🇵',
                 'population' => 32000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => true,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'or' => array(
                 'name' => 'Oriya',
@@ -1373,12 +1415,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇮🇳',
                 'population' => 50000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'fa' => array(
                 'name' => 'Persian/Farsi',
@@ -1391,12 +1434,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => true,
                 'flag' => '🇮🇷',
                 'population' => 62000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'pl ' => array(
                 'name' => 'Polish',
@@ -1409,12 +1453,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇵🇱',
                 'population' => 43000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'pt' => array(
                 'name' => 'Portuguese',
@@ -1427,12 +1472,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇵🇹',
                 'population' => 300000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => true,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'pa' => array(
                 'name' => 'Punjabi',
@@ -1445,12 +1491,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇮🇳',
                 'population' => 210000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'pa_pk' => array(
                 'name' => 'Punjabi (Western)',
@@ -1463,12 +1510,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇵🇰',
                 'population' => 80000000,
-                'feature_flags' => [
-                    'language_selector' => false,
+                'enable_flags' => [
+                    'version_4_available' => false,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => false,
             ),
             'ru' => array(
                 'name' => 'Russian',
@@ -1481,12 +1529,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇷🇺',
                 'population' => 258000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'ro' => array(
                 'name' => 'Romanian',
@@ -1499,12 +1548,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇷🇴',
                 'population' => 25000000,
-                'feature_flags' => [
-                    'language_selector' => true,
-                    'pieces_pages' => false,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => true,
+                    'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'sl' => array(
                 'name' => 'Slovenian',
@@ -1517,12 +1567,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇸🇮',
                 'population' => 2500000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => true,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'so' => array(
                 'name' => 'Somali',
@@ -1535,12 +1586,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇸🇴',
                 'population' => 24000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'es' => array(
                 'name' => 'Spanish',
@@ -1553,12 +1605,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇪🇸',
                 'population' => 500000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => true,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'es_es' => array(
                 'name' => 'Spanish (Spain)',
@@ -1571,12 +1624,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇪🇸',
                 'population' => 0,
-                'feature_flags' => [
-                    'language_selector' => false,
+                'enable_flags' => [
+                    'version_4_available' => false,
+                    'translator_enabled' => false,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => false,
             ),
             'swa' => array(
                 'name' => 'Swahili',
@@ -1589,12 +1643,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇹🇿',
                 'population' => 200000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => true,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'ta' => array(
                 'name' => 'Tamil',
@@ -1607,12 +1662,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇮🇳',
                 'population' => 89000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'te' => array(
                 'name' => 'Telugu',
@@ -1625,12 +1681,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇮🇳',
                 'population' => 96000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'th' => array(
                 'name' => 'Thai',
@@ -1643,12 +1700,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇹🇭',
                 'population' => 69000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'tr' => array(
                 'name' => 'Turkish',
@@ -1661,12 +1719,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇹🇷',
                 'population' => 80000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'uk' => array(
                 'name' => 'Ukrainian',
@@ -1679,12 +1738,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => true,
                 'flag' => '🇺🇦',
                 'population' => 45000000,
-                'feature_flags' => [
-                    'language_selector' => false,
+                'enable_flags' => [
+                    'version_4_available' => false,
+                    'translator_enabled' => false,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => false,
             ),
             'ur' => array(
                 'name' => 'Urdu',
@@ -1697,12 +1757,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => true,
                 'flag' => '🇵🇰',
                 'population' => 230000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'vi' => array(
                 'name' => 'Vietnamese',
@@ -1715,12 +1776,13 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇻🇳',
                 'population' => 85000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
             'yo' => array(
                 'name' => 'Yoruba',
@@ -1733,20 +1795,23 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'rtl' => false,
                 'flag' => '🇳🇬',
                 'population' => 47000000,
-                'feature_flags' => [
-                    'language_selector' => true,
+                'enable_flags' => [
+                    'version_4_available' => true,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
-                'enabled' => true,
             ),
         );
         foreach ( $list as $lang ) {
-            if ( $lang['enabled'] ) {
+            if ( $lang['enable_flags']['version_5_ready'] || $lang['enable_flags']['version_4_available'] ) {
                 $zume_languages_by_code[$lang['code']] = $lang;
                 $zume_languages_by_locale[$lang['locale']] = $lang;
             }
-            $zume_languages_full_list[$lang['code']] = $lang;
+            if ( $lang['enable_flags']['translator_enabled'] ) {
+                $zume_languages_full_list[$lang['code']] = $lang;
+            }
         }
 
         if ( $type === 'full' ) {
@@ -1942,7 +2007,7 @@ if ( ! function_exists( 'zume_apple_locales' ) ) {
 /**
  * Get the status of any feature for any language
  *
- * If no params given returns array of all feature_flags for all languages
+ * If no params given returns array of all enable_flags for all languages
  * If one param given returns array of booleans for that language or flag
  * If both params given returns boolean for that flag in that language
  * Returns null if the language code or flag is not found.
@@ -1958,31 +2023,31 @@ if ( ! function_exists( 'zume_feature_flag' ) ) {
 
         $results = [];
 
-        /* If no args given return all the feature_flags for all languages */
+        /* If no args given return all the enable_flags for all languages */
         if ( empty( $flag_name ) && empty( $lang_code ) ) {
             foreach ( $zume_languages_by_code as $code => $details ) {
-                $results[$code] = $details['feature_flags'];
+                $results[$code] = $details['enable_flags'];
             }
 
             return $results;
         }
 
-        /* If only the language is given return all the feature_flags for that language */
+        /* If only the language is given return all the enable_flags for that language */
         if ( empty( $flag_name ) && isset( $zume_languages_by_code[$lang_code] ) ) {
-            return $zume_languages_by_code[$lang_code]['feature_flags'];
+            return $zume_languages_by_code[$lang_code]['enable_flags'];
         }
 
         /* If only the flag name is given, return that flag status for all languages */
         if ( empty( $lang_code ) ) {
             foreach( $zume_languages_by_code as $code => $details ) {
-                $results[$code] = isset($details['feature_flags'][$flag_name]) ? $details['feature_flags'][$flag_name] : null;
+                $results[$code] = isset($details['enable_flags'][$flag_name]) ? $details['enable_flags'][$flag_name] : null;
             }
             return $results;
         }
 
         /* If both are given return the flag status for that language */
-        if ( isset( $zume_languages_by_code[$lang_code] ) && isset( $zume_languages_by_code[$lang_code]['feature_flags'][$flag_name] ) ) {
-            return $zume_languages_by_code[$lang_code]['feature_flags'][$flag_name];
+        if ( isset( $zume_languages_by_code[$lang_code] ) && isset( $zume_languages_by_code[$lang_code]['enable_flags'][$flag_name] ) ) {
+            return $zume_languages_by_code[$lang_code]['enable_flags'][$flag_name];
         }
 
         return null;
