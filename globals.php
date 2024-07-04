@@ -708,14 +708,14 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'population' => 500000000,
                 'enable_flags' => [
                     'version_4_available' => true,
-                    // has a published version in zume 4.0
-                    // if version 5 not ready, then language will be listed and redirect to legacy.zume.training
+                        // has a published version in zume 4.0
+                        // if version 5 not ready, then language will be listed and redirect to legacy.zume.training
                     'translator_enabled' => true,
-                    // enables the translator app to begin translation
+                        // enables the translator app to begin translation
                     'version_5_ready' => true,
-                    // publishes publicly the version 5.0 system with minimum support
-                    // has translated (weblate, scripts, activities, videos, files)
-                    // allows the language to show up in the selection  list, and disables redirect to 4.0
+                        // publishes publicly the version 5.0 system with minimum support
+                        // has translated (weblate, scripts, activities, videos, files)
+                        // allows the language to show up in the selection  list, and disables redirect to 4.0
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
