@@ -53,9 +53,9 @@ class Zume_Tile_System  {
         <div class="cell small-12 medium-4">
             <button class="button expanded" data-open="modal_activity">User Activities <?php echo !empty( $profile['activities'] ) ? '('. $profile['activities'] . ')': ''; ?></button>
             <button class="button expanded" id="open_commitments">Commitments <?php echo !empty( $profile['commitments'] ) ? '('. $profile['commitments'] . ')': ''; ?></button>
-            <button class="button expanded" data-open="modal_reports">Reports <?php echo !empty( $profile['reports'] ) ? '('. $profile['reports'] . ')': ''; ?></button>
-            <button class="button expanded" data-open="modal_genmap">Church GenMap <?php echo !empty( $profile['churches'] ) ? '('. $profile['churches'] . ')': ''; ?></button>
-            <button class="button expanded" data-open="modal_localized_vision">Localized Vision</button>
+            <button class="button expanded" data-open="modal_reports" disabled>Reports <?php echo !empty( $profile['reports'] ) ? '('. $profile['reports'] . ')': ''; ?></button>
+            <button class="button expanded" data-open="modal_genmap" disabled>Church GenMap <?php echo !empty( $profile['churches'] ) ? '('. $profile['churches'] . ')': ''; ?></button>
+            <button class="button expanded" data-open="modal_localized_vision" disabled>Localized Vision</button>
         </div>
         <?php
 
