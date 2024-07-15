@@ -131,6 +131,7 @@ class Zume_Charts_API
                 ],
             ]
         );
+
 //        register_rest_route(
 //            $namespace, '/simulate', [
 //                'methods'  => [ 'GET', 'POST' ],

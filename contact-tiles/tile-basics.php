@@ -163,7 +163,7 @@ class Zume_Tile_Basics {
                         })
                     } else {
                         jQuery(this).addClass('zume_button_green')
-                        makeRequest('POST', 'host', { type: type, subtype: subtype, user_id: <?php echo $this_post['trainee_user_id'] ?>  }, 'zume_system/v1' ).done( function( data ) {
+                        makeRequest('POST', 'log', { type: type, subtype: subtype, user_id: <?php echo $this_post['trainee_user_id'] ?>  }, 'zume_system/v1' ).done( function( data ) {
                             console.log(data)
                         })
                     }

@@ -7128,7 +7128,7 @@ if ( ! class_exists( 'Zume_System_Log_API' ) ) {
             }
 
             $wpdb->insert(
-                $table_prefix.'dt_reports',
+                'zume_dt_reports',
                 [
                     'user_id' => $args['user_id'],
                     'parent_id' => $args['parent_id'],
