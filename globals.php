@@ -61,20 +61,24 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
 
         // get coaching connections
         $coaches = [];
-        $coaching_contact_id = $wpdb->get_var( $wpdb->prepare(
-            "SELECT post_id
-                FROM zume_3_postmeta
-                WHERE meta_key = 'trainee_user_id'
-                  AND meta_value = %s",
-            $user_id ) );
-        $coach_list = $wpdb->get_results( $wpdb->prepare(
-            "SELECT p.ID as contact_id, pm.meta_value as user_id, p.post_title as name
-                FROM zume_3_p2p p2
-                LEFT JOIN zume_3_posts p ON p2.p2p_to=p.ID
-                LEFT JOIN zume_3_postmeta pm ON pm.post_id = p.ID AND pm.meta_key = 'corresponds_to_user'
-                WHERE p2p_from = %d
-                  AND p2p_type = 'contacts_to_contacts'",
-            $coaching_contact_id ), ARRAY_A );
+        $coaching_contact_id = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT post_id
+                    FROM zume_3_postmeta
+                    WHERE meta_key = 'trainee_user_id'
+                      AND meta_value = %s",
+                $user_id )
+        );
+        $coach_list = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT p.ID as contact_id, pm.meta_value as user_id, p.post_title as name
+                    FROM zume_3_p2p p2
+                    LEFT JOIN zume_3_posts p ON p2.p2p_to=p.ID
+                    LEFT JOIN zume_3_postmeta pm ON pm.post_id = p.ID AND pm.meta_key = 'corresponds_to_user'
+                    WHERE p2p_from = %d
+                      AND p2p_type = 'contacts_to_contacts'",
+                $coaching_contact_id ), ARRAY_A
+        );
         if ( ! empty( $coach_list ) ) {
             foreach ( $coach_list as $key => $value ) {
                 $communication_apps = $wpdb->get_results( $wpdb->prepare(
@@ -299,14 +303,16 @@ if ( ! function_exists( 'zume_get_user_location' ) ) {
             $user_id = get_current_user_id();
         }
         global $wpdb, $table_prefix;
-        $location = $wpdb->get_row( $wpdb->prepare(
-            "SELECT lng, lat, level, label, grid_id, source
-                    FROM zume_postmeta pm
-                    JOIN zume_dt_location_grid_meta lgm ON pm.post_id=lgm.post_id
-                    WHERE pm.meta_key = 'corresponds_to_user' AND pm.meta_value = %d
-                    ORDER BY grid_meta_id desc
-                    LIMIT 1",
-            $user_id ), ARRAY_A );
+        $location = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT lng, lat, level, label, grid_id, source
+                        FROM zume_postmeta pm
+                        JOIN zume_dt_location_grid_meta lgm ON pm.post_id=lgm.post_id
+                        WHERE pm.meta_key = 'corresponds_to_user' AND pm.meta_value = %d
+                        ORDER BY grid_meta_id desc
+                        LIMIT 1",
+                $user_id ), ARRAY_A
+        );
 
         if ( empty( $location ) && $ip_lookup ) {
             $result = DT_Ipstack_API::get_location_grid_meta_from_current_visitor();
@@ -492,23 +498,27 @@ if ( ! function_exists( 'zume_get_user_friends' ) ) {
 
         // query user friends
         global $wpdb, $table_prefix;
-        $from = $wpdb->get_results($wpdb->prepare(
-            "SELECT p.post_title as name, p.ID as contact_id, um.user_id
-                FROM zume_p2p p2
-                LEFT JOIN zume_posts p ON p.ID=p2.p2p_to
-                LEFT JOIN zume_usermeta um ON um.meta_value=p.ID AND um.meta_key = 'zume_corresponds_to_contact'
-                WHERE p2.p2p_type = 'contacts_to_relation'
-                AND p2.p2p_from = %d",
-            $contact_id ), ARRAY_A);
+        $from = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT p.post_title as name, p.ID as contact_id, um.user_id
+                    FROM zume_p2p p2
+                    LEFT JOIN zume_posts p ON p.ID=p2.p2p_to
+                    LEFT JOIN zume_usermeta um ON um.meta_value=p.ID AND um.meta_key = 'zume_corresponds_to_contact'
+                    WHERE p2.p2p_type = 'contacts_to_relation'
+                    AND p2.p2p_from = %d",
+                $contact_id ), ARRAY_A
+        );
 
-        $to = $wpdb->get_results($wpdb->prepare(
-            "SELECT p.post_title as name, p.ID as contact_id, um.user_id
-                FROM zume_p2p p2
-                LEFT JOIN zume_posts p ON p.ID=p2.p2p_from
-                LEFT JOIN zume_usermeta um ON um.meta_value=p.ID AND um.meta_key = 'zume_corresponds_to_contact'
-                WHERE p2.p2p_type = 'contacts_to_relation'
-                AND p2.p2p_to = %d",
-            $contact_id ), ARRAY_A);
+        $to = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT p.post_title as name, p.ID as contact_id, um.user_id
+                    FROM zume_p2p p2
+                    LEFT JOIN zume_posts p ON p.ID=p2.p2p_from
+                    LEFT JOIN zume_usermeta um ON um.meta_value=p.ID AND um.meta_key = 'zume_corresponds_to_contact'
+                    WHERE p2.p2p_type = 'contacts_to_relation'
+                    AND p2.p2p_to = %d",
+                $contact_id ), ARRAY_A
+        );
 
         if ( empty( $from ) && empty( $to ) ) {
             return [];
@@ -534,11 +544,13 @@ if ( ! function_exists( 'zume_get_user_commitments' ) ) {
         }
         global $wpdb, $table_prefix;
         ;
-        $results = $wpdb->get_results($wpdb->prepare(
-            'SELECT * FROM zume_dt_post_user_meta
-                    WHERE user_id = %d
-                    ORDER BY date DESC',
-            $user_id), ARRAY_A);
+        $results = $wpdb->get_results(
+            $wpdb->prepare(
+                'SELECT * FROM zume_dt_post_user_meta
+                        WHERE user_id = %d
+                        ORDER BY date DESC',
+                $user_id), ARRAY_A
+        );
 
         $list = [];
         foreach ( $results as $result ) {
@@ -610,9 +622,7 @@ if ( ! function_exists( 'zume_get_user_plans' ) ) {
                 ) {
                     $plans[$connection['post_id']][$connection['meta_key']] = [
                         'timestamp' => $connection['meta_value'],
-                        // phpcs:ignore
                         'date' => gmdate( 'Y-m-d', $connection['meta_value'] ),
-                        // phpcs:ignore
                         'date_formatted' => gmdate( 'M j, Y', $connection['meta_value'] ),
                         'completed' => in_array( $connection['meta_key'], $log_subtypes ),
                     ];
@@ -980,7 +990,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'displayCode' => 'zhhk',
                 'locale' => 'zh_HK',
                 'weblate' => 'zh_Hant_HK',
-                'nativeName' => '粵語（繁體)',
+                'nativeName' => '中文（繁體,香港）',
                 'rtl' => false,
                 'flag' => '🇭🇰',
                 'population' => 72000000,
@@ -999,14 +1009,14 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'displayCode' => 'zhcn',
                 'locale' => 'zh_CN',
                 'weblate' => 'zh_Hans',
-                'nativeName' => '国语（简体)',
+                'nativeName' => '中文（简体）',
                 'rtl' => false,
                 'flag' => '🇨🇳',
                 'population' => 1300000000,
                 'enable_flags' => [
                     'version_4_available' => true,
                     'translator_enabled' => true,
-                    'version_5_ready' => false,
+                    'version_5_ready' => true,
                     'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
@@ -1018,7 +1028,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'displayCode' => 'zhtw',
                 'locale' => 'zh_TW',
                 'weblate' => 'zh_Hant',
-                'nativeName' => '國語（繁體)',
+                'nativeName' => '中文（繁體）',
                 'rtl' => false,
                 'flag' => '🇹🇼',
                 'population' => 0,
@@ -1253,7 +1263,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'enable_flags' => [
                     'version_4_available' => true,
                     'translator_enabled' => true,
-                    'version_5_ready' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
@@ -1644,7 +1654,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'code' => 'swa',
                 'displayCode' => 'swa',
                 'locale' => 'swa',
-                'weblate' => 'swa',
+                'weblate' => 'sw',
                 'nativeName' => 'Kiswahili',
                 'rtl' => false,
                 'flag' => '🇹🇿',
@@ -5895,16 +5905,20 @@ if ( ! class_exists( 'Zume_Global_Endpoints' ) ) {
             }
             $contact_id = zume_get_user_contact_id( $user_id );
 
+            $meta_value = [];
+
+            if ( isset( $params['category'] ) && $params['category'] === 'custom' ) {
+                $meta_value['note'] = $params['note'] ?? '';
+            } else {
+                $meta_value['question'] = $params['question'] ?? '';
+                $meta_value['answer'] = $params['answer'] ?? '';
+            }
+
             $fields = [
                 'user_id' => $user_id,
                 'post_id' => $contact_id,
                 'meta_key' => 'tasks',
-                'meta_value' => maybe_serialize([
-                    'note' => $params['note'] ?? '',
-                    'question' => $params['question'] ?? '',
-                    'answer' => $params['answer'] ?? '',
-                ]),
-                // phpcs:ignore
+                'meta_value' => maybe_serialize( $meta_value ),
                 'date' => $params['date'] ?? gmdate( 'Y-m-d H:i:s' ),
                 'category' => $params['category'] ?? 'custom',
             ];
@@ -5916,7 +5930,7 @@ if ( ! class_exists( 'Zume_Global_Endpoints' ) ) {
                 $log = zume_get_user_log( $user_id );
                 $subtypes = array_column( $log, 'subtype' );
                 if ( ! in_array( 'made_post_training_plan', $subtypes ) ) {
-                    zume_log_insert( 'system', 'made_post_training_plan', [ 'user_id' => $user_id ] );
+                    zume_log_insert( 'system', 'made_post_training_plan', [ 'user_id' => $user_id ], true );
                 }
             }
 
@@ -6178,7 +6192,11 @@ if ( ! class_exists( 'Zume_System_Log_API' ) ) {
             if ( !isset( $params['type'], $params['subtype'] ) ) {
                 return new WP_Error( __METHOD__, 'Missing required parameters: type, subtype.', ['status' => 400] );
             }
-            return self::log( $params['type'], $params['subtype'], $params );
+            $log_once = false;
+            if ( isset( $params['log_once'] ) ) {
+                $log_once = true;
+            }
+            return self::log( $params['type'], $params['subtype'], $params, $log_once );
         }
 
         public function get_log( WP_REST_Request $request )
@@ -6414,7 +6432,7 @@ if ( ! class_exists( 'Zume_System_Log_API' ) ) {
                     $data_item['type'] = 'system';
                     $data_item['subtype'] = 'set_profile';
                     $data_item['hash'] = hash( 'sha256', maybe_serialize( $data_item ) . time() );
-                    $added_log[] = self::insert( $data_item, true, false );
+                    $added_log[] = self::insert( $data_item, true, true );
                 }
             }
 
