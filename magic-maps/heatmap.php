@@ -3108,6 +3108,7 @@ class Zume_Funnel_App_Heatmap {
         $type = $record['type'];
         $subtype = $record['subtype'];
 
+        $language_name_only = $language_name;
         if ( 'English' == $language_name ) {
             $language_name = '';
         }
@@ -3134,6 +3135,10 @@ class Zume_Funnel_App_Heatmap {
             case 'registered':
                 $data['note'] = sprintf( __( '%1$s trainee registered! (%2$s)', 'zume' ), $language_name, $location_name );
                 $data['type'] = 'training';
+                break;
+            case 'requested_a_coach':
+                $data['note'] = sprintf( __( 'A %1$s in %2$s has requested %3$s coaching!', 'zume' ), $identity, $location_name, $language_name_only );
+                $data['type'] = 'coaching';
                 break;
             case 'plan_created':
                 $data['note'] = sprintf( __( 'New training group scheduled in %1$s. %2$s', 'zume' ), $location_name, $language_name );
