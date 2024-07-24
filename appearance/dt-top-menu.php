@@ -1,6 +1,6 @@
 <?php
 
-add_filter( 'dt_nav', function( $menu ) {
+add_filter( 'dt_nav', function ( $menu ) {
     if ( isset( $menu['admin']['site']['icon'] ) ) {
         $menu['admin']['site']['icon'] = plugin_dir_url( __FILE__ ) . 'coaching-logo.png';
     }

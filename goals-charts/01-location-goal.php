@@ -38,7 +38,7 @@ class Zume_Goals_Locations_Goals extends Zume_Goals_Chart_Base
             [
                 'jquery',
                 'datatable',
-                'lodash'
+                'lodash',
             ],
             filemtime( get_theme_file_path() .  $this->js_file_name ),
             true
@@ -47,7 +47,7 @@ class Zume_Goals_Locations_Goals extends Zume_Goals_Chart_Base
             'dt_'.$this->slug.'_script', $this->js_object_name, [
                 'rest_endpoints_base' => esc_url_raw( rest_url() ) . $this->namespace,
                 'rest_endpoint' => esc_url_raw( rest_url() ) . $this->namespace . '/location_goals',
-                'load_url' =>  "zume-goals/$this->base_slug",
+                'load_url' => "zume-goals/$this->base_slug",
                 'base_slug' => $this->base_slug,
                 'root' => esc_url_raw( rest_url() ),
                 'nonce' => wp_create_nonce( 'wp_rest' ),
@@ -63,6 +63,5 @@ class Zume_Goals_Locations_Goals extends Zume_Goals_Chart_Base
         $translations = [];
         return $translations;
     }
-
 }
 new Zume_Goals_Locations_Goals();

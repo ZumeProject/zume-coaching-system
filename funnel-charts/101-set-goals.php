@@ -22,14 +22,14 @@ class Zume_Funnel_Set_Goals extends Zume_Funnel_Chart_Base
         $url_path = dt_get_url_path( true );
         if ( "zume-funnel/$this->base_slug" === $url_path ) {
             add_action( 'wp_enqueue_scripts', [ $this, 'base_scripts' ], 99 );
-            add_action( 'wp_head',[ $this, 'wp_head' ], 1000);
+            add_action( 'wp_head', [ $this, 'wp_head' ], 1000 );
         }
     }
 
     public function base_menu( $content ) {
         if ( user_can( get_current_user_id(), 'manage_options' ) ) {
             $content .= '<li class=""><hr>ADMIN</li>';
-            $content .= '<li class=""><a href="'.site_url('/zume-funnel/'.$this->base_slug).'" id="'.$this->base_slug.'-menu">' .  $this->base_title . '</a></li>';
+            $content .= '<li class=""><a href="'.site_url( '/zume-funnel/'.$this->base_slug ).'" id="'.$this->base_slug.'-menu">' .  $this->base_title . '</a></li>';
         }
         return $content;
     }
@@ -522,12 +522,11 @@ class Zume_Funnel_Set_Goals extends Zume_Funnel_Chart_Base
         );
 
         $html = '';
-        foreach( $users as $user ) {
+        foreach ( $users as $user ) {
             $html .= '<option value="' . $user['ID'] . '">' . $user['display_name'] . '</option>';
         }
 
         return $html;
-
     }
 }
 new Zume_Funnel_Set_Goals();

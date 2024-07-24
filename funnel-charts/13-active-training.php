@@ -22,7 +22,7 @@ class Zume_Funnel_Active extends Zume_Funnel_Chart_Base
         $url_path = dt_get_url_path( true );
         if ( "zume-funnel/$this->base_slug" === $url_path ) {
             add_action( 'wp_enqueue_scripts', [ $this, 'base_scripts' ], 99 );
-            add_action( 'wp_head',[ $this, 'wp_head' ], 1000);
+            add_action( 'wp_head', [ $this, 'wp_head' ], 1000 );
         }
     }
 
@@ -254,6 +254,5 @@ class Zume_Funnel_Active extends Zume_Funnel_Chart_Base
             ],
         ];
     }
-
 }
 new Zume_Funnel_Active();

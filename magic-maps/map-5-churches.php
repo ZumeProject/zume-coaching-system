@@ -8,7 +8,7 @@ if ( strpos( dt_get_url_path(), 'zume_app' ) !== false || dt_is_rest() ){
 class Zume_Funnel_Public_Heatmap_Churches extends DT_Magic_Url_Base
 {
     public $page_title = 'Zúme Churches Map';
-    public $root = "zume_app";
+    public $root = 'zume_app';
     public $type = 'heatmap_churches';
     public $type_name = '';
     public $post_type = 'groups';
@@ -45,7 +45,6 @@ class Zume_Funnel_Public_Heatmap_Churches extends DT_Magic_Url_Base
         add_filter( 'dt_magic_url_base_allowed_css', [ $this, 'dt_magic_url_base_allowed_css' ], 10, 1 );
         add_filter( 'dt_magic_url_base_allowed_js', [ $this, 'dt_magic_url_base_allowed_js' ], 10, 1 );
         add_action( 'wp_enqueue_scripts', [ $this, '_wp_enqueue_scripts' ], 99 );
-
     }
 
     public function dt_magic_url_base_allowed_js( $allowed_js ) {
@@ -91,11 +90,11 @@ class Zume_Funnel_Public_Heatmap_Churches extends DT_Magic_Url_Base
                 'post_type' => $this->post_type,
                 'translation' => [
                     'add' => __( 'Zume', 'zume_funnels' ),
-                    'title' => 'Churches'
+                    'title' => 'Churches',
                 ],
-                'grid_data' => ['data' => [], 'highest_value' => 1 ],
+                'grid_data' => [ 'data' => [], 'highest_value' => 1 ],
                 'custom_marks' => [],
-                'zoom' => 8
+                'zoom' => 8,
             ]) ?>][0]
 
             /* custom content */
@@ -188,7 +187,7 @@ class Zume_Funnel_Public_Heatmap_Churches extends DT_Magic_Url_Base
         $params = $request->get_params();
 
         if ( ! isset( $params['parts'], $params['action'] ) ) {
-            return new WP_Error( __METHOD__, "Missing parameters", [ 'status' => 400 ] );
+            return new WP_Error( __METHOD__, 'Missing parameters', [ 'status' => 400 ] );
         }
 
         $params = dt_recursive_sanitize_array( $params );
@@ -212,8 +211,7 @@ class Zume_Funnel_Public_Heatmap_Churches extends DT_Magic_Url_Base
                 $grid_totals = Zume_Funnel_App_Heatmap::query_church_grid_totals();
                 return Zume_Funnel_App_Heatmap::_initial_polygon_value_list( $grid_totals, $this->global_div, $this->us_div );
             default:
-                return new WP_Error( __METHOD__, "Missing valid action", [ 'status' => 400 ] );
+                return new WP_Error( __METHOD__, 'Missing valid action', [ 'status' => 400 ] );
         }
     }
-
 }

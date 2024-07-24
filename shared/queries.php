@@ -19,8 +19,8 @@ class Zume_Queries {
                 (
                    $query_for_user_stage
                 ) as tb
-                GROUP BY tb.stage;"
-            ,  ARRAY_A );
+                GROUP BY tb.stage;",
+        ARRAY_A );
 
         $stages = [];
 
@@ -28,7 +28,7 @@ class Zume_Queries {
             return $stages;
         }
 
-        foreach( $results as $result ) {
+        foreach ( $results as $result ) {
             $stages[ $result['stage'] ] = $result;
         }
 
@@ -39,7 +39,7 @@ class Zume_Queries {
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
 
-        if( count( $range ) > 1 ) {
+        if ( count( $range ) > 1 ) {
             $range = '(' . implode( ',', $range ) . ')';
         } else {
             $range = '(' . $range[0] . ')';
@@ -66,7 +66,7 @@ class Zume_Queries {
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
 
-        if( count( $range ) > 1 ) {
+        if ( count( $range ) > 1 ) {
             $range = '(' . implode( ',', $range ) . ')';
         } else {
             $range = '(' . $range[0] . ')';
@@ -94,7 +94,7 @@ class Zume_Queries {
         return $results;
     }
 
-    public static function churches_with_location( ) {
+    public static function churches_with_location() {
         global $wpdb;
 
         $results = $wpdb->get_results(
@@ -161,7 +161,7 @@ class Zume_Queries {
      * Returns the total number of churches in the system.
      * @return int
      */
-    public static function query_total_churches() : int {
+    public static function query_total_churches(): int {
         global $wpdb;
         $results = $wpdb->get_var(
             "SELECT count(*) as count
@@ -181,7 +181,7 @@ class Zume_Queries {
      * Returns the total number of practitioners in the system.
      * @return int
      */
-    public static function query_total_practitioners() : int {
+    public static function query_total_practitioners(): int {
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
 
@@ -192,7 +192,7 @@ class Zume_Queries {
                     $query_for_user_stage
                 ) as tb
             WHERE tb.stage >= 4;"
-            );
+        );
 
         if ( $results ) {
             return (int) $results;

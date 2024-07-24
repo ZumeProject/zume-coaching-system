@@ -27,9 +27,12 @@ class Zume_Tile_Basics {
         $mawl = zume_get_user_mawl( $this_post['trainee_user_id'], $log );
 
         $h = $host['percent']['h'] ?? 0;
-        $o = $host['percent']['o'] ?? 0;;
-        $s = $host['percent']['s'] ?? 0;;
-        $t = $host['percent']['t'] ?? 0;;
+        $o = $host['percent']['o'] ?? 0;
+        ;
+        $s = $host['percent']['s'] ?? 0;
+        ;
+        $t = $host['percent']['t'] ?? 0;
+        ;
         $m = $mawl['percent']['m'] ?? 0;
         $a = $mawl['percent']['a'] ?? 0;
         $w = $mawl['percent']['w'] ?? 0;
@@ -114,7 +117,7 @@ class Zume_Tile_Basics {
     private function _modal_host( $this_post, $activity ) {
         $training_items = zume_training_items();
         $completed = [];
-        foreach( $activity as $item ) {
+        foreach ( $activity as $item ) {
             if ( $item['type'] == 'training' ) {
                 $completed[$item['log_key']] = $item['log_key'];
             }
@@ -125,11 +128,11 @@ class Zume_Tile_Basics {
             <hr>
             <div class="grid-x">
                 <?php
-                foreach( $training_items as $element ) {
+                foreach ( $training_items as $element ) {
                     $url = '';
                     ?>
                     <div class="cell small-8">
-                        <a data-value="<?php echo esc_url( $url ); ?>" class="coaching-checklist-modal-open" target="_blank"><?php echo esc_html( $element["title"] ); ?></a>
+                        <a data-value="<?php echo esc_url( $url ); ?>" class="coaching-checklist-modal-open" target="_blank"><?php echo esc_html( $element['title'] ); ?></a>
                     </div>
                     <div class="cell small-4" style="text-align:right;">
                         <div class="small button-group" style="display: inline-block; margin-bottom: 5px;">
@@ -175,7 +178,7 @@ class Zume_Tile_Basics {
     private function _modal_mawl( $this_post, $activity ) {
         $training_items = zume_training_items();
         $completed = [];
-        foreach( $activity as $item ) {
+        foreach ( $activity as $item ) {
             if ( $item['type'] == 'coaching' ) {
                 $completed[$item['log_key']] = $item['log_key'];
             }
@@ -186,14 +189,14 @@ class Zume_Tile_Basics {
             <hr>
             <div class="grid-x">
                 <?php
-                foreach( $training_items as $element ) {
-                    if ( empty($element['mawl']) ) {
+                foreach ( $training_items as $element ) {
+                    if ( empty( $element['mawl'] ) ) {
                         continue;
                     }
                     $url = '';
                     ?>
                     <div class="cell small-8">
-                        <a data-value="<?php echo esc_url( $url ); ?>" class="coaching-checklist-modal-open" target="_blank"><?php echo esc_html( $element["title"] ); ?></a>
+                        <a data-value="<?php echo esc_url( $url ); ?>" class="coaching-checklist-modal-open" target="_blank"><?php echo esc_html( $element['title'] ); ?></a>
                     </div>
                     <div class="cell small-4" style="text-align:right;">
                         <div class="small button-group" style="display: inline-block; margin-bottom: 5px;">
@@ -236,5 +239,4 @@ class Zume_Tile_Basics {
         </script>
         <?php
     }
-
 }

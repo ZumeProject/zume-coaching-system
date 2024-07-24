@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-class Zume_Tile_System  {
+class Zume_Tile_System {
     private static $_instance = null;
     public static function instance(){
         if ( is_null( self::$_instance ) ) {
@@ -35,7 +35,7 @@ class Zume_Tile_System  {
         $profile['churches'] = 0;
         $profile['activities'] = 0;
         $reports = [];
-        foreach( $log as $item ) {
+        foreach ( $log as $item ) {
             if ( $item['type'] == 'reports' && $item['subtype'] == 'new_church' ) {
                 $profile['churches']++;
             }
@@ -45,16 +45,16 @@ class Zume_Tile_System  {
             }
             $profile['activities']++;
         }
-        if ( count($active_commitments) > 0 ) {
-            $profile['commitments'] = count($active_commitments);
+        if ( count( $active_commitments ) > 0 ) {
+            $profile['commitments'] = count( $active_commitments );
         }
 
         ?>
         <div class="cell small-12 medium-4">
-            <button class="button expanded" data-open="modal_activity">User Activities <?php echo !empty( $profile['activities'] ) ? '('. $profile['activities'] . ')': ''; ?></button>
-            <button class="button expanded" id="open_commitments">Commitments <?php echo !empty( $profile['commitments'] ) ? '('. $profile['commitments'] . ')': ''; ?></button>
-            <button class="button expanded" data-open="modal_reports" disabled>Reports <?php echo !empty( $profile['reports'] ) ? '('. $profile['reports'] . ')': ''; ?></button>
-            <button class="button expanded" data-open="modal_genmap" disabled>Church GenMap <?php echo !empty( $profile['churches'] ) ? '('. $profile['churches'] . ')': ''; ?></button>
+            <button class="button expanded" data-open="modal_activity">User Activities <?php echo !empty( $profile['activities'] ) ? '('. $profile['activities'] . ')' : ''; ?></button>
+            <button class="button expanded" id="open_commitments">Commitments <?php echo !empty( $profile['commitments'] ) ? '('. $profile['commitments'] . ')' : ''; ?></button>
+            <button class="button expanded" data-open="modal_reports" disabled>Reports <?php echo !empty( $profile['reports'] ) ? '('. $profile['reports'] . ')' : ''; ?></button>
+            <button class="button expanded" data-open="modal_genmap" disabled>Church GenMap <?php echo !empty( $profile['churches'] ) ? '('. $profile['churches'] . ')' : ''; ?></button>
             <button class="button expanded" data-open="modal_localized_vision" disabled>Localized Vision</button>
         </div>
         <?php
@@ -65,7 +65,6 @@ class Zume_Tile_System  {
         self::_modal_commitments( $profile, $active_commitments, $completed_commitments );
         self::_modal_genmap( $profile, $trainee_user_id );
         self::_modal_activity( $profile, $log );
-
     }
     private function _modal_localized_vision( $profile ) {
         ?>
@@ -207,19 +206,18 @@ class Zume_Tile_System  {
         <?php
     }
     private function _modal_genmap( $profile, $user_id ) {
-        Zume_User_Genmap::instance()->modal( $profile, $user_id);
+        Zume_User_Genmap::instance()->modal( $profile, $user_id );
     }
     private function _modal_activity( $profile, $log ) {
         ?>
         <div class="reveal" id="modal_activity" data-v-offset="0" data-reveal>
             <h1>Activity History for <?php echo $profile['name'] ?></h1>
             <hr>
-            <?php Zume_Coaching_Tile::print_activity_list( $log) ?>
+            <?php Zume_Coaching_Tile::print_activity_list( $log ) ?>
             <button class="close-button" data-close aria-label="Close modal" type="button">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <?php
     }
-
 }

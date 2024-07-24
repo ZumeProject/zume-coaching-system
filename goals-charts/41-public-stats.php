@@ -23,7 +23,7 @@ class Zume_Goals_Public_Stats extends Zume_Goals_Chart_Base
         $url_path = dt_get_url_path( true );
         if ( "zume-goals/$this->base_slug" === $url_path ) {
             add_action( 'wp_enqueue_scripts', [ $this, 'base_scripts' ], 99 );
-            add_action( 'wp_head',[ $this, 'wp_head' ], 1000);
+            add_action( 'wp_head', [ $this, 'wp_head' ], 1000 );
         }
     }
 
@@ -109,6 +109,5 @@ class Zume_Goals_Public_Stats extends Zume_Goals_Chart_Base
         </script>
         <?php
     }
-
 }
 new Zume_Goals_Public_Stats();

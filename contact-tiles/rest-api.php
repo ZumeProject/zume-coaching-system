@@ -8,7 +8,7 @@ class Zume_Training_API
 
     public static function instance()
     {
-        if (is_null(self::$_instance)) {
+        if ( is_null( self::$_instance ) ) {
             self::$_instance = new self();
         }
         return self::$_instance;
@@ -16,13 +16,13 @@ class Zume_Training_API
 
     public function __construct()
     {
-        if ( dt_is_rest()) {
-            add_action('rest_api_init', [$this, 'add_api_routes']);
-            add_filter('dt_allow_rest_access', [$this, 'authorize_url'], 10, 1);
+        if ( dt_is_rest() ) {
+            add_action( 'rest_api_init', [ $this, 'add_api_routes' ] );
+            add_filter( 'dt_allow_rest_access', [ $this, 'authorize_url' ], 10, 1 );
         }
     }
     public function authorize_url( $authorized ){
-        if ( isset( $_SERVER['REQUEST_URI'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), $this->namespace  ) !== false ) {
+        if ( isset( $_SERVER['REQUEST_URI'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), $this->namespace ) !== false ) {
             $authorized = true;
         }
         return $authorized;
@@ -34,41 +34,41 @@ class Zume_Training_API
                 'description' => 'The post type',
                 'type' => 'string',
                 'required' => true,
-                'validate_callback' => [ $this, 'prefix_validate_args' ]
+                'validate_callback' => [ $this, 'prefix_validate_args' ],
             ],
         ];
         register_rest_route(
             $this->namespace, '/(?P<post_type>\w+)/(?P<id>\d+)', [
-                'methods' => ['GET', 'POST'],
-                'callback' => [$this, 'get_post'],
+                'methods' => [ 'GET', 'POST' ],
+                'callback' => [ $this, 'get_post' ],
                 'args' => [
                     'post_type' => $arg_schemas['post_type'],
                 ],
-                'permission_callback' => '__return_true'
+                'permission_callback' => '__return_true',
             ]
         );
     }
     public function get_post( WP_REST_Request $request ){
-        $params = dt_recursive_sanitize_array($request->get_params());
+        $params = dt_recursive_sanitize_array( $request->get_params() );
 
         global $wpdb;
-        $post_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM zume_posts WHERE ID = %d", $params['id'] ), ARRAY_A );
-        $postmeta_rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM zume_postmeta WHERE post_id = %d", $params['id'] ), ARRAY_A );
-        $connections = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM wp_p2p WHERE p2p_from = %d OR p2p_to = %d", $params['id'], $params['id'] ), ARRAY_A );
+        $post_row = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM zume_posts WHERE ID = %d', $params['id'] ), ARRAY_A );
+        $postmeta_rows = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM zume_postmeta WHERE post_id = %d', $params['id'] ), ARRAY_A );
+        $connections = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM wp_p2p WHERE p2p_from = %d OR p2p_to = %d', $params['id'], $params['id'] ), ARRAY_A );
 
         $fields = [
             'ID' => 0,
             'location_grid' => [],
             'location_grid_meta' => [],
         ];
-        foreach( $post_row as $key => $value ) {
+        foreach ( $post_row as $key => $value ) {
             $fields[ $key ] = $value;
         }
-        foreach( $postmeta_rows as $row ) {
+        foreach ( $postmeta_rows as $row ) {
             if ( 'location_grid' === $row['meta_key'] ) {
-                $fields['location_grid'][] = $wpdb->get_row("SELECT * FROM zume_dt_location_grid WHERE grid_id = {$row['meta_value']}", ARRAY_A);
+                $fields['location_grid'][] = $wpdb->get_row( "SELECT * FROM zume_dt_location_grid WHERE grid_id = {$row['meta_value']}", ARRAY_A );
             } else if ( 'location_grid_meta' === $row['meta_key'] ) {
-                $fields['location_grid_meta'][] = $wpdb->get_row("SELECT * FROM zume_dt_location_grid_meta WHERE grid_meta_id = {$row['meta_value']}", ARRAY_A);
+                $fields['location_grid_meta'][] = $wpdb->get_row( "SELECT * FROM zume_dt_location_grid_meta WHERE grid_meta_id = {$row['meta_value']}", ARRAY_A );
             }
             else {
                 $fields[ $row['meta_key'] ] = $row['meta_value'];
@@ -107,6 +107,5 @@ class Zume_Training_API
         // If we got this far then the data is valid.
         return true;
     }
-
 }
 Zume_Training_API::instance();

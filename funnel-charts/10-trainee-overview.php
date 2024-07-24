@@ -20,14 +20,14 @@ class Zume_Funnel_Trainee extends Zume_Funnel_Chart_Base
         $this->base_title = __( 'Overview', 'zume_funnels' );
 
         $url_path = dt_get_url_path( true );
-        if ( "zume-funnel" === $url_path ) {
+        if ( 'zume-funnel' === $url_path ) {
             add_action( 'wp_enqueue_scripts', [ $this, 'base_scripts' ], 99 );
-            add_action( 'wp_head',[ $this, 'wp_head' ], 1000);
+            add_action( 'wp_head', [ $this, 'wp_head' ], 1000 );
         }
     }
 
     public function base_menu( $content ) {
-        $content .= '<li class=""><a href="'.site_url('/zume-funnel/'.$this->base_slug).'" id="'.$this->base_slug.'-menu">' .  $this->base_title . '</a></li>';
+        $content .= '<li class=""><a href="'.site_url( '/zume-funnel/'.$this->base_slug ).'" id="'.$this->base_slug.'-menu">' .  $this->base_title . '</a></li>';
         return $content;
     }
     public function wp_head() {
@@ -35,31 +35,31 @@ class Zume_Funnel_Trainee extends Zume_Funnel_Chart_Base
             $this->js_api();
             $stages = zume_funnel_stages();
             $html = '';
-            foreach( $stages as $stage ) {
-                if ( 'anonymous' === $stage['key'] ) {
-                    continue;
-                }
-                $html .= '<div class="cell medium-9 zume-funnel">
+        foreach ( $stages as $stage ) {
+            if ( 'anonymous' === $stage['key'] ) {
+                continue;
+            }
+            $html .= '<div class="cell medium-9 zume-funnel">
                              <div class="'.$stage['key'].'"><span class="loading-spinner active"></span></div>
                         </div>
                         <div class="cell medium-3 padding-top">
                             <h3>Characteristics</h3>';
 
-                $html .='<ul>';
-                foreach( $stage['characteristics'] as $item ) {
-                    $html .='<li>'.$item.'</li>';
-                }
-                $html .= '</ul>';
-
-                $html .= '<h3>Next Steps</h3>';
-
-                $html .= '<ul>';
-                foreach( $stage['next_steps'] as $item ) {
-                    $html .= '<li>'.$item.'</li>';
-                }
-                $html .= '</ul></div>';
+            $html .='<ul>';
+            foreach ( $stage['characteristics'] as $item ) {
+                $html .='<li>'.$item.'</li>';
             }
-            ?>
+            $html .= '</ul>';
+
+            $html .= '<h3>Next Steps</h3>';
+
+            $html .= '<ul>';
+            foreach ( $stage['next_steps'] as $item ) {
+                $html .= '<li>'.$item.'</li>';
+            }
+            $html .= '</ul></div>';
+        }
+        ?>
             <script>
                 jQuery(document).ready(function(){
                     "use strict";
@@ -167,6 +167,5 @@ class Zume_Funnel_Trainee extends Zume_Funnel_Chart_Base
         </style>
         <?php
     }
-
 }
 new Zume_Funnel_Trainee();

@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-class Zume_Tile_Communication  {
+class Zume_Tile_Communication {
     private static $_instance = null;
     public static function instance(){
         if ( is_null( self::$_instance ) ) {

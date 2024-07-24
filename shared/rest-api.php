@@ -3,8 +3,8 @@ if ( !defined( 'ABSPATH' ) ) { exit; } // Exit if accessed directly.
 
 class Zume_Charts_API
 {
-    public $leadership_permissions = ['manage_dt'];
-    public $coach_permissions = ['access_contacts'];
+    public $leadership_permissions = [ 'manage_dt' ];
+    public $coach_permissions = [ 'access_contacts' ];
     public $namespace = 'zume_funnel/v1';
     private static $_instance = null;
     public static function instance() {
@@ -28,7 +28,7 @@ class Zume_Charts_API
                 'callback' => [ $this, 'total' ],
                 'permission_callback' => function () {
                     return $this->has_permission( $this->coach_permissions );
-                }
+                },
             ]
         );
         register_rest_route(
@@ -37,7 +37,7 @@ class Zume_Charts_API
                 'callback' => [ $this, 'location' ],
                 'permission_callback' => function () {
                     return $this->has_permission( $this->coach_permissions );
-                }
+                },
             ]
         );
         register_rest_route(
@@ -46,7 +46,7 @@ class Zume_Charts_API
                 'callback' => [ $this, 'map_switcher' ],
                 'permission_callback' => function () {
                     return $this->has_permission( $this->coach_permissions );
-                }
+                },
             ]
         );
         register_rest_route(
@@ -55,7 +55,7 @@ class Zume_Charts_API
                 'callback' => [ $this, 'map_list_switcher' ],
                 'permission_callback' => function () {
                     return $this->has_permission( $this->coach_permissions );
-                }
+                },
             ]
         );
         register_rest_route(
@@ -64,7 +64,7 @@ class Zume_Charts_API
                 'callback' => [ $this, 'list' ],
                 'permission_callback' => function () {
                     return $this->has_permission( $this->coach_permissions );
-                }
+                },
             ]
         );
         register_rest_route(
@@ -73,7 +73,7 @@ class Zume_Charts_API
                 'callback' => [ $this, 'training_elements' ],
                 'permission_callback' => function () {
                     return $this->has_permission( $this->coach_permissions );
-                }
+                },
             ]
         );
         register_rest_route(
@@ -83,7 +83,7 @@ class Zume_Charts_API
                     'callback' => [ $this, 'location_funnel' ],
                     'permission_callback' => function () {
                         return $this->has_permission( $this->coach_permissions );
-                    }
+                    },
                 ],
             ]
         );
@@ -94,7 +94,7 @@ class Zume_Charts_API
                     'callback' => [ $this, 'location_goals' ],
                     'permission_callback' => function () {
                         return $this->has_permission( $this->coach_permissions );
-                    }
+                    },
                 ],
             ]
         );
@@ -105,7 +105,7 @@ class Zume_Charts_API
                     'callback' => [ $this, 'list_mawl' ],
                     'permission_callback' => function () {
                         return $this->has_permission( $this->coach_permissions );
-                    }
+                    },
                 ],
             ]
         );
@@ -116,7 +116,7 @@ class Zume_Charts_API
                     'callback' => [ $this, 'create_mawl' ],
                     'permission_callback' => function () {
                         return $this->has_permission( $this->coach_permissions );
-                    }
+                    },
                 ],
             ]
         );
@@ -127,7 +127,7 @@ class Zume_Charts_API
                     'callback' => [ $this, 'delete_mawl' ],
                     'permission_callback' => function () {
                         return $this->has_permission( $this->coach_permissions );
-                    }
+                    },
                 ],
             ]
         );
@@ -168,7 +168,7 @@ class Zume_Charts_API
      * @return array|WP_Error
      */
     public function total( WP_REST_Request $request ) {
-        $params =  dt_recursive_sanitize_array( $request->get_params() );
+        $params = dt_recursive_sanitize_array( $request->get_params() );
         if ( ! isset( $params['stage'] ) ) {
             return new WP_Error( 'no_stage', __( 'No stage key provided.', 'zume' ), array( 'status' => 400 ) );
         }
@@ -181,7 +181,7 @@ class Zume_Charts_API
             $params['range'] = false;
         }
 
-        switch( $params['stage'] ) {
+        switch ( $params['stage'] ) {
             case 'anonymous':
                 return $this->total_anonymous( $params );
             case 'registrant':
@@ -219,9 +219,9 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
+        $valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
 
             case 'total_registrations':
                 $label = 'Total Registrations';
@@ -291,7 +291,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
     public function total_registrants( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -302,11 +301,11 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
-        $goal_valence = NULL;
-        $trend_valence = NULL;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
             case 'locations':
                 $label = 'Locations';
                 $description = 'Cumulative number of locations in this stage.';
@@ -354,7 +353,7 @@ class Zume_Charts_API
                 $value = 2;
                 $goal = 4;
                 $trend = 4;
-                $valence = NULL;
+                $valence = null;
                 break;
             case 'no_friends':
                 $label = 'Has No Friends';
@@ -421,7 +420,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
     public function total_active_training_trainee( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -432,11 +430,11 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
-        $goal_valence = NULL;
-        $trend_valence = NULL;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
             case 'has_coach':
                 $label = 'Has Coach';
                 $description = 'Active trainees who have a coach.';
@@ -480,7 +478,7 @@ class Zume_Charts_API
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
-                $valence = NULL;
+                $valence = null;
                 break;
             case 'in_and_out':
                 return [
@@ -507,7 +505,7 @@ class Zume_Charts_API
                 break;
         }
 
-       return [
+        return [
             'key' => $params['key'],
             'stage' => $params['stage'],
             'label' => $label,
@@ -523,7 +521,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
     public function total_post_training_trainee( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -534,11 +531,11 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
-        $goal_valence = NULL;
-        $trend_valence = NULL;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
 
             case 'needs_3_month_plan':
                 $label = 'Needs 3 Month Plan';
@@ -619,7 +616,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
     public function total_partial_practitioner( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -630,11 +626,11 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
-        $goal_valence = NULL;
-        $trend_valence = NULL;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
 
             case 'total_churches';
                 $label = 'Churches';
@@ -744,7 +740,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
     public function total_full_practitioner( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -755,11 +750,11 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
-        $goal_valence = NULL;
-        $trend_valence = NULL;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
 
             case 'total_churches';
                 $label = 'Churches';
@@ -831,7 +826,7 @@ class Zume_Charts_API
                 $link = 'full_practitioner_practitioners';
                 $value = Zume_Views::stage_totals( 5 );
                 $goal = 5;
-                $trend = rand(1, 10);
+                $trend = rand( 1, 10 );
                 break;
             case 'in_and_out':
                 return [
@@ -867,7 +862,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
     public function total_multiplying_practitioner( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -878,11 +872,11 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
-        $goal_valence = NULL;
-        $trend_valence = NULL;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
             case 'total_churches';
                 $label = 'Churches';
                 $description = 'Total number of churches reported by S2 Practitioners.';
@@ -989,7 +983,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
     public function total_facilitator( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -1000,11 +993,11 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
-        $goal_valence = NULL;
-        $trend_valence = NULL;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
 
             case 'new_coaching_requests';
                 $label = 'New Coaching Requests';
@@ -1053,7 +1046,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
     public function total_early( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -1064,12 +1056,12 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
-        $goal_valence = NULL;
-        $trend_valence = NULL;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
 
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
             case 'new_coaching_requests';
                 $label = 'Languages';
                 $description = '';
@@ -1120,8 +1112,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
-
     }
     public function total_advanced( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -1132,11 +1122,11 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
-        $goal_valence = NULL;
-        $trend_valence = NULL;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
             case 'total_churches';
                 $label = 'Total Churches';
                 $description = 'Total number of churches reported by S2 Practitioners.';
@@ -1232,7 +1222,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
     public function general( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -1243,11 +1232,11 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
-        $goal_valence = NULL;
-        $trend_valence = NULL;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
 
             case 'active_coaches';
                 $label = 'Active Coaches';
@@ -1314,7 +1303,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
     public function total_practitioners( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -1325,16 +1313,17 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
+        $valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
 
             case 'churches_total':
                 $label = 'Total Registrations';
                 $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
                 $value = Zume_Queries::query_total_churches();
                 $goal = 0;
-                $trend = 0;;
+                $trend = 0;
+                ;
                 $valence = 'valence-grey';
                 break;
             case 'practitioners_total':
@@ -1369,7 +1358,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
 
     public function total_churches( $params ) {
@@ -1381,16 +1369,17 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
+        $valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
 
             case 'churches_total':
                 $label = 'Total Registrations';
                 $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
                 $value = Zume_Queries::query_total_churches();
                 $goal = 0;
-                $trend = 0;;
+                $trend = 0;
+                ;
                 $valence = 'valence-grey';
                 break;
             case 'practitioners_total':
@@ -1425,19 +1414,18 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
 
-    public function location_funnel( ) {
+    public function location_funnel() {
         $data = DT_Mapping_Module::instance()->data();
         $funnel = zume_funnel_stages();
 
-        $data = $this->add_column(  $data, $funnel['1']['key'], $funnel['1']['label'], ['1'] );
-        $data = $this->add_column(  $data, $funnel['2']['key'], $funnel['2']['label'], ['2'] );
-        $data = $this->add_column(  $data, $funnel['3']['key'], $funnel['3']['label'], ['3'] );
-        $data = $this->add_column(  $data, $funnel['4']['key'], $funnel['4']['label'], ['4'] );
-        $data = $this->add_column(  $data, $funnel['5']['key'], $funnel['5']['label'], ['5'] );
-        $data = $this->add_column(  $data, $funnel['6']['key'], $funnel['6']['label'], ['6'] );
+        $data = $this->add_column( $data, $funnel['1']['key'], $funnel['1']['label'], [ '1' ] );
+        $data = $this->add_column( $data, $funnel['2']['key'], $funnel['2']['label'], [ '2' ] );
+        $data = $this->add_column( $data, $funnel['3']['key'], $funnel['3']['label'], [ '3' ] );
+        $data = $this->add_column( $data, $funnel['4']['key'], $funnel['4']['label'], [ '4' ] );
+        $data = $this->add_column( $data, $funnel['5']['key'], $funnel['5']['label'], [ '5' ] );
+        $data = $this->add_column( $data, $funnel['6']['key'], $funnel['6']['label'], [ '6' ] );
 
         return $data;
     }
@@ -1448,30 +1436,30 @@ class Zume_Charts_API
 
 
     public function map_switcher( WP_REST_Request $request ) {
-        $params =  dt_recursive_sanitize_array( $request->get_params() );
+        $params = dt_recursive_sanitize_array( $request->get_params() );
         if ( ! isset( $params['stage'] ) ) {
             return new WP_Error( 'no_stage', __( 'No stage key provided.', 'zume' ), array( 'status' => 400 ) );
         }
 
-        switch( $params['stage'] ) {
+        switch ( $params['stage'] ) {
             case 'anonymous':
                 return $this->map_geojson( [ 0 ] );
             case 'registrant':
-                return $this->map_geojson( [1] );
+                return $this->map_geojson( [ 1 ] );
             case 'active_training_trainee':
-                return $this->map_geojson( [2] );
+                return $this->map_geojson( [ 2 ] );
             case 'post_training_trainee':
-                return $this->map_geojson( [3] );
+                return $this->map_geojson( [ 3 ] );
             case 'partial_practitioner':
-                return $this->map_geojson( [4] );
+                return $this->map_geojson( [ 4 ] );
             case 'full_practitioner':
-                return $this->map_geojson( [5] );
+                return $this->map_geojson( [ 5 ] );
             case 'multiplying_practitioner':
-                return $this->map_geojson( [6] );
+                return $this->map_geojson( [ 6 ] );
             case 'trainees':
-                return $this->map_geojson( [1,2,3] );
+                return $this->map_geojson( [ 1,2,3 ] );
             case 'practitioners':
-                return $this->map_geojson( [4,5,6] );
+                return $this->map_geojson( [ 4,5,6 ] );
             case 'churches':
                 return $this->map_churches_geojson( 6 );
 //            case 'facilitator':
@@ -1499,14 +1487,14 @@ class Zume_Charts_API
                 'properties' => [
                     'name' => $result['name'],
                     'post_id' => $result['post_id'],
-                    'post_type' => 'contacts'
+                    'post_type' => 'contacts',
                 ],
                 'geometry' => array(
                     'type' => 'Point',
                     'coordinates' => array(
                         (float) $lng,
                         (float) $lat,
-                        1
+                        1,
                     ),
                 ),
             );
@@ -1521,7 +1509,7 @@ class Zume_Charts_API
         return $new_data;
     }
 
-    public function map_churches_geojson( ) {
+    public function map_churches_geojson() {
         global $wpdb;
         $results = Zume_Queries::churches_with_location();
 
@@ -1536,14 +1524,14 @@ class Zume_Charts_API
                 'properties' => [
                     'name' => $result['name'],
                     'post_id' => $result['post_id'],
-                    'post_type' => 'groups'
+                    'post_type' => 'groups',
                 ],
                 'geometry' => array(
                     'type' => 'Point',
                     'coordinates' => array(
                         (float) $lng,
                         (float) $lat,
-                        1
+                        1,
                     ),
                 ),
             );
@@ -1558,7 +1546,7 @@ class Zume_Charts_API
     }
 
     public function map_list_switcher( WP_REST_Request $request ) {
-        $params =  dt_recursive_sanitize_array( $request->get_params() );
+        $params = dt_recursive_sanitize_array( $request->get_params() );
         if ( ! isset( $params['stage'], $params['north'], $params['south'], $params['east'], $params['west'] ) ) {
             return new WP_Error( 'no_stage', __( 'No stage key or complete boundaries provided.', 'zume' ), array( 'status' => 400 ) );
         }
@@ -1567,23 +1555,23 @@ class Zume_Charts_API
         $params['east'] = (float) $params['east'];
         $params['west'] = (float) $params['west'];
 
-        switch( $params['stage'] ) {
+        switch ( $params['stage'] ) {
             case 'anonymous':
-                return Zume_Queries::stage_by_boundary( [0], $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [ 0 ], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'registrant':
-                return Zume_Queries::stage_by_boundary( [1], $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [ 1 ], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'active_training_trainee':
-                return Zume_Queries::stage_by_boundary( [2], $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [ 2 ], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'post_training_trainee':
-                return Zume_Queries::stage_by_boundary( [3], $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [ 3 ], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'partial_practitioner':
-                return Zume_Queries::stage_by_boundary( [4], $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [ 4 ], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'full_practitioner':
-                return Zume_Queries::stage_by_boundary( [5], $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [ 5 ], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'multiplying_practitioner':
-                return Zume_Queries::stage_by_boundary( [6], $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [ 6 ], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'practitioners':
-                return Zume_Queries::stage_by_boundary( [4,5,6], $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [ 4,5,6 ], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'churches':
                 return Zume_Queries::churches_by_boundary( $params['north'], $params['south'], $params['east'], $params['west'] );
 //            case 'facilitator':
@@ -1599,7 +1587,7 @@ class Zume_Charts_API
 
     public function query_location_funnel( array $range ) {
         global $wpdb;
-        if( count( $range ) > 1 ) {
+        if ( count( $range ) > 1 ) {
             $range = '(' . implode( ',', $range ) . ')';
         } else {
             $range = '(' . $range[0] . ')';
@@ -1685,44 +1673,44 @@ class Zume_Charts_API
 
         return $list;
     }
-    public function add_column(  $data, $key, $label, $stage )
+    public function add_column( $data, $key, $label, $stage )
     {
         $column_labels = $data['custom_column_labels'] ?? [];
         $column_data = $data['custom_column_data'] ?? [];
-        if (empty($column_labels)) {
+        if ( empty( $column_labels ) ) {
             $next_column_number = 0;
-        } else if (count($column_labels) === 1) {
+        } else if ( count( $column_labels ) === 1 ) {
             $next_column_number = 1;
         } else {
-            $next_column_number = count($column_labels);
+            $next_column_number = count( $column_labels );
         }
         $column_labels[$next_column_number] = [
             'key' => $key,
-            'label' => $label
+            'label' => $label,
         ];
-        if (!empty($column_data)) {
-            foreach ($column_data as $key => $value) {
+        if ( !empty( $column_data ) ) {
+            foreach ( $column_data as $key => $value ) {
                 $column_data[$key][$next_column_number] = 0;
             }
         }
-        $results = $this->query_location_funnel( $stage);
-        if (!empty($results)) {
-            foreach ($results as $result) {
-                if ($result['count'] > 0) { // filter for only contact and positive counts
+        $results = $this->query_location_funnel( $stage );
+        if ( !empty( $results ) ) {
+            foreach ( $results as $result ) {
+                if ( $result['count'] > 0 ) { // filter for only contact and positive counts
                     $grid_id = $result['grid_id'];
 
                     // test if grid_id exists, else prepare it with 0 values
-                    if (!isset($column_data[$grid_id])) {
+                    if ( !isset( $column_data[$grid_id] ) ) {
                         $column_data[$grid_id] = [];
                         $i = 0;
-                        while ($i <= $next_column_number) {
+                        while ( $i <= $next_column_number ) {
                             $column_data[$grid_id][$i] = 0;
                             $i++;
                         }
                     }
 
                     // add new record to column
-                    $column_data[$grid_id][$next_column_number] = (int)$result['count'] ?? 0; // must be string
+                    $column_data[$grid_id][$next_column_number] = (int) $result['count'] ?? 0; // must be string
                 }
             }
         }
@@ -1746,19 +1734,19 @@ class Zume_Charts_API
     public function location_goals() {
         $data = DT_Mapping_Module::instance()->data();
 
-        $practitioners = $this->query_practitioner_funnel( ['4','5','6'] );
-        $data = $this->add_goals_column(  $data, 'practitioners', 'Practitioners', $practitioners );
+        $practitioners = $this->query_practitioner_funnel( [ '4','5','6' ] );
+        $data = $this->add_goals_column( $data, 'practitioners', 'Practitioners', $practitioners );
         $data = $this->add_practitioners_goal_column( $data );
 
         $churches = $this->query_churches_funnel();
-        $data = $this->add_goals_column(  $data, 'churches', 'Churches', $churches );
+        $data = $this->add_goals_column( $data, 'churches', 'Churches', $churches );
         $data = $this->add_church_goal_column( $data );
 
         return $data;
     }
     public function query_practitioner_funnel( array $range ) {
         global $wpdb;
-        if( count( $range ) > 1 ) {
+        if ( count( $range ) > 1 ) {
             $range = '(' . implode( ',', $range ) . ')';
         } else {
             $range = '(' . $range[0] . ')';
@@ -1903,44 +1891,44 @@ class Zume_Charts_API
 
         return $list;
     }
-    public function add_goals_column(  $data, $key, $label, $results = [] )
+    public function add_goals_column( $data, $key, $label, $results = [] )
     {
         $column_labels = $data['custom_column_labels'] ?? [];
         $column_data = $data['custom_column_data'] ?? [];
-        if (empty($column_labels)) {
+        if ( empty( $column_labels ) ) {
             $next_column_number = 0;
-        } else if (count($column_labels) === 1) {
+        } else if ( count( $column_labels ) === 1 ) {
             $next_column_number = 1;
         } else {
-            $next_column_number = count($column_labels);
+            $next_column_number = count( $column_labels );
         }
         $column_labels[$next_column_number] = [
             'key' => $key,
-            'label' => $label
+            'label' => $label,
         ];
-        if (!empty($column_data)) {
-            foreach ($column_data as $key => $value) {
+        if ( !empty( $column_data ) ) {
+            foreach ( $column_data as $key => $value ) {
                 $column_data[$key][$next_column_number] = 0;
             }
         }
 
-        if ( !empty($results) ) {
-            foreach ($results as $result) {
-                if ($result['count'] > 0) { // filter for only contact and positive counts
+        if ( !empty( $results ) ) {
+            foreach ( $results as $result ) {
+                if ( $result['count'] > 0 ) { // filter for only contact and positive counts
                     $grid_id = $result['grid_id'];
 
                     // test if grid_id exists, else prepare it with 0 values
-                    if (!isset($column_data[$grid_id])) {
+                    if ( !isset( $column_data[$grid_id] ) ) {
                         $column_data[$grid_id] = [];
                         $i = 0;
-                        while ($i <= $next_column_number) {
+                        while ( $i <= $next_column_number ) {
                             $column_data[$grid_id][$i] = 0;
                             $i++;
                         }
                     }
 
                     // add new record to column
-                    $column_data[$grid_id][$next_column_number] = (int)$result['count'] ?? 0; // must be string
+                    $column_data[$grid_id][$next_column_number] = (int) $result['count'] ?? 0; // must be string
                 }
             }
         }
@@ -1962,7 +1950,7 @@ class Zume_Charts_API
         }
         $column_labels[ $next_column_number ] = [
             'key'   => 'practitioner_goal',
-            'label' => __( 'Practitioner Goal', 'zume_funnels' )
+            'label' => __( 'Practitioner Goal', 'zume_funnels' ),
         ];
         if ( ! empty( $column_data ) ) {
             foreach ( $column_data as $key => $value ) {
@@ -1973,8 +1961,8 @@ class Zume_Charts_API
             "SELECT grid_id, population, country_code, 1 as count
                     FROM {$wpdb->prefix}dt_location_grid
                     WHERE population != '0'
-                      AND population IS NOT NULL"
-            , ARRAY_A );
+                      AND population IS NOT NULL",
+        ARRAY_A );
         if ( ! empty( $results ) ) {
             foreach ( $results as $result ) {
                 $grid_id = $result['grid_id'];
@@ -1989,7 +1977,7 @@ class Zume_Charts_API
                     $i = 0;
                     while ( $i <= $next_column_number ) {
                         $column_data[$grid_id][$i] = 0;
-                        $i ++;
+                        $i++;
                     }
                 }
 
@@ -2017,7 +2005,7 @@ class Zume_Charts_API
         }
         $column_labels[ $next_column_number ] = [
             'key'   => 'church_goal',
-            'label' => __( 'Church Goal', 'zume_funnels' )
+            'label' => __( 'Church Goal', 'zume_funnels' ),
         ];
         if ( ! empty( $column_data ) ) {
             foreach ( $column_data as $key => $value ) {
@@ -2028,8 +2016,8 @@ class Zume_Charts_API
             "SELECT grid_id, population, country_code, 1 as count
                     FROM {$wpdb->prefix}dt_location_grid
                     WHERE population != '0'
-                      AND population IS NOT NULL"
-            , ARRAY_A );
+                      AND population IS NOT NULL",
+        ARRAY_A );
         if ( ! empty( $results ) ) {
             foreach ( $results as $result ) {
                 $grid_id = $result['grid_id'];
@@ -2044,7 +2032,7 @@ class Zume_Charts_API
                     $i = 0;
                     while ( $i <= $next_column_number ) {
                         $column_data[$grid_id][$i] = 0;
-                        $i ++;
+                        $i++;
                     }
                 }
 
@@ -2104,7 +2092,7 @@ class Zume_Charts_API
     }
 
     public function authorize_url( $authorized ){
-        if ( isset( $_SERVER['REQUEST_URI'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), $this->namespace  ) !== false ) {
+        if ( isset( $_SERVER['REQUEST_URI'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), $this->namespace ) !== false ) {
             $authorized = true;
         }
         return $authorized;

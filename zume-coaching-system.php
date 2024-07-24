@@ -68,12 +68,11 @@ function zume_coaching() {
     }
 
     return Zume_Coaching::instance();
-
 }
 add_action( 'after_setup_theme', 'zume_coaching', 20 );
 
 //register the D.T Plugin
-add_filter( 'dt_plugins', function ( $plugins ){
+add_filter( 'dt_plugins', function ( $plugins ) {
     $plugin_data = get_file_data( __FILE__, [ 'Version' => 'Version', 'Plugin Name' => 'Zume Coaching' ], false );
     $plugins['zume-coaching'] = [
         'plugin_url' => trailingslashit( plugin_dir_url( __FILE__ ) ),
@@ -120,7 +119,6 @@ class Zume_Coaching {
         if ( is_admin() ) {
             add_filter( 'plugin_row_meta', [ $this, 'plugin_description_links' ], 10, 4 );
         }
-
     }
     public function plugin_description_links( $links_array, $plugin_file_name, $plugin_data, $status ) {
         if ( strpos( $plugin_file_name, basename( __FILE__ ) ) ) {

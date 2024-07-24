@@ -8,16 +8,16 @@ class Zume_Views {
 
         $results = Zume_Queries::training_subtype_counts();
 
-        foreach( $results as $index => $value ) {
+        foreach ( $results as $index => $value ) {
             $results[$index]['value'] = (int) $value['value'];
-            $key = intval(substr( $value['subtype'], 0, 2 ));
+            $key = intval( substr( $value['subtype'], 0, 2 ) );
             $results[$index]['label'] = $items[$key]['title'] ?? $value['subtype'];
         }
 
         return $results;
     }
 
-    public static function stage_totals( $stage = NULL ) {
+    public static function stage_totals( $stage = null ) {
         $results = Zume_Queries::stage_totals();
 
         $totals = [
@@ -29,7 +29,7 @@ class Zume_Views {
             '6' => 0,
         ];
 
-        foreach( $results as $result ) {
+        foreach ( $results as $result ) {
             $totals[$result['stage']] = (int) $result['total'];
         }
 

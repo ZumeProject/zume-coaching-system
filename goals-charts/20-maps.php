@@ -24,14 +24,14 @@ class Zume_Goals_Maps_Trainees extends Zume_Goals_Chart_Base
 
         $url_path = dt_get_url_path( true );
         if ( "zume-goals/$this->base_slug" === $url_path ) {
-            add_action( 'wp_head',[ $this, 'wp_head' ], 1000);
+            add_action( 'wp_head', [ $this, 'wp_head' ], 1000 );
         }
     }
 
     public function base_menu( $content ) {
         $content .= '<li><hr></li>';
         $content .= '<li>MAPS</li>';
-        $content .= '<li><a href="'.site_url('/zume-goals/'.$this->base_slug).'" id="'.$this->base_slug.'-menu">' .  $this->base_title . '</a></li>';
+        $content .= '<li><a href="'.site_url( '/zume-goals/'.$this->base_slug ).'" id="'.$this->base_slug.'-menu">' .  $this->base_title . '</a></li>';
         return $content;
     }
 
@@ -91,7 +91,7 @@ class Zume_Goals_Maps_Practitioners extends Zume_Goals_Chart_Base
 
         $url_path = dt_get_url_path( true );
         if ( "zume-goals/$this->base_slug" === $url_path ) {
-            add_action( 'wp_head',[ $this, 'wp_head' ], 1000);
+            add_action( 'wp_head', [ $this, 'wp_head' ], 1000 );
         }
     }
 
@@ -151,7 +151,7 @@ class Zume_Goals_Maps_Churches extends Zume_Goals_Chart_Base
 
         $url_path = dt_get_url_path( true );
         if ( "zume-goals/$this->base_slug" === $url_path ) {
-            add_action( 'wp_head',[ $this, 'wp_head' ], 1000);
+            add_action( 'wp_head', [ $this, 'wp_head' ], 1000 );
         }
     }
 
