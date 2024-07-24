@@ -190,10 +190,10 @@ jQuery(document).ready(function(){
     let data = get_filters()
     window.post_request('load_geojson', data )
       .done( data => {
-        console.log('load_geojson')
-        console.log(data)
+        // console.log(data)
         "use strict";
         window.activity_geojson = data
+        console.log('loaded_geojson')
 
         var mapSource= map.getSource('layer-source-contacts');
         if( typeof mapSource !== 'undefined') {
@@ -211,10 +211,10 @@ jQuery(document).ready(function(){
     window.post_request('activity_list', data )
       .done( data => {
         let spinner = jQuery('.loading-spinner')
-        console.log('load_map_activity')
-        console.log(data)
+        // console.log(data)
         "use strict";
         window.activity_list = data
+        console.log('loaded_map_activity')
         update_activity_list()
         spinner.removeClass('active')
 
