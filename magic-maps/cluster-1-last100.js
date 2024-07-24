@@ -62,7 +62,7 @@ jQuery(document).ready(function(){
         <div class="medium-9 cell">
             <div id="map-wrapper">
                 <div id='map'></div>
-                <div id="map-header"><h3>Last 100 Hours of Movement Activity</h3>Countries: <span id="country_count">0</span> | Languages: <span id="languages_count">0</span></div>
+                <div id="map-header"><h3>Last 1000 Hours of Movement Activity</h3>Countries: <span id="country_count">0</span> | Languages: <span id="languages_count">0</span></div>
             </div>
         </div>
         <div class="medium-3 cell">
@@ -190,6 +190,7 @@ jQuery(document).ready(function(){
     let data = get_filters()
     window.post_request('load_geojson', data )
       .done( data => {
+        console.log('load_geojson')
         console.log(data)
         "use strict";
         window.activity_geojson = data
@@ -198,11 +199,6 @@ jQuery(document).ready(function(){
         if( typeof mapSource !== 'undefined') {
           map.getSource('layer-source-contacts').setData(window.activity_geojson);
         }
-
-        load_countries_dropdown()
-        load_languages_dropdown()
-        load_type_dropdown()
-        load_title_stats()
       })
   }
 
@@ -215,12 +211,20 @@ jQuery(document).ready(function(){
     window.post_request('activity_list', data )
       .done( data => {
         let spinner = jQuery('.loading-spinner')
+        console.log('load_map_activity')
         console.log(data)
         "use strict";
         window.activity_list = data
         update_activity_list()
         spinner.removeClass('active')
+
+        load_countries_dropdown()
+        load_languages_dropdown()
+        load_type_dropdown()
+        load_title_stats()
       })
+
+
   }
   load_geojson()
   load_map_activity()
@@ -321,7 +325,7 @@ jQuery(document).ready(function(){
 
   function load_countries_dropdown() {
     let country_dropdown = jQuery('#country-dropdown')
-    let points = window.activity_geojson
+    let points = window.activity_list
     window.selected_country = country_dropdown.val()
     country_dropdown.empty()
 
@@ -338,7 +342,7 @@ jQuery(document).ready(function(){
   }
   function load_languages_dropdown() {
     let language_dropdown = jQuery('#language-dropdown')
-    let points = window.activity_geojson
+    let points = window.activity_list
     window.selected_language = language_dropdown.val()
     language_dropdown.empty()
 
@@ -356,22 +360,26 @@ jQuery(document).ready(function(){
   function load_type_dropdown() {
     let type_dropdown = jQuery('#type-dropdown')
     let stats_list = jQuery('#stats-list')
-    let points = window.activity_geojson
+    let points = window.activity_list
     window.selected_type = type_dropdown.val()
 
     let add_selected = ''
     type_dropdown.empty().append(
-      `<option value="none">All Types</option>
+      `
+        <option value="none">All Types</option>
         <option disabled>---</option>
-        <option value="" class="dd learning"></option>
-        <option value="" class="dd joining"></option>
-        <option value="" class="dd producing"></option>`
+        <option value="" class="dd studying">Studying: 0</option>
+        <option value="" class="dd training">Training: 0</option>
+        <option value="" class="dd practicing">Practicing: 0</option>
+        <option value="" class="dd coaching">Coaching: 0</option>
+        `
     )
     stats_list.empty().append(`
     <div>
-        <span class="stats learning"></span><br>
-        <span class="stats joining"></span><br>
-        <span class="stats producing"></span><br>
+        <span class="stats studying">Studying: 0</span><br>
+        <span class="stats training">Training: 0</span><br>
+        <span class="stats practicing">Practicing: 0</span><br>
+        <span class="stats coaching">Coaching: 0</span><br>
         <span>Total: ${points.total}</span>
     </div>
     <hr>
@@ -386,7 +394,7 @@ jQuery(document).ready(function(){
     })
   }
   function load_title_stats() {
-    jQuery('#country_count').html(window.activity_geojson.countries_count)
-    jQuery('#languages_count').html(window.activity_geojson.languages_count)
+    jQuery('#country_count').html(window.activity_list.countries_count)
+    jQuery('#languages_count').html(window.activity_list.languages_count)
   }
 })

@@ -13,7 +13,7 @@ class Zume_Funnel_Public_Heatmap_100hours_V2 extends DT_Magic_Url_Base {
     public $magic = false;
     public $parts = false;
     public $page_title = 'Last 100 Hours';
-    public $root = "zume_app";
+    public $root = 'zume_app';
     public $type = 'last100_hours';
     public $post_type = 'contacts';
     private $meta_key = '';
@@ -54,7 +54,6 @@ class Zume_Funnel_Public_Heatmap_100hours_V2 extends DT_Magic_Url_Base {
         add_action( 'dt_blank_body', [ $this, 'body' ] ); // body for no post key
         add_filter( 'dt_magic_url_base_allowed_css', [ $this, 'dt_magic_url_base_allowed_css' ], 10, 1 );
         add_filter( 'dt_magic_url_base_allowed_js', [ $this, 'dt_magic_url_base_allowed_js' ], 10, 1 );
-
     }
 
     public function dt_magic_url_base_allowed_js( $allowed_js ) {
@@ -104,7 +103,7 @@ class Zume_Funnel_Public_Heatmap_100hours_V2 extends DT_Magic_Url_Base {
                 'map_key' => DT_Mapbox_API::get_key(),
                 'root' => esc_url_raw( rest_url() ),
                 'nonce' => wp_create_nonce( 'wp_rest' ),
-                'parts' => $this->parts
+                'parts' => $this->parts,
             ]) ?>][0]
             /* <![CDATA[ */
 
@@ -146,7 +145,7 @@ class Zume_Funnel_Public_Heatmap_100hours_V2 extends DT_Magic_Url_Base {
                 [
                     'methods' => WP_REST_Server::CREATABLE,
                     'callback' => [ $this, 'endpoint' ],
-                    'permission_callback' => function( WP_REST_Request $request ){
+                    'permission_callback' => function ( WP_REST_Request $request ) {
                         return true;
                     },
                 ],
@@ -158,7 +157,7 @@ class Zume_Funnel_Public_Heatmap_100hours_V2 extends DT_Magic_Url_Base {
         $params = $request->get_params();
 
         if ( ! isset( $params['parts'], $params['action'], $params['data'] ) ) {
-            return new WP_Error( __METHOD__, "Missing parameters", [ 'status' => 400 ] );
+            return new WP_Error( __METHOD__, 'Missing parameters', [ 'status' => 400 ] );
         }
 
         $params = dt_recursive_sanitize_array( $params );
@@ -170,8 +169,7 @@ class Zume_Funnel_Public_Heatmap_100hours_V2 extends DT_Magic_Url_Base {
             case 'activity_list':
                 return Zume_Funnel_App_Heatmap::get_activity_list( $params['data'], true );
             default:
-                return new WP_Error( __METHOD__, "Missing valid action", [ 'status' => 400 ] );
+                return new WP_Error( __METHOD__, 'Missing valid action', [ 'status' => 400 ] );
         }
     }
-
 }

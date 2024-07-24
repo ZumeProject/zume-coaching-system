@@ -12,7 +12,7 @@ class Zume_Funnel_App_Heatmap {
      *
      * @return array
      */
-    public static function query_saturation_list() : array {
+    public static function query_saturation_list(): array {
 
         if ( false !== ( $value = get_transient( __METHOD__ ) ) ) { // phpcs:ignore
             return $value;
@@ -105,7 +105,7 @@ class Zume_Funnel_App_Heatmap {
         return $list;
     }
 
-    public static function query_saturation_list_full() : array {
+    public static function query_saturation_list_full(): array {
 
         if ( false !== ( $value = get_transient( __METHOD__ ) ) ) { // phpcs:ignore
             return $value;
@@ -263,7 +263,7 @@ class Zume_Funnel_App_Heatmap {
         return $list;
     }
 
-    public static function query_saturation_list_with_filters( $filters ) : array {
+    public static function query_saturation_list_with_filters( $filters ): array {
 
         $additional_where = '';
         if ( ! empty( $filters['bounds'] ) && is_array( $filters['bounds'] ) && $filters['zoom'] > 1.5 ) {
@@ -272,12 +272,12 @@ class Zume_Funnel_App_Heatmap {
                 && isset( $filters['bounds']['e_lng'] )
                 && isset( $filters['bounds']['w_lng'] )
             ) {
-                $additional_where .= "
-                WHERE tb.longitude < ".$filters['bounds']['e_lng']."
-                AND tb.longitude > ".$filters['bounds']['w_lng']."
-                AND tb.latitude > ".$filters['bounds']['s_lat']."
-                AND tb.latitude < ".$filters['bounds']['n_lat']."
-                ";
+                $additional_where .= '
+                WHERE tb.longitude < '.$filters['bounds']['e_lng'].'
+                AND tb.longitude > '.$filters['bounds']['w_lng'].'
+                AND tb.latitude > '.$filters['bounds']['s_lat'].'
+                AND tb.latitude < '.$filters['bounds']['n_lat'].'
+                ';
             }
         }
 
@@ -1708,7 +1708,7 @@ class Zume_Funnel_App_Heatmap {
         return $list;
     }
 
-    public static function query_funnel_grid_totals( $administrative_level = null, $stages = ['1','2','3','4','5','6'] ) {
+    public static function query_funnel_grid_totals( $administrative_level = null, $stages = [ '1','2','3','4','5','6' ] ) {
         global $wpdb;
 
         $stage_list = '(' . implode( ',', $stages ) . ')';
@@ -2282,16 +2282,16 @@ class Zume_Funnel_App_Heatmap {
     }
 
     public static function query_church_grid_totals( $administrative_level = null ) {
-            dt_write_log(__METHOD__);
+            dt_write_log( __METHOD__ );
 //        if ( false !== ( $value = get_transient( __METHOD__ . $administrative_level ) ) ) { // phpcs:ignore
 //            return $value;
 //        }
 
             global $wpdb;
 
-            switch ( $administrative_level ) {
-                case 'a0':
-                    $results = $wpdb->get_results( "
+        switch ( $administrative_level ) {
+            case 'a0':
+                $results = $wpdb->get_results( "
                     SELECT t0.admin0_grid_id as grid_id, count(t0.admin0_grid_id) as count
                     FROM (
                         SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id
@@ -2302,9 +2302,9 @@ class Zume_Funnel_App_Heatmap {
                     ) as t0
                     GROUP BY t0.admin0_grid_id
                     ", ARRAY_A );
-                    break;
-                case 'a1':
-                    $results = $wpdb->get_results( "
+                break;
+            case 'a1':
+                $results = $wpdb->get_results( "
                     SELECT t1.admin1_grid_id as grid_id, count(t1.admin1_grid_id) as count
                     FROM (
                         SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id
@@ -2315,9 +2315,9 @@ class Zume_Funnel_App_Heatmap {
                     ) as t1
                     GROUP BY t1.admin1_grid_id
                     ", ARRAY_A );
-                    break;
-                case 'a2':
-                    $results = $wpdb->get_results( "
+                break;
+            case 'a2':
+                $results = $wpdb->get_results( "
                     SELECT t2.admin2_grid_id as grid_id, count(t2.admin2_grid_id) as count
                     FROM (
                         SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id
@@ -2328,9 +2328,9 @@ class Zume_Funnel_App_Heatmap {
                     ) as t2
                     GROUP BY t2.admin2_grid_id
                     ", ARRAY_A );
-                    break;
-                case 'a3':
-                    $results = $wpdb->get_results( "
+                break;
+            case 'a3':
+                $results = $wpdb->get_results( "
                     SELECT t3.admin3_grid_id as grid_id, count(t3.admin3_grid_id) as count
                     FROM (
                         SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id
@@ -2342,9 +2342,9 @@ class Zume_Funnel_App_Heatmap {
                     GROUP BY t3.admin3_grid_id
 
                     ", ARRAY_A );
-                    break;
-                case 'world':
-                    $results = $wpdb->get_results( "
+                break;
+            case 'world':
+                $results = $wpdb->get_results( "
                     SELECT 1 as grid_id, count('World') as count
                     FROM (
                         SELECT 'World'
@@ -2355,10 +2355,10 @@ class Zume_Funnel_App_Heatmap {
                          ) as tw
                     GROUP BY 'World'
                     ", ARRAY_A );
-                    break;
-                case 'full': // full query including world
-                default:
-                    $results = $wpdb->get_results( "
+                break;
+            case 'full': // full query including world
+            default:
+                $results = $wpdb->get_results( "
                     SELECT t0.admin0_grid_id as grid_id, count(t0.admin0_grid_id) as count
                     FROM (
                         SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id
@@ -2409,54 +2409,54 @@ class Zume_Funnel_App_Heatmap {
                          ) as tw
                     GROUP BY 'World'
                     ", ARRAY_A );
-                    break;
-            }
+                break;
+        }
 
             $list = [];
-            if ( is_array( $results ) ) {
-                foreach ( $results as $result ) {
-                    $result['count'] = (int) $result['count'];
-                    if ( empty( $result['count'] ) ) {
-                        continue;
+        if ( is_array( $results ) ) {
+            foreach ( $results as $result ) {
+                $result['count'] = (int) $result['count'];
+                if ( empty( $result['count'] ) ) {
+                    continue;
+                }
+                if ( isset( $result['world'] ) ) {
+                    if ( ! isset( $list[$result['world']] ) ) {
+                        $list[$result['world']] = 0;
                     }
-                    if ( isset( $result['world'] ) ) {
-                        if ( ! isset( $list[$result['world']] ) ) {
-                            $list[$result['world']] = 0;
-                        }
-                        $list[$result['world']] = $list[$result['world']] + $result['count'];
+                    $list[$result['world']] = $list[$result['world']] + $result['count'];
+                }
+                if ( isset( $result['grid_id'] ) ) {
+                    if ( ! isset( $list[$result['grid_id']] ) ) {
+                        $list[$result['grid_id']] = 0;
                     }
-                    if ( isset( $result['grid_id'] ) ) {
-                        if ( ! isset( $list[$result['grid_id']] ) ) {
-                            $list[$result['grid_id']] = 0;
-                        }
-                        $list[$result['grid_id']] = $list[$result['grid_id']] + $result['count'];
+                    $list[$result['grid_id']] = $list[$result['grid_id']] + $result['count'];
+                }
+                if ( ! empty( $result['admin0_grid_id'] ) ) {
+                    if ( ! isset( $list[$result['admin0_grid_id']] ) ) {
+                        $list[$result['admin0_grid_id']] = 0;
                     }
-                    if ( ! empty( $result['admin0_grid_id'] ) ) {
-                        if ( ! isset( $list[$result['admin0_grid_id']] ) ) {
-                            $list[$result['admin0_grid_id']] = 0;
-                        }
-                        $list[$result['admin0_grid_id']] = $list[$result['admin0_grid_id']] + $result['count'];
+                    $list[$result['admin0_grid_id']] = $list[$result['admin0_grid_id']] + $result['count'];
+                }
+                if ( ! empty( $result['admin1_grid_id'] ) ) {
+                    if ( ! isset( $list[$result['admin1_grid_id']] ) ) {
+                        $list[$result['admin1_grid_id']] = 0;
                     }
-                    if ( ! empty( $result['admin1_grid_id'] ) ) {
-                        if ( ! isset( $list[$result['admin1_grid_id']] ) ) {
-                            $list[$result['admin1_grid_id']] = 0;
-                        }
-                        $list[$result['admin1_grid_id']] = $list[$result['admin1_grid_id']] + $result['count'];
+                    $list[$result['admin1_grid_id']] = $list[$result['admin1_grid_id']] + $result['count'];
+                }
+                if ( ! empty( $result['admin2_grid_id'] ) ) {
+                    if ( ! isset( $list[$result['admin2_grid_id']] ) ) {
+                        $list[$result['admin2_grid_id']] = 0;
                     }
-                    if ( ! empty( $result['admin2_grid_id'] ) ) {
-                        if ( ! isset( $list[$result['admin2_grid_id']] ) ) {
-                            $list[$result['admin2_grid_id']] = 0;
-                        }
-                        $list[$result['admin2_grid_id']] = $list[$result['admin2_grid_id']] + $result['count'];
+                    $list[$result['admin2_grid_id']] = $list[$result['admin2_grid_id']] + $result['count'];
+                }
+                if ( ! empty( $result['admin3_grid_id'] ) ) {
+                    if ( ! isset( $list[$result['admin3_grid_id']] ) ) {
+                        $list[$result['admin3_grid_id']] = 0;
                     }
-                    if ( ! empty( $result['admin3_grid_id'] ) ) {
-                        if ( ! isset( $list[$result['admin3_grid_id']] ) ) {
-                            $list[$result['admin3_grid_id']] = 0;
-                        }
-                        $list[$result['admin3_grid_id']] = $list[$result['admin3_grid_id']] + $result['count'];
-                    }
+                    $list[$result['admin3_grid_id']] = $list[$result['admin3_grid_id']] + $result['count'];
                 }
             }
+        }
 
 //        set_transient( __METHOD__ . $administrative_level, $list, HOUR_IN_SECONDS . 6 );
 
@@ -2610,7 +2610,7 @@ class Zume_Funnel_App_Heatmap {
 
         return [
             'highest_value' => (int) $highest_value,
-            'data' => $data
+            'data' => $data,
         ];
     }
 
@@ -2622,7 +2622,7 @@ class Zume_Funnel_App_Heatmap {
         wp_enqueue_script( 'heatmap-js', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'heatmap.js', [
             'jquery',
             'mapbox-cookie',
-            'jquery-cookie'
+            'jquery-cookie',
         ], filemtime( plugin_dir_path( __FILE__ ) .'heatmap.js' ), true );
 
         wp_enqueue_style( 'heatmap-css', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'heatmap.css', [], filemtime( plugin_dir_path( __FILE__ ) .'heatmap.css' ) );
@@ -2915,327 +2915,84 @@ class Zume_Funnel_App_Heatmap {
         return $list;
     }
 
-    public static function query_activity_list() {
+    public static function query_activity_list( $filters ): array {
         global $wpdb;
-        $timestamp = strtotime( '-100 hours' );
-        $results = $wpdb->get_results( $wpdb->prepare( "
-                SELECT ml.action, ml.category, ml.lng, ml.lat, ml.label, ml.payload, ml.timestamp, lga0.name as country_name, lga0.country_code
-                FROM $wpdb->dt_movement_log ml
-                LEFT JOIN $wpdb->dt_location_grid lg ON lg.grid_id=ml.grid_id
-                LEFT JOIN $wpdb->dt_location_grid lga0 ON lga0.grid_id=lg.admin0_grid_id
-                WHERE ml.timestamp > %d
-                ORDER BY ml.timestamp DESC
-                ", $timestamp), ARRAY_A );
-
-        foreach ( $results as $i => $v ) {
-            $t = self::_get_type( $v['action'] );
-            if ( empty( $t ) ) {
-                unset( $results[$i] );
-            } else {
-                $results[$i]['type'] = $t;
+        $additional_where = '';
+        if ( ! empty( $filters['bounds'] ) && is_array( $filters['bounds'] ) && $filters['zoom'] > 1.5 ) {
+            if ( isset( $filters['bounds']['n_lat'] )
+                && isset( $filters['bounds']['s_lat'] )
+                && isset( $filters['bounds']['e_lng'] )
+                && isset( $filters['bounds']['w_lng'] )
+            ) {
+                $additional_where .= '
+                AND lng < '.$filters['bounds']['e_lng'].'
+                AND lng > '.$filters['bounds']['w_lng'].'
+                AND lat > '.$filters['bounds']['s_lat'].'
+                AND lat < '.$filters['bounds']['n_lat'].'
+                ';
             }
         }
+
+        if ( 'none' !== $filters['country'] ) {
+            $additional_where .= " AND lga0.country_code = '" .$filters['country']. "'";
+        }
+
+        $timestamp = strtotime( '-1000 hours' );
+        // @phpcs:disable
+        $sql = "
+                SELECT *
+                FROM (
+                SELECT r.type, r.subtype, r.value, r.lng, r.lat, r.label, r.timestamp, lga0.name as country_name, lga0.country_code, r.language_code
+                FROM zume_dt_reports r
+                LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=r.grid_id
+                LEFT JOIN zume_dt_location_grid lga0 ON lga0.grid_id=lg.admin0_grid_id
+                WHERE r.timestamp > $timestamp AND r.type != 'system'
+                UNION ALL
+                SELECT r.type, r.subtype, r.value, r.lng, r.lat, r.label, r.timestamp, lga0.name as country_name, lga0.country_code, r.language_code
+                FROM zume_dt_reports_anonymous r
+                LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=r.grid_id
+                LEFT JOIN zume_dt_location_grid lga0 ON lga0.grid_id=lg.admin0_grid_id
+                WHERE r.timestamp > $timestamp AND r.type != 'system'
+                ) as tb
+                WHERE tb.timestamp > $timestamp
+                $additional_where
+                ORDER BY tb.timestamp DESC
+        ";
+
+        $results = $wpdb->get_results( $sql, ARRAY_A );
+        // @phpcs:enable
+
+        if ( is_wp_error( $results ) || empty( $results ) ) {
+            return [];
+        }
+        return $results;
+    }
+
+    public static function query_activity_geojson() {
+        global $wpdb;
+        $timestamp = strtotime( '-1000 hours' );
+        $results = $wpdb->get_results( $wpdb->prepare( "
+                SELECT *
+                FROM (
+                SELECT r.type, r.subtype, r.value, r.lng, r.lat, r.label, r.timestamp, lga0.name as country_name, lga0.country_code, r.language_code
+                FROM zume_dt_reports r
+                LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=r.grid_id
+                LEFT JOIN zume_dt_location_grid lga0 ON lga0.grid_id=lg.admin0_grid_id
+                WHERE r.timestamp > %d AND r.type != 'system'
+                UNION ALL
+                SELECT r.type, r.subtype, r.value, r.lng, r.lat, r.label, r.timestamp, lga0.name as country_name, lga0.country_code, r.language_code
+                FROM zume_dt_reports_anonymous r
+                LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=r.grid_id
+                LEFT JOIN zume_dt_location_grid lga0 ON lga0.grid_id=lg.admin0_grid_id
+                WHERE r.timestamp > %d AND r.type != 'system'
+                ) as tb
+                ORDER BY tb.timestamp DESC
+                ", $timestamp, $timestamp), ARRAY_A );
 
         return $results;
     }
 
-    public static function create_initials( $longitude, $latitude, $payload ) : string {
-        $letters = [
-            'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        'G',
-        'H',
-        'I',
-        'J',
-        'K',
-        'L',
-        'N',
-        'S',
-        'M',
-        'N',
-        'O',
-        'P',
-        'R',
-        'S',
-        'T',
-        'U',
-        'V',
-        'W',
-        'E',
-        'A',
-        'R',
-        'I',
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        'G',
-        'H',
-        'I',
-        'J',
-        'K',
-        'L',
-        'D',
-        'E',
-        'M',
-        'N',
-        'O',
-        'P',
-        'R',
-        'S',
-        'T',
-        'U',
-        'V',
-        'W',
-        'E',
-        'A',
-        'R',
-        'I',
-        'E',
-        'A',
-        'R',
-        'I',
-        'T',
-        'N',
-        'S',
-        'L',
-        'E',
-        'A',
-        'R',
-        'I',
-        'N',
-        'S',
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        'G',
-        'H',
-        'I',
-        'J',
-        'K',
-        'L',
-        'C',
-        'D',
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        'G',
-        'H',
-        'I',
-        'J',
-        'K',
-        'L',
-        'A',
-        'B',
-        'M',
-        'N',
-        'O',
-        'P',
-        'R',
-        'S',
-        'T',
-        'U',
-        'V',
-        'W',
-        'E',
-        'A',
-        'R',
-        'I',
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        'G',
-        'H',
-        'I',
-        'J',
-        'K',
-        'L',
-        'A',
-        'B',
-        'M',
-        'N',
-        'O',
-        'P',
-        'Q',
-        'R',
-        'S',
-        'T',
-        'U',
-        'V',
-        'W',
-        'E',
-        'A',
-        'R',
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        'G',
-        'H',
-        'I',
-        'J',
-        'K',
-        'L',
-        'N',
-        'S',
-        'M',
-        'N',
-        'O',
-        'P',
-        'R',
-        'S',
-        'T',
-        'U',
-        'V',
-        'W',
-        'E',
-        'A',
-        'R',
-        'I',
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        'G',
-        'H',
-        'I',
-        'J',
-        'K',
-        'L',
-        'D',
-        'E',
-        'M',
-        'N',
-        'O',
-        'P',
-        'R',
-        'S',
-        'T',
-        'U',
-        'V',
-        'W',
-        'E',
-        'A',
-        'R',
-        'I',
-        'E',
-        'A',
-        'R',
-        'I',
-        'T',
-        'N',
-        'S',
-        'L',
-        'E',
-        'A',
-        'R',
-        'I',
-        'N',
-        'S',
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        'G',
-        'H',
-        'I',
-        'J',
-        'K',
-        'L',
-        'C',
-        'D',
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        'G',
-        'H',
-        'I',
-        'J',
-        'K',
-        'L',
-        'A',
-        'B',
-        'E',
-        'A',
-        'R',
-        'I',
-        'T',
-        'N',
-        'S',
-        'L',
-        'E',
-        'A',
-        'R',
-        'I',
-        'N',
-        'S',
-        'M',
-        'N',
-        'O',
-        'P',
-        'R',
-        'S',
-        'T',
-        'U',
-        'V',
-        'W',
-        'E',
-        'A',
-        'R',
-        'I',
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        'G',
-        'H',
-        'I',
-        'J',
-        'K',
-        'L',
-        'N',
-        'S',
-        ];
-        $fnum = abs( round( $longitude ) );
-        $lnum = abs( round( $latitude ) );
-        $list = str_split( hash( 'sha256', maybe_serialize( $payload ) ) );
-        foreach ( $list as $character ){
-            if ( is_numeric( $character ) ) {
-                $fnum = $fnum + $character;
-                $lnum = $lnum + $character;
-                break;
-            }
-        }
-        return strtoupper( $letters[$fnum] . $letters[$lnum] );
-    }
-
-    public static function create_time_string( $timestamp, $timezone_offset ) : string {
+    public static function create_time_string( $timestamp, $timezone_offset ): string {
         $adjusted_time = $timestamp + $timezone_offset;
         if ( $timestamp > strtotime( '-1 hour' ) ) {
             $time_string = self::_time_elapsed_string( '@'.$timestamp );
@@ -3249,19 +3006,16 @@ class Zume_Funnel_App_Heatmap {
         return $time_string;
     }
 
-    public static function create_in_language_string( $payload ) : string {
-        $in_language = '';
-        if ( isset( $payload['language_name'] ) && ! empty( $payload['language_name'] ) && 'English' !== $payload['language_name'] ) {
-            $in_language = ' in ' . $payload['language_name'];
-        }
-        return $in_language;
+    public static function create_in_language_string( $data, $languages ): string {
+        $language = $languages[$data['language_code']] ?? $languages['en'];
+        return $language['name'];
     }
 
-    public static function create_location_precision( $lng, $lat, $label, $payload ) : array {
+    public static function create_location_precision( $lng, $lat, $label ): array {
         $location = [
             'lng' => $lng,
             'lat' => $lat,
-            'label' => $label
+            'label' => $label,
         ];
 
         // @todo remove the precision reduction
@@ -3286,7 +3040,7 @@ class Zume_Funnel_App_Heatmap {
         return $location;
     }
 
-    public static function _persecuted_countries() : array {
+    public static function _persecuted_countries(): array {
 
         // Top 50 most persecuted countries
         // @link https://www.opendoorsusa.org/christian-persecution/world-watch-list/
@@ -3341,139 +3095,373 @@ class Zume_Funnel_App_Heatmap {
             'United Arab Emirates',
             'Cameroon',
             'Indonesia',
-            'Niger'
+            'Niger',
         ];
     }
 
-    public static function create_note_data( $action, $string_elements, $payload ) : array {
-        // learning
-        // joining
-        // producing
+    public static function create_note_data( $record, $language_name, $location_name, $training_items ) {
+        // studying - anonymous viewing of pieces content
+        // training - registration to training completion
+        // coaching - request for coach and all mawl and coaching effort
+        // practicing - all practitioner actions like reporting and training multiple groups
 
-        $initials = $string_elements['initials'] ?? '';
-        $in_language = $string_elements['in_language'] ?? '';
-        $location_label =' (' . $string_elements['location_label'] . ') ' ?? '';
+        $type = $record['type'];
+        $subtype = $record['subtype'];
+
+        if ( 'English' == $language_name ) {
+            $language_name = '';
+        }
+        else {
+            $language_name = '('.$language_name.')';
+        }
+
+        if ( $record['value'] < 4 && $record['value'] > 0 ) {
+            $identity = 'trainee';
+        }
+        else if ( $record['value'] > 3 ) { // value = 4+
+            $identity = 'practitioner';
+        }
+        else { // value = 0
+            $identity = 'visitor';
+        }
 
         $data = [
-            'note' => '',
-            'type' => 'learning',
+            'note' => $type . ' ' . $subtype,
+            'type' => $type,
         ];
 
-        switch ( $action ) {
-            case 'starting_group':
-                $data['note'] = $initials . ' is starting a training group' . $in_language . '! ' . $location_label;
-                $data['type'] = 'producing';
+        switch ( $subtype ) {
+            case 'registered':
+                $data['note'] = sprintf( __( '%1$s trainee registered! (%2$s)', 'zume' ), $language_name, $location_name );
+                $data['type'] = 'training';
                 break;
-            case 'building_group':
-                $data['note'] = $initials . ' is growing a training group' . $in_language . '! ' . $location_label;
-                $data['type'] = 'producing';
+            case 'plan_created':
+                $data['note'] = sprintf( __( 'New training group scheduled in %1$s. %2$s', 'zume' ), $location_name, $language_name );
+                $data['type'] = 'training';
                 break;
-            case 'leading_1':
-            case 'leading_2':
-            case 'leading_3':
-            case 'leading_4':
-            case 'leading_5':
-            case 'leading_6':
-            case 'leading_7':
-            case 'leading_8':
-            case 'leading_9':
-            case 'leading_10':
-                if ( isset( $payload['group_size'] ) && $payload['group_size'] > 1 ) {
-                    $data['note'] = $initials . ' is leading a group of '. $payload['group_size'] .' through session ' . str_replace( '_', '', substr( $action, -2, 2 ) ) . $in_language . '! ' . $location_label;
+
+            case 'set_a_1':
+            case 'set_a_2':
+            case 'set_a_3':
+            case 'set_a_4':
+            case 'set_a_5':
+            case 'set_a_6':
+            case 'set_a_7':
+            case 'set_a_8':
+            case 'set_a_9':
+            case 'set_a_10':
+
+            case 'set_b_1':
+            case 'set_b_2':
+            case 'set_b_3':
+            case 'set_b_4':
+            case 'set_b_5':
+            case 'set_b_6':
+            case 'set_b_7':
+            case 'set_b_8':
+            case 'set_b_9':
+            case 'set_b_10':
+            case 'set_b_11':
+            case 'set_b_12':
+            case 'set_b_13':
+            case 'set_b_14':
+            case 'set_b_15':
+            case 'set_b_16':
+            case 'set_b_17':
+            case 'set_b_18':
+            case 'set_b_19':
+            case 'set_b_20':
+
+            case 'set_c_1':
+            case 'set_c_2':
+            case 'set_c_3':
+            case 'set_c_4':
+            case 'set_c_5':
+                $data['note'] = sprintf( '%s training session beginning in %s. %s', $subtype, $location_name, $language_name );
+                $data['type'] = 'training';
+                break;
+            case '1_heard':
+            case '2_heard':
+            case '3_heard':
+            case '4_heard':
+            case '5_heard':
+            case '6_heard':
+            case '7_heard':
+            case '8_heard':
+            case '9_heard':
+            case '10_heard':
+            case '11_heard':
+            case '12_heard':
+            case '13_heard':
+            case '14_heard':
+            case '15_heard':
+            case '16_heard':
+            case '17_heard':
+            case '18_heard':
+            case '19_heard':
+            case '20_heard':
+            case '21_heard':
+            case '22_heard':
+            case '23_heard':
+            case '24_heard':
+            case '25_heard':
+            case '26_heard':
+            case '27_heard':
+            case '28_heard':
+            case '29_heard':
+            case '30_heard':
+            case '31_heard':
+            case '32_heard':
+            case '33_heard':
+                $key = str_replace( '_', '', substr( $subtype, 0, 2 ) );
+                $title = $training_items[$key]['video_title'];
+                $data['note'] = sprintf( __( 'A %1$s is studying "%2$s" in %3$s. %4$s', 'zume' ), $identity, $title, $location_name, $language_name );
+                if ( $record['value'] > 0 ) {
+                    $data['type'] = 'training';
                 } else {
-                    $data['note'] = $initials . ' is leading a group through session ' . str_replace( '_', '', substr( $action, -2, 2 ) ) . $in_language . '! ' . $location_label;
+                    $data['type'] = 'studying';
                 }
-                $data['type'] = 'producing';
                 break;
-            case 'zume_training':
-                $data['note'] = $initials . ' is registering for Zúme training' . $in_language . '! ' . $location_label;
-                $data['type'] = 'joining';
+            case '1_shared':
+            case '2_shared':
+            case '3_shared':
+            case '4_shared':
+            case '5_shared':
+            case '6_shared':
+            case '7_shared':
+            case '8_shared':
+            case '9_shared':
+            case '10_shared':
+            case '11_shared':
+            case '12_shared':
+            case '13_shared':
+            case '14_shared':
+            case '15_shared':
+            case '16_shared':
+            case '17_shared':
+            case '18_shared':
+            case '19_shared':
+            case '20_shared':
+            case '21_shared':
+            case '22_shared':
+            case '23_shared':
+            case '24_shared':
+            case '25_shared':
+            case '26_shared':
+            case '27_shared':
+            case '28_shared':
+            case '29_shared':
+            case '30_shared':
+            case '31_shared':
+            case '32_shared':
+            case '33_shared':
+                $key = str_replace( '_', '', substr( $subtype, 0, 2 ) );
+                $title = $training_items[$key]['video_title'];
+                $data['note'] = sprintf( __( 'A %1$s shared "%2$s" with someone in %3$s. %4$s', 'zume' ), $identity, $title, $location_name, $language_name );
+                $data['type'] = 'practicing';
                 break;
-            case 'zume_vision':
-                $data['note'] = $initials . ' is joining the Zúme community to engage in Disciple Making Movements' . $in_language . '! ' . $location_label;
-                $data['type'] = 'joining';
+            case '1_trained':
+            case '2_trained':
+            case '3_trained':
+            case '4_trained':
+            case '5_trained':
+            case '6_trained':
+            case '7_trained':
+            case '8_trained':
+            case '9_trained':
+            case '10_trained':
+            case '11_trained':
+            case '12_trained':
+            case '13_trained':
+            case '14_trained':
+            case '15_trained':
+            case '16_trained':
+            case '17_trained':
+            case '18_trained':
+            case '19_trained':
+            case '20_trained':
+            case '21_trained':
+            case '22_trained':
+            case '23_trained':
+            case '24_trained':
+            case '25_trained':
+            case '26_trained':
+            case '27_trained':
+            case '28_trained':
+            case '29_trained':
+            case '30_trained':
+            case '31_trained':
+            case '32_trained':
+            case '33_trained':
+                $key = str_replace( '_', '', substr( $subtype, 0, 2 ) );
+                $title = $training_items[$key]['video_title'];
+                $data['note'] = sprintf( __( 'A %1$s trained someone to use "%2$s" in %3$s. %4$s', 'zume' ), $identity, $title, $location_name, $language_name );
+                $data['type'] = 'practicing';
                 break;
-            case 'coaching':
-                $data['note'] = $initials . ' is requesting coaching from Zúme coaches' . $in_language . '! ' . $location_label;
-                $data['type'] = 'producing';
+
+            case '1_modeling':
+            case '2_modeling':
+            case '3_modeling':
+            case '4_modeling':
+            case '5_modeling':
+            case '6_modeling':
+            case '7_modeling':
+            case '8_modeling':
+            case '9_modeling':
+            case '10_modeling':
+            case '11_modeling':
+            case '12_modeling':
+            case '13_modeling':
+            case '14_modeling':
+            case '15_modeling':
+            case '16_modeling':
+            case '17_modeling':
+            case '18_modeling':
+            case '19_modeling':
+            case '20_modeling':
+            case '21_modeling':
+            case '22_modeling':
+            case '23_modeling':
+            case '24_modeling':
+            case '25_modeling':
+            case '26_modeling':
+            case '27_modeling':
+            case '28_modeling':
+            case '29_modeling':
+            case '30_modeling':
+            case '31_modeling':
+            case '32_modeling':
+            case '33_modeling':
+                $key = str_replace( '_', '', substr( $subtype, 0, 2 ) );
+                $title = $training_items[$key]['video_title'];
+                $data['note'] = sprintf( __( 'A coach is modeling "%1$s" for a trainee in %2$s. %3$s', 'zume' ), $title, $location_name, $language_name );
+                $data['type'] = 'coaching';
                 break;
-            case 'studying_1':
-            case 'studying_2':
-            case 'studying_3':
-            case 'studying_4':
-            case 'studying_5':
-            case 'studying_6':
-            case 'studying_7':
-            case 'studying_8':
-            case 'studying_9':
-            case 'studying_10':
-            case 'studying_11':
-            case 'studying_12':
-            case 'studying_13':
-            case 'studying_14':
-            case 'studying_15':
-            case 'studying_16':
-            case 'studying_17':
-            case 'studying_18':
-            case 'studying_19':
-            case 'studying_20':
-            case 'studying_21':
-            case 'studying_22':
-            case 'studying_23':
-            case 'studying_24':
-            case 'studying_25':
-            case 'studying_26':
-            case 'studying_27':
-            case 'studying_28':
-            case 'studying_29':
-            case 'studying_30':
-            case 'studying_31':
-            case 'studying_32':
-            case 'studying_offline_1':
-            case 'studying_offline_2':
-            case 'studying_offline_3':
-            case 'studying_offline_4':
-            case 'studying_offline_5':
-            case 'studying_offline_6':
-            case 'studying_offline_7':
-            case 'studying_offline_8':
-            case 'studying_offline_9':
-            case 'studying_offline_10':
-            case 'studying_offline_11':
-            case 'studying_offline_12':
-            case 'studying_offline_13':
-            case 'studying_offline_14':
-            case 'studying_offline_15':
-            case 'studying_offline_16':
-            case 'studying_offline_17':
-            case 'studying_offline_18':
-            case 'studying_offline_19':
-            case 'studying_offline_20':
-            case 'studying_offline_21':
-            case 'studying_offline_22':
-            case 'studying_offline_23':
-            case 'studying_offline_24':
-            case 'studying_offline_25':
-            case 'studying_offline_26':
-            case 'studying_offline_27':
-            case 'studying_offline_28':
-            case 'studying_offline_29':
-            case 'studying_offline_30':
-            case 'studying_offline_31':
-            case 'studying_offline_32':
-                $title = ' disciple making movement principles';
-                if ( isset( $payload['title'] ) && ! empty( $payload['title'] ) ) {
-                    $title = ' "' . $payload['title'] . '"';
-                }
-                $data['note'] = $initials . ' is studying' . $title . $in_language . '! ' . $location_label;
-                $data['type'] = 'learning';
+
+            case '1_assisting':
+            case '2_assisting':
+            case '3_assisting':
+            case '4_assisting':
+            case '5_assisting':
+            case '6_assisting':
+            case '7_assisting':
+            case '8_assisting':
+            case '9_assisting':
+            case '10_assisting':
+            case '11_assisting':
+            case '12_assisting':
+            case '13_assisting':
+            case '14_assisting':
+            case '15_assisting':
+            case '16_assisting':
+            case '17_assisting':
+            case '18_assisting':
+            case '19_assisting':
+            case '20_assisting':
+            case '21_assisting':
+            case '22_assisting':
+            case '23_assisting':
+            case '24_assisting':
+            case '25_assisting':
+            case '26_assisting':
+            case '27_assisting':
+            case '28_assisting':
+            case '29_assisting':
+            case '30_assisting':
+            case '31_assisting':
+            case '32_assisting':
+            case '33_assisting':
+                $key = str_replace( '_', '', substr( $subtype, 0, 2 ) );
+                $title = $training_items[$key]['video_title'];
+                $data['note'] = sprintf( __( 'A coach is assisting with "%1$s" for a trainee in %2$s. %3$s', 'zume' ), $title, $location_name, $language_name );
+                $data['type'] = 'coaching';
                 break;
+
+            case '1_watching':
+            case '2_watching':
+            case '3_watching':
+            case '4_watching':
+            case '5_watching':
+            case '6_watching':
+            case '7_watching':
+            case '8_watching':
+            case '9_watching':
+            case '10_watching':
+            case '11_watching':
+            case '12_watching':
+            case '13_watching':
+            case '14_watching':
+            case '15_watching':
+            case '16_watching':
+            case '17_watching':
+            case '18_watching':
+            case '19_watching':
+            case '20_watching':
+            case '21_watching':
+            case '22_watching':
+            case '23_watching':
+            case '24_watching':
+            case '25_watching':
+            case '26_watching':
+            case '27_watching':
+            case '28_watching':
+            case '29_watching':
+            case '30_watching':
+            case '31_watching':
+            case '32_watching':
+            case '33_watching':
+                $key = str_replace( '_', '', substr( $subtype, 0, 2 ) );
+                $title = $training_items[$key]['video_title'];
+                $data['note'] = sprintf( __( 'A coach has entered a watching stage for a trainee regarding "%1$s" in %2$s. %3$s', 'zume' ), $title, $location_name, $language_name );
+                $data['type'] = 'coaching';
+                break;
+
+            case '1_launching':
+            case '2_launching':
+            case '3_launching':
+            case '4_launching':
+            case '5_launching':
+            case '6_launching':
+            case '7_launching':
+            case '8_launching':
+            case '9_launching':
+            case '10_launching':
+            case '11_launching':
+            case '12_launching':
+            case '13_launching':
+            case '14_launching':
+            case '15_launching':
+            case '16_launching':
+            case '17_launching':
+            case '18_launching':
+            case '19_launching':
+            case '20_launching':
+            case '21_launching':
+            case '22_launching':
+            case '23_launching':
+            case '24_launching':
+            case '25_launching':
+            case '26_launching':
+            case '27_launching':
+            case '28_launching':
+            case '29_launching':
+            case '30_launching':
+            case '31_launching':
+            case '32_launching':
+            case '33_launching':
+                $key = str_replace( '_', '', substr( $subtype, 0, 2 ) );
+                $title = $training_items[$key]['video_title'];
+                $data['note'] = sprintf( __( 'A coach has fully launched a trainee regarding "%1$s" in %2$s. %3$s', 'zume' ), $title, $location_name, $language_name );
+                $data['type'] = 'coaching';
+                break;
+
             case 'updated_3_month':
-                $data['note'] = $initials . '  made a three month plan to multiply disciples' . $in_language . '! ' . $location_label;
-                $data['type'] = 'producing';
+            case 'made_post_training_plan':
+                $data['note'] = sprintf( __( 'A %1$s created at post training plan in %2$s. %3$s', 'zume' ), $identity, $location_name, $language_name );
+                $data['type'] = 'practicing';
                 break;
             default:
-                break;
+                return false;
         }
 
         return $data;
@@ -3496,189 +3484,104 @@ class Zume_Funnel_App_Heatmap {
             'i' => 'minute',
             's' => 'second',
         );
-        foreach ($string as $k => &$v) {
-            if ($diff->$k) {
+        foreach ( $string as $k => &$v ) {
+            if ( $diff->$k ) {
                 $v = $diff->$k . ' ' . $v . ( $diff->$k > 1 ? 's' : '' );
             } else {
                 unset( $string[$k] );
             }
         }
 
-        if ( !$full) { $string = array_slice( $string, 0, 1 );
+        if ( !$full ) { $string = array_slice( $string, 0, 1 );
         }
         return $string ? implode( ', ', $string ) . ' ago' : 'just now';
     }
 
-    public static function _get_type( $action ) {
-
-        switch ( $action ) {
-            case 'coaching':
-            case 'updated_3_month':
-            case 'starting_group':
-            case 'building_group':
-            case 'leading_1':
-            case 'leading_2':
-            case 'leading_3':
-            case 'leading_4':
-            case 'leading_5':
-            case 'leading_6':
-            case 'leading_7':
-            case 'leading_8':
-            case 'leading_9':
-            case 'leading_10':
-                return 'producing';
-            case 'zume_training':
-            case 'zume_vision':
-                return 'joining';
-            case 'studying_1':
-            case 'studying_2':
-            case 'studying_3':
-            case 'studying_4':
-            case 'studying_5':
-            case 'studying_6':
-            case 'studying_7':
-            case 'studying_8':
-            case 'studying_9':
-            case 'studying_10':
-            case 'studying_11':
-            case 'studying_12':
-            case 'studying_13':
-            case 'studying_14':
-            case 'studying_15':
-            case 'studying_16':
-            case 'studying_17':
-            case 'studying_18':
-            case 'studying_19':
-            case 'studying_20':
-            case 'studying_21':
-            case 'studying_22':
-            case 'studying_23':
-            case 'studying_24':
-            case 'studying_25':
-            case 'studying_26':
-            case 'studying_27':
-            case 'studying_28':
-            case 'studying_29':
-            case 'studying_30':
-            case 'studying_31':
-            case 'studying_32':
-            case 'studying_offline_1':
-            case 'studying_offline_2':
-            case 'studying_offline_3':
-            case 'studying_offline_4':
-            case 'studying_offline_5':
-            case 'studying_offline_6':
-            case 'studying_offline_7':
-            case 'studying_offline_8':
-            case 'studying_offline_9':
-            case 'studying_offline_10':
-            case 'studying_offline_11':
-            case 'studying_offline_12':
-            case 'studying_offline_13':
-            case 'studying_offline_14':
-            case 'studying_offline_15':
-            case 'studying_offline_16':
-            case 'studying_offline_17':
-            case 'studying_offline_18':
-            case 'studying_offline_19':
-            case 'studying_offline_20':
-            case 'studying_offline_21':
-            case 'studying_offline_22':
-            case 'studying_offline_23':
-            case 'studying_offline_24':
-            case 'studying_offline_25':
-            case 'studying_offline_26':
-            case 'studying_offline_27':
-            case 'studying_offline_28':
-            case 'studying_offline_29':
-            case 'studying_offline_30':
-            case 'studying_offline_31':
-            case 'studying_offline_32':
-                return 'learning';
-            default:
-                return false;
-        }
-    }
-
     public static function get_activity_list( $filters, $limit = false ) {
-        global $wpdb;
-
+        global $zume_languages_by_code;
+        $languages = [];
         $utc_time = new DateTime( 'now', new DateTimeZone( $filters['timezone'] ) );
         $timezone_offset = $utc_time->format( 'Z' );
 
-        $additional_where = '';
-        if ( ! empty( $filters['bounds'] ) && is_array( $filters['bounds'] ) && $filters['zoom'] > 1.5 ) {
-            if ( isset( $filters['bounds']['n_lat'] )
-                && isset( $filters['bounds']['s_lat'] )
-                && isset( $filters['bounds']['e_lng'] )
-                && isset( $filters['bounds']['w_lng'] )
-            ) {
-                $additional_where .= "
-                AND lng < ".$filters['bounds']['e_lng']."
-                AND lng > ".$filters['bounds']['w_lng']."
-                AND lat > ".$filters['bounds']['s_lat']."
-                AND lat < ".$filters['bounds']['n_lat']."
-                ";
-            }
-        }
+        $training_items = zume_training_items();
+        $records = 0;
 
-        if ( 'none' !== $filters['country'] ) {
-            $additional_where .= " AND lga0.country_code = '" .$filters['country']. "'";
-        }
-
-        $timestamp = strtotime( '-100 hours' );
-        // @phpcs:disable
-        $results = $wpdb->get_results( "
-                SELECT ml.action, ml.category, ml.lng, ml.lat, ml.label, ml.payload, ml.timestamp, lga0.name as country_name, lga0.country_code
-                FROM $wpdb->dt_movement_log as ml
-                LEFT JOIN $wpdb->dt_location_grid lg ON lg.grid_id=ml.grid_id
-                LEFT JOIN $wpdb->dt_location_grid lga0 ON lga0.grid_id=lg.admin0_grid_id
-                WHERE ml.timestamp > $timestamp
-                $additional_where
-                ORDER BY ml.timestamp DESC
-                ", ARRAY_A );
+        $results = self::query_activity_list( $filters );
         // @phpcs:enable
 
-        foreach ( $results as $i => $v ) {
-            $t = self::_get_type( $v['action'] );
-            if ( empty( $t ) ) {
-                unset( $results[$i] );
-            } else {
-                $results[$i]['type'] = $t;
-            }
-        }
-
         foreach ( $results as $result ) {
-
-            $payload = maybe_unserialize( $result['payload'] );
-
-            // BUILD NOTE
-            $string_elements = [];
 
             // time string
             $time_string = self::create_time_string( $result['timestamp'], $timezone_offset );
 
             // language
-            $string_elements['in_language'] = self::create_in_language_string( $payload );
-
-            // initials string
-            $string_elements['initials'] = self::create_initials( $result['lng'], $result['lat'], $payload );
+            $language_name = self::create_in_language_string( $result, $zume_languages_by_code );
 
             // location string
-            $location = self::create_location_precision( $result['lng'], $result['lat'], $result['label'], $payload );
-            $string_elements['location_label'] = $location['label'];
+//            $location = self::create_location_precision( $result['lng'], $result['lat'], $result['label'] );
+            $location_name = $result['label'];
 
             // note and type data
-            $data = self::create_note_data( $result['action'], $string_elements, $payload );
+            $note = self::create_note_data( $result, $language_name, $location_name, $training_items );
+            if ( ! $note ) {
+                continue;
+            }
 
             $prepared_array = array(
-                "note" => esc_html( $data['note'] ),
-                "time" => esc_attr( $time_string ),
-                "type" => esc_attr( $result['type'] ),
-                "language" => esc_attr( $payload['language_code'] ?? '' ),
-                "country" => esc_attr( $result['country_code'] )
+                'note' => $note['note'],
+                'time' => $time_string,
+                'type' => $note['type'],
+                'language' => $result['language_code'],
+                'country' => $result['country_code'],
             );
 
+            // COUNTERS FOR TOTALS
+            // count types
+            if ( isset( $note['type'] ) && ! empty( $note['type'] ) )
+            {
+                if ( ! isset( $types[$note['type']] ) ) {
+                    $types[$note['type']] = [
+                        'code' => $note['type'],
+                        'name' => ucwords( $note['type'] ),
+                        'count' => 0,
+                    ];
+                }
+                $types[$note['type']]['count']++;
+            }
+            // count country
+            if ( isset( $result['country_code'] ) && !empty( $result['country_code'] ) && ! isset( $countries[$result['country_name']] ) ) {
+                $countries[$result['country_name']] = [
+                    'code' => $result['country_code'],
+                    'name' => $result['country_name'],
+                    'count' => 0,
+                ];
+            }
+            if ( isset( $result['country_code'] ) ) {
+                $countries[$result['country_name']]['count']++;
+            }
+
+            // count language
+            $language_code = $result['language_code'];
+            if ( ! isset( $zume_languages_by_code[$language_code] ) ) {
+                continue;
+            }
+            $language = $zume_languages_by_code[$language_code];
+            $language_name = $language['name'];
+            if ( isset( $language['name'] )
+                && isset( $language_code )
+                && ! isset( $languages[$language_name] )
+            ) {
+                $languages[$language_name] = [
+                    'code' => $language_code,
+                    'name' => $language_name,
+                    'count' => 0,
+                ];
+            }
+            if ( isset( $language_name ) ) {
+                $languages[$language_name]['count']++;
+            }
+
+            // APPLY FILTER
             // filter out non selected country
             // no filter set
             if ( 'none' === $filters['country'] && 'none' === $filters['language'] && 'none' === $filters['type'] ) {
@@ -3712,100 +3615,117 @@ class Zume_Funnel_App_Heatmap {
             else if ( $prepared_array['country'] === $filters['country'] && $prepared_array['language'] === $filters['language'] && $prepared_array['type'] === $filters['type'] ) {
                 $list[] = $prepared_array;
             }
+
+            $records++;
         } // end foreach loop
 
         if ( empty( $list ) ) {
             return [
                 'list' => [],
-                'count' => 0
+                'count' => 0,
             ];
         }
 
         $c = array_chunk( $list, 250 );
         return [
             'list' => $c[0] ?? $list,
-            'count' => count( $list )
+            'count' => count( $list ),
+            'countries' => $countries,
+            'countries_count' => count( $countries ),
+            'languages' => $languages,
+            'languages_count' => count( $languages ),
+            'types' => $types,
+            'total' => $records,
         ];
     }
 
     public static function get_activity_geojson() {
-        $results = self::query_activity_list();
-        if ( empty( $results ) ) {
-            $results = [];
+        global $zume_languages_by_code;
+        $list = self::query_activity_geojson();
+        if ( empty( $list ) ) {
+            $list = [];
         }
 
+        $training_items = zume_training_items();
         $countries = [];
         $languages = [];
         $types = [];
-
-
-
+        $records = 0;
 
         $features = [];
-        foreach ( $results as $result ) {
-
-            $payload = maybe_unserialize( $result['payload'] );
+        foreach ( $list as $record ) {
+            if ( ! self::noteworthy_record( $record, $training_items ) ) {
+                continue;
+            }
 
             // count country
-            if ( isset( $result['country_code'] ) && !empty( $result['country_code'] ) && ! isset( $countries[$result['country_name']] ) ) {
-                $countries[$result['country_name']] = [
-                    'code' => $result['country_code'],
-                    'name' => $result['country_name'],
-                    'count' => 0
+            if ( isset( $record['country_code'] ) && !empty( $record['country_code'] ) && ! isset( $countries[$record['country_name']] ) ) {
+                $countries[$record['country_name']] = [
+                    'code' => $record['country_code'],
+                    'name' => $record['country_name'],
+                    'count' => 0,
                 ];
             }
-            if ( isset( $result['country_code'] ) ) {
-                $countries[$result['country_name']]['count']++;
+            if ( isset( $record['country_code'] ) ) {
+                $countries[$record['country_name']]['count']++;
             }
 
             // count language
-            if ( isset( $payload['language_name'] )
-                && isset( $payload['language_code'] )
-                && ! isset( $languages[$payload['language_name']] )
+            $language_code = $record['language_code'];
+            if ( ! isset( $zume_languages_by_code[$language_code] ) ) {
+                continue;
+            }
+            $language = $zume_languages_by_code[$language_code];
+            $language_name = $language['name'];
+            if ( isset( $language['name'] )
+                && isset( $language_code )
+                && ! isset( $languages[$language_name] )
             ) {
-                $languages[$payload['language_name']] = [
-                    'code' => $payload['language_code'],
-                    'name' => $payload['language_name'],
-                    'count' => 0
+                $languages[$language_name] = [
+                    'code' => $language_code,
+                    'name' => $language_name,
+                    'count' => 0,
                 ];
             }
-            if ( isset( $payload['language_name'] ) ) {
-                $languages[$payload['language_name']]['count']++;
+            if ( isset( $language_name ) ) {
+                $languages[$language_name]['count']++;
             }
 
             // count types
-            if ( isset( $result['type'] ) && ! empty( $result['type'] ) )
+            if ( isset( $record['type'] ) && ! empty( $record['type'] ) )
             {
-                if ( ! isset( $types[$result['type']] ) ) {
-                    $types[$result['type']] = [
-                        'code' => $result['type'],
-                        'name' => ucwords( $result['type'] ),
-                        'count' => 0
+                if ( ! isset( $types[$record['type']] ) ) {
+                    $types[$record['type']] = [
+                        'code' => $record['type'],
+                        'name' => ucwords( $record['type'] ),
+                        'count' => 0,
                     ];
                 }
-                $types[$result['type']]['count']++;
+                $types[$record['type']]['count']++;
             }
 
             // reduce lng to 1.1 km
-            $lng = round( $result['lng'], 2 );
-            $lat = round( $result['lat'], 2 );
+            $lng = round( $record['lng'], 2 );
+            $lat = round( $record['lat'], 2 );
 
             $features[] = array(
                 'type' => 'Feature',
                 'properties' => [
-                    'type' => $result['type'] ?? '',
-                    'language' => $payload['language_code'] ?? '',
-                    'country' => $result['country_code']
+                    'type' => $record['type'] ?? '',
+                    'language' => $record['language_code'] ?? 'en',
+                    'country' => $record['country_code'],
                 ],
                 'geometry' => array(
                     'type' => 'Point',
                     'coordinates' => array(
                         $lng,
                         $lat,
-                        1
+                        1,
                     ),
                 ),
             );
+
+            $records++;
 
         } // end foreach loop
 
@@ -3819,450 +3739,19 @@ class Zume_Funnel_App_Heatmap {
             'languages' => $languages,
             'languages_count' => count( $languages ),
             'types' => $types,
-            'total' => count( $results ),
+            'total' => $records,
             'features' => $features,
         );
 
         return $new_data;
     }
-}
 
-
-/**
- * REGISTER ACTIONS (AND CATEGORIES)
- */
-add_action( 'dt_network_dashboard_register_actions', 'dt_network_dashboard_register_action_zume_public_keys', 30, 1 );
-function dt_network_dashboard_register_action_zume_public_keys( $actions ){
-
-    $actions['studying_1'] = [
-        'key' => 'studying_1',
-        'label' => 'Studying 1',
-        'message_pattern' => []
-    ];
-    $actions['studying_2'] = [
-        'key' => 'studying_2',
-        'label' => 'Studying 2',
-        'message_pattern' => []
-    ];
-    $actions['studying_3'] = [
-        'key' => 'studying_3',
-        'label' => 'Studying 3',
-        'message_pattern' => []
-    ];
-    $actions['studying_4'] = [
-        'key' => 'studying_4',
-        'label' => 'Studying 4',
-        'message_pattern' => []
-    ];
-    $actions['studying_5'] = [
-        'key' => 'studying_5',
-        'label' => 'Studying 5',
-        'message_pattern' => []
-    ];
-    $actions['studying_6'] = [
-        'key' => 'studying_6',
-        'label' => 'Studying 6',
-        'message_pattern' => []
-    ];
-    $actions['studying_7'] = [
-        'key' => 'studying_7',
-        'label' => 'Studying 7',
-        'message_pattern' => []
-    ];
-    $actions['studying_8'] = [
-        'key' => 'studying_8',
-        'label' => 'Studying 8',
-        'message_pattern' => []
-    ];
-    $actions['studying_9'] = [
-        'key' => 'studying_9',
-        'label' => 'Studying 9',
-        'message_pattern' => []
-    ];
-    $actions['studying_10'] = [
-        'key' => 'studying_10',
-        'label' => 'Studying 10',
-        'message_pattern' => []
-    ];
-    $actions['studying_11'] = [
-        'key' => 'studying_11',
-        'label' => 'Studying 11',
-        'message_pattern' => []
-    ];
-    $actions['studying_12'] = [
-        'key' => 'studying_12',
-        'label' => 'Studying 12',
-        'message_pattern' => []
-    ];
-    $actions['studying_13'] = [
-        'key' => 'studying_13',
-        'label' => 'Studying 13',
-        'message_pattern' => []
-    ];
-    $actions['studying_14'] = [
-        'key' => 'studying_14',
-        'label' => 'Studying 14',
-        'message_pattern' => []
-    ];
-    $actions['studying_15'] = [
-        'key' => 'studying_15',
-        'label' => 'Studying 15',
-        'message_pattern' => []
-    ];
-    $actions['studying_16'] = [
-        'key' => 'studying_16',
-        'label' => 'Studying 16',
-        'message_pattern' => []
-    ];
-    $actions['studying_17'] = [
-        'key' => 'studying_17',
-        'label' => 'Studying 17',
-        'message_pattern' => []
-    ];
-    $actions['studying_18'] = [
-        'key' => 'studying_18',
-        'label' => 'Studying 18',
-        'message_pattern' => []
-    ];
-    $actions['studying_19'] = [
-        'key' => 'studying_19',
-        'label' => 'Studying 19',
-        'message_pattern' => []
-    ];
-    $actions['studying_20'] = [
-        'key' => 'studying_20',
-        'label' => 'Studying 20',
-        'message_pattern' => []
-    ];
-    $actions['studying_21'] = [
-        'key' => 'studying_21',
-        'label' => 'Studying 21',
-        'message_pattern' => []
-    ];
-    $actions['studying_22'] = [
-        'key' => 'studying_22',
-        'label' => 'Studying 22',
-        'message_pattern' => []
-    ];
-    $actions['studying_23'] = [
-        'key' => 'studying_23',
-        'label' => 'Studying 23',
-        'message_pattern' => []
-    ];
-    $actions['studying_24'] = [
-        'key' => 'studying_24',
-        'label' => 'Studying 24',
-        'message_pattern' => []
-    ];
-    $actions['studying_25'] = [
-        'key' => 'studying_25',
-        'label' => 'Studying 25',
-        'message_pattern' => []
-    ];
-    $actions['studying_26'] = [
-        'key' => 'studying_26',
-        'label' => 'Studying 26',
-        'message_pattern' => []
-    ];
-    $actions['studying_27'] = [
-        'key' => 'studying_27',
-        'label' => 'Studying 27',
-        'message_pattern' => []
-    ];
-    $actions['studying_28'] = [
-        'key' => 'studying_28',
-        'label' => 'Studying 28',
-        'message_pattern' => []
-    ];
-    $actions['studying_29'] = [
-        'key' => 'studying_29',
-        'label' => 'Studying 29',
-        'message_pattern' => []
-    ];
-    $actions['studying_30'] = [
-        'key' => 'studying_30',
-        'label' => 'Studying 30',
-        'message_pattern' => []
-    ];
-    $actions['studying_31'] = [
-        'key' => 'studying_31',
-        'label' => 'Studying 31',
-        'message_pattern' => []
-    ];
-    $actions['studying_32'] = [
-        'key' => 'studying_32',
-        'label' => 'Studying 32',
-        'message_pattern' => []
-    ];
-
-    // offline
-    $actions['studying_offline_1'] = [
-        'key' => 'studying_offline_1',
-        'label' => 'Studying Offline 1',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_2'] = [
-        'key' => 'studying_offline_2',
-        'label' => 'Studying Offline 2',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_3'] = [
-        'key' => 'studying_offline_3',
-        'label' => 'Studying Offline 3',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_4'] = [
-        'key' => 'studying_offline_4',
-        'label' => 'Studying Offline 4',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_5'] = [
-        'key' => 'studying_offline_5',
-        'label' => 'Studying Offline 5',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_6'] = [
-        'key' => 'studying_offline_6',
-        'label' => 'Studying Offline 6',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_7'] = [
-        'key' => 'studying_offline_7',
-        'label' => 'Studying Offline 7',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_8'] = [
-        'key' => 'studying_offline_8',
-        'label' => 'Studying Offline 8',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_9'] = [
-        'key' => 'studying_offline_9',
-        'label' => 'Studying Offline 9',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_10'] = [
-        'key' => 'studying_offline_10',
-        'label' => 'Studying Offline 10',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_11'] = [
-        'key' => 'studying_offline_11',
-        'label' => 'Studying Offline 11',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_12'] = [
-        'key' => 'studying_offline_12',
-        'label' => 'Studying Offline 12',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_13'] = [
-        'key' => 'studying_offline_13',
-        'label' => 'Studying Offline 13',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_14'] = [
-        'key' => 'studying_offline_14',
-        'label' => 'Studying Offline 14',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_15'] = [
-        'key' => 'studying_offline_15',
-        'label' => 'Studying Offline 15',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_16'] = [
-        'key' => 'studying_offline_16',
-        'label' => 'Studying Offline 16',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_17'] = [
-        'key' => 'studying_offline_17',
-        'label' => 'Studying Offline 17',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_18'] = [
-        'key' => 'studying_offline_18',
-        'label' => 'Studying Offline 18',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_19'] = [
-        'key' => 'studying_offline_19',
-        'label' => 'Studying Offline 19',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_20'] = [
-        'key' => 'studying_offline_20',
-        'label' => 'Studying Offline 20',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_21'] = [
-        'key' => 'studying_offline_21',
-        'label' => 'Studying Offline 21',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_22'] = [
-        'key' => 'studying_offline_22',
-        'label' => 'Studying Offline 22',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_23'] = [
-        'key' => 'studying_offline_23',
-        'label' => 'Studying Offline 23',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_24'] = [
-        'key' => 'studying_offline_24',
-        'label' => 'Studying Offline 24',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_25'] = [
-        'key' => 'studying_offline_25',
-        'label' => 'Studying Offline 25',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_26'] = [
-        'key' => 'studying_offline_26',
-        'label' => 'Studying Offline 26',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_27'] = [
-        'key' => 'studying_offline_27',
-        'label' => 'Studying Offline 27',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_28'] = [
-        'key' => 'studying_offline_28',
-        'label' => 'Studying Offline 28',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_29'] = [
-        'key' => 'studying_offline_29',
-        'label' => 'Studying Offline 29',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_30'] = [
-        'key' => 'studying_offline_30',
-        'label' => 'Studying Offline 30',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_31'] = [
-        'key' => 'studying_offline_31',
-        'label' => 'Studying Offline 31',
-        'message_pattern' => []
-    ];
-    $actions['studying_offline_32'] = [
-        'key' => 'studying_offline_32',
-        'label' => 'Studying Offline 32',
-        'message_pattern' => []
-    ];
-
-
-
-    $actions['leading_1'] = [
-        'key' => 'leading_1',
-        'label' => 'Leading 1',
-        'message_pattern' => []
-    ];
-    $actions['leading_2'] = [
-        'key' => 'leading_2',
-        'label' => 'Leading 2',
-        'message_pattern' => []
-    ];
-    $actions['leading_3'] = [
-        'key' => 'leading_3',
-        'label' => 'Leading 3',
-        'message_pattern' => []
-    ];
-    $actions['leading_4'] = [
-        'key' => 'leading_4',
-        'label' => 'Leading 4',
-        'message_pattern' => []
-    ];
-    $actions['leading_5'] = [
-        'key' => 'leading_5',
-        'label' => 'Leading 5',
-        'message_pattern' => []
-    ];
-    $actions['leading_6'] = [
-        'key' => 'leading_6',
-        'label' => 'Leading 6',
-        'message_pattern' => []
-    ];
-    $actions['leading_7'] = [
-        'key' => 'leading_7',
-        'label' => 'Leading 7',
-        'message_pattern' => []
-    ];
-    $actions['leading_8'] = [
-        'key' => 'leading_8',
-        'label' => 'Leading 8',
-        'message_pattern' => []
-    ];
-    $actions['leading_9'] = [
-        'key' => 'leading_9',
-        'label' => 'Leading 9',
-        'message_pattern' => []
-    ];
-    $actions['leading_10'] = [
-        'key' => 'leading_10',
-        'label' => 'Leading 10',
-        'message_pattern' => []
-    ];
-
-    $actions['zume_training'] = [
-        'key' => 'zume_training',
-        'label' => 'Registered for Training',
-        'message_pattern' => []
-    ];
-    $actions['zume_vision'] = [
-        'key' => 'zume_vision',
-        'label' => 'Joined Vision',
-        'message_pattern' => []
-    ];
-    $actions['updated_3_month'] = [
-        'key' => 'updated_3_month',
-        'label' => 'Updated 3 Month Plan',
-        'message_pattern' => []
-    ];
-
-    return $actions;
-}
-
-/**
- * READ LOG
- */
-add_filter( 'dt_network_dashboard_build_message', 'zume_public_log_actions', 10, 1 );
-function zume_public_log_actions( $activity_log ){
-
-    foreach ( $activity_log as $index => $log ){
-
-        /* new_baptism */
-        if ( 'studying' === substr( $log['action'], 0, 8 ) ) {
-            $initials = Zume_Funnel_App_Heatmap::create_initials( $log['lng'], $log['lat'], $log['payload'] );
-            $activity_log[$index]['message'] = $initials . ' is studying "' . $log['payload']['title'] . '"';
+    public static function noteworthy_record( $record, $training_items ) {
+        $noteworthy_subtypes = self::create_note_data( $record, '', '', $training_items );
+        if ( $noteworthy_subtypes ) {
+            return true;
         }
 
-        if ( 'leading' === substr( $log['action'], 0, 7 ) ) {
-            $initials = Zume_Funnel_App_Heatmap::create_initials( $log['lng'], $log['lat'], $log['payload'] );
-            $activity_log[$index]['message'] = $initials . ' is leading a group through session '. str_replace( '_', '', substr( $log['action'], -2, 2 ) ).'!';
-        }
-
-        if ( 'zume_training' === $log['action'] && 'joining' === $log['category'] ) {
-            $initials = Zume_Funnel_App_Heatmap::create_initials( $log['lng'], $log['lat'], $log['payload'] );
-            $activity_log[$index]['message'] = $initials . ' is registering for Zúme Training! ';
-        }
-
-        if ( 'zume_vision' === $log['action'] && 'joining' === $log['category'] ) {
-            $initials = Zume_Funnel_App_Heatmap::create_initials( $log['lng'], $log['lat'], $log['payload'] );
-            $activity_log[$index]['message'] = $initials . ' is registering for Zúme Community! ';
-        }
-
-        if ( 'updated_3_month' === $log['action'] ) {
-            $initials = Zume_Funnel_App_Heatmap::create_initials( $log['lng'], $log['lat'], $log['payload'] );
-            $activity_log[$index]['message'] = $initials . ' is updating there Zúme Training 3 month plan! ';
-        }
+        return false;
     }
-
-    return $activity_log;
 }

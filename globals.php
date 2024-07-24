@@ -67,7 +67,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
                     FROM zume_3_postmeta
                     WHERE meta_key = 'trainee_user_id'
                       AND meta_value = %s",
-                $user_id )
+            $user_id )
         );
         $coach_list = $wpdb->get_results(
             $wpdb->prepare(
@@ -77,7 +77,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
                     LEFT JOIN zume_3_postmeta pm ON pm.post_id = p.ID AND pm.meta_key = 'corresponds_to_user'
                     WHERE p2p_from = %d
                       AND p2p_type = 'contacts_to_contacts'",
-                $coaching_contact_id ), ARRAY_A
+            $coaching_contact_id ), ARRAY_A
         );
         if ( ! empty( $coach_list ) ) {
             foreach ( $coach_list as $key => $value ) {
@@ -311,7 +311,7 @@ if ( ! function_exists( 'zume_get_user_location' ) ) {
                         WHERE pm.meta_key = 'corresponds_to_user' AND pm.meta_value = %d
                         ORDER BY grid_meta_id desc
                         LIMIT 1",
-                $user_id ), ARRAY_A
+            $user_id ), ARRAY_A
         );
 
         if ( empty( $location ) && $ip_lookup ) {
@@ -506,7 +506,7 @@ if ( ! function_exists( 'zume_get_user_friends' ) ) {
                     LEFT JOIN zume_usermeta um ON um.meta_value=p.ID AND um.meta_key = 'zume_corresponds_to_contact'
                     WHERE p2.p2p_type = 'contacts_to_relation'
                     AND p2.p2p_from = %d",
-                $contact_id ), ARRAY_A
+            $contact_id ), ARRAY_A
         );
 
         $to = $wpdb->get_results(
@@ -517,7 +517,7 @@ if ( ! function_exists( 'zume_get_user_friends' ) ) {
                     LEFT JOIN zume_usermeta um ON um.meta_value=p.ID AND um.meta_key = 'zume_corresponds_to_contact'
                     WHERE p2.p2p_type = 'contacts_to_relation'
                     AND p2.p2p_to = %d",
-                $contact_id ), ARRAY_A
+            $contact_id ), ARRAY_A
         );
 
         if ( empty( $from ) && empty( $to ) ) {
@@ -549,7 +549,7 @@ if ( ! function_exists( 'zume_get_user_commitments' ) ) {
                 'SELECT * FROM zume_dt_post_user_meta
                         WHERE user_id = %d
                         ORDER BY date DESC',
-                $user_id), ARRAY_A
+            $user_id), ARRAY_A
         );
 
         $list = [];
@@ -2815,7 +2815,7 @@ if ( ! function_exists( 'zume_get_percent' ) ) {
     }
 }
 if ( ! function_exists( 'zume_get_timezones' ) ) {
-    function zume_get_timezones( string $key = null ) : array {
+    function zume_get_timezones( string $key = null ): array {
         $timezones = [
             'Africa/Abidjan' => [
                 'timezone' => 'Africa/Abidjan',
@@ -6109,7 +6109,7 @@ if ( ! class_exists( 'Zume_Global_Endpoints' ) ) {
 if ( ! function_exists( 'zume_validate_user_id_request' ) ) {
     function zume_validate_user_id_request( $user_id ) {
         if ( !is_user_logged_in() ) {
-            return new WP_Error( __METHOD__, 'User not logged in', array('status' => 401) );
+            return new WP_Error( __METHOD__, 'User not logged in', array( 'status' => 401 ) );
         }
         $profile = zume_get_user_profile( $user_id );
         if ( $profile ) {
@@ -6130,9 +6130,9 @@ if ( ! function_exists( 'zume_validate_user_id_request' ) ) {
                     return (int) $user_id;
                 }
             }
-            return new WP_Error( __METHOD__, 'Permissions not found for this user_id', array('status' => 401) );
+            return new WP_Error( __METHOD__, 'Permissions not found for this user_id', array( 'status' => 401 ) );
         } else {
-            return new WP_Error( __METHOD__, 'User not found', array('status' => 401) );
+            return new WP_Error( __METHOD__, 'User not found', array( 'status' => 401 ) );
         }
     }
 }
@@ -6161,8 +6161,8 @@ if ( ! class_exists( 'Zume_System_Log_API' ) ) {
         public function __construct()
         {
             if ( dt_is_rest() ) {
-                add_action( 'rest_api_init', [$this, 'add_api_routes'] );
-                add_filter( 'dt_allow_rest_access', [$this, 'authorize_url'], 10, 1 );
+                add_action( 'rest_api_init', [ $this, 'add_api_routes' ] );
+                add_filter( 'dt_allow_rest_access', [ $this, 'authorize_url' ], 10, 1 );
             }
         }
 
@@ -6172,15 +6172,15 @@ if ( ! class_exists( 'Zume_System_Log_API' ) ) {
 
             register_rest_route(
                 $namespace, '/log', [
-                    'methods' => ['POST'],
-                    'callback' => [$this, 'rest_log'],
+                    'methods' => [ 'POST' ],
+                    'callback' => [ $this, 'rest_log' ],
                     'permission_callback' => 'is_user_logged_in',
                 ]
             );
             register_rest_route(
                 $namespace, '/log', [
-                    'methods' => ['GET'],
-                    'callback' => [$this, 'get_log'],
+                    'methods' => [ 'GET' ],
+                    'callback' => [ $this, 'get_log' ],
                     'permission_callback' => 'is_user_logged_in',
                 ]
             );
@@ -6190,7 +6190,7 @@ if ( ! class_exists( 'Zume_System_Log_API' ) ) {
         {
             $params = dt_recursive_sanitize_array( $request->get_params() );
             if ( !isset( $params['type'], $params['subtype'] ) ) {
-                return new WP_Error( __METHOD__, 'Missing required parameters: type, subtype.', ['status' => 400] );
+                return new WP_Error( __METHOD__, 'Missing required parameters: type, subtype.', [ 'status' => 400 ] );
             }
             $log_once = false;
             if ( isset( $params['log_once'] ) ) {
@@ -6214,7 +6214,7 @@ if ( ! class_exists( 'Zume_System_Log_API' ) ) {
         {
             $added_log = [];
             if ( !isset( $type, $subtype ) ) {
-                return new WP_Error( __METHOD__, 'Missing required parameters: type, subtype.', ['status' => 400] );
+                return new WP_Error( __METHOD__, 'Missing required parameters: type, subtype.', [ 'status' => 400 ] );
             }
             $data = dt_recursive_sanitize_array( $data );
 
@@ -6254,7 +6254,7 @@ if ( ! class_exists( 'Zume_System_Log_API' ) ) {
                     return $item['type'] === $type && $item['subtype'] === $subtype;
                 });
                 if ( !empty( $already_logged ) ) {
-                    return ['already_logged' => true];
+                    return [ 'already_logged' => true ];
                 }
             }
 
