@@ -3133,7 +3133,7 @@ class Zume_Funnel_App_Heatmap {
 
         switch ( $subtype ) {
             case 'registered':
-                $data['note'] = sprintf( __( '%1$s trainee registered! (%2$s)', 'zume' ), $language_name, $location_name );
+                $data['note'] = sprintf( __( 'An %1$s trainee from %2$s has registered!', 'zume' ), $language_name_only, $location_name );
                 $data['type'] = 'training';
                 break;
             case 'requested_a_coach':
