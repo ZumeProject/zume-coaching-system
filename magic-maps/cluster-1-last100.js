@@ -190,15 +190,20 @@ jQuery(document).ready(function(){
     let data = get_filters()
     window.post_request('load_geojson', data )
       .done( data => {
-        // console.log(data)
+        console.log('loaded_geojson')
+        console.log(data)
         "use strict";
         window.activity_geojson = data
-        console.log('loaded_geojson')
-
         var mapSource= map.getSource('layer-source-contacts');
         if( typeof mapSource !== 'undefined') {
           map.getSource('layer-source-contacts').setData(window.activity_geojson);
         }
+
+        load_countries_dropdown()
+        load_languages_dropdown()
+        load_type_dropdown()
+        load_title_stats()
+
       })
   }
 
@@ -211,20 +216,13 @@ jQuery(document).ready(function(){
     window.post_request('activity_list', data )
       .done( data => {
         let spinner = jQuery('.loading-spinner')
-        // console.log(data)
+        console.log('loaded_map_activity')
+        console.log(data)
         "use strict";
         window.activity_list = data
-        console.log('loaded_map_activity')
         update_activity_list()
         spinner.removeClass('active')
-
-        load_countries_dropdown()
-        load_languages_dropdown()
-        load_type_dropdown()
-        load_title_stats()
       })
-
-
   }
   load_geojson()
   load_map_activity()
@@ -325,7 +323,7 @@ jQuery(document).ready(function(){
 
   function load_countries_dropdown() {
     let country_dropdown = jQuery('#country-dropdown')
-    let points = window.activity_list
+    let points = window.activity_geojson
     window.selected_country = country_dropdown.val()
     country_dropdown.empty()
 
@@ -342,7 +340,7 @@ jQuery(document).ready(function(){
   }
   function load_languages_dropdown() {
     let language_dropdown = jQuery('#language-dropdown')
-    let points = window.activity_list
+    let points = window.activity_geojson
     window.selected_language = language_dropdown.val()
     language_dropdown.empty()
 
@@ -360,7 +358,7 @@ jQuery(document).ready(function(){
   function load_type_dropdown() {
     let type_dropdown = jQuery('#type-dropdown')
     let stats_list = jQuery('#stats-list')
-    let points = window.activity_list
+    let points = window.activity_geojson
     window.selected_type = type_dropdown.val()
 
     let add_selected = ''
@@ -394,7 +392,7 @@ jQuery(document).ready(function(){
     })
   }
   function load_title_stats() {
-    jQuery('#country_count').html(window.activity_list.countries_count)
-    jQuery('#languages_count').html(window.activity_list.languages_count)
+    jQuery('#country_count').html(window.activity_geojson.countries_count)
+    jQuery('#languages_count').html(window.activity_geojson.languages_count)
   }
 })

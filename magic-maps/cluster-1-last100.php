@@ -12,7 +12,7 @@ class Zume_Funnel_Public_Heatmap_100hours_V2 extends DT_Magic_Url_Base {
 
     public $magic = false;
     public $parts = false;
-    public $page_title = 'Last 100 Hours';
+    public $page_title = 'Last 1000 Hours';
     public $root = 'zume_app';
     public $type = 'last100_hours';
     public $post_type = 'contacts';

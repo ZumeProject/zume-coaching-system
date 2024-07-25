@@ -2934,7 +2934,7 @@ class Zume_Funnel_App_Heatmap {
         }
 
         if ( 'none' !== $filters['country'] ) {
-            $additional_where .= " AND lga0.country_code = '" .$filters['country']. "'";
+            $additional_where .= " AND tb.country_code = '" .$filters['country']. "'";
         }
 
         $timestamp = strtotime( '-1000 hours' );
@@ -3133,7 +3133,7 @@ class Zume_Funnel_App_Heatmap {
 
         switch ( $subtype ) {
             case 'registered':
-                $data['note'] = sprintf( __( 'An %1$s trainee from %2$s has registered!', 'zume' ), $language_name_only, $location_name );
+                $data['note'] = sprintf( __( 'A new trainee from %1$s has registered!', 'zume' ), $location_name );
                 $data['type'] = 'training';
                 break;
             case 'requested_a_coach':
@@ -3512,23 +3512,23 @@ class Zume_Funnel_App_Heatmap {
         $training_items = zume_training_items();
         $records = 0;
 
-        $results = self::query_activity_list( $filters );
+        $activity_list = self::query_activity_list( $filters );
         // @phpcs:enable
 
-        foreach ( $results as $result ) {
+        foreach ( $activity_list as $record ) {
 
             // time string
-            $time_string = self::create_time_string( $result['timestamp'], $timezone_offset );
+            $time_string = self::create_time_string( $record['timestamp'], $timezone_offset );
 
             // language
-            $language_name = self::create_in_language_string( $result, $zume_languages_by_code );
+            $language_name = self::create_in_language_string( $record, $zume_languages_by_code );
 
             // location string
-//            $location = self::create_location_precision( $result['lng'], $result['lat'], $result['label'] );
-            $location_name = $result['label'];
+//            $location = self::create_location_precision( $record['lng'], $record['lat'], $record['label'] );
+            $location_name = $record['label'];
 
             // note and type data
-            $note = self::create_note_data( $result, $language_name, $location_name, $training_items );
+            $note = self::create_note_data( $record, $language_name, $location_name, $training_items );
             if ( ! $note ) {
                 continue;
             }
@@ -3537,8 +3537,8 @@ class Zume_Funnel_App_Heatmap {
                 'note' => $note['note'],
                 'time' => $time_string,
                 'type' => $note['type'],
-                'language' => $result['language_code'],
-                'country' => $result['country_code'],
+                'language' => $record['language_code'],
+                'country' => $record['country_code'],
             );
 
             // COUNTERS FOR TOTALS
@@ -3555,19 +3555,19 @@ class Zume_Funnel_App_Heatmap {
                 $types[$note['type']]['count']++;
             }
             // count country
-            if ( isset( $result['country_code'] ) && !empty( $result['country_code'] ) && ! isset( $countries[$result['country_name']] ) ) {
-                $countries[$result['country_name']] = [
-                    'code' => $result['country_code'],
-                    'name' => $result['country_name'],
+            if ( isset( $record['country_code'] ) && !empty( $record['country_code'] ) && ! isset( $countries[$record['country_name']] ) ) {
+                $countries[$record['country_name']] = [
+                    'code' => $record['country_code'],
+                    'name' => $record['country_name'],
                     'count' => 0,
                 ];
             }
-            if ( isset( $result['country_code'] ) ) {
-                $countries[$result['country_name']]['count']++;
+            if ( isset( $record['country_code'] ) ) {
+                $countries[$record['country_name']]['count']++;
             }
 
             // count language
-            $language_code = $result['language_code'];
+            $language_code = $record['language_code'];
             if ( ! isset( $zume_languages_by_code[$language_code] ) ) {
                 continue;
             }
@@ -3623,6 +3623,7 @@ class Zume_Funnel_App_Heatmap {
             }
 
             $records++;
+
         } // end foreach loop
 
         if ( empty( $list ) ) {
@@ -3631,6 +3632,9 @@ class Zume_Funnel_App_Heatmap {
                 'count' => 0,
             ];
         }
+
+        ksort( $countries );
+        ksort( $languages );
 
         $c = array_chunk( $list, 250 );
         return [
@@ -3660,7 +3664,8 @@ class Zume_Funnel_App_Heatmap {
 
         $features = [];
         foreach ( $list as $record ) {
-            if ( ! self::noteworthy_record( $record, $training_items ) ) {
+            $note = self::create_note_data( $record, '', '', $training_items );
+            if ( ! $note ) {
                 continue;
             }
 
@@ -3698,16 +3703,16 @@ class Zume_Funnel_App_Heatmap {
             }
 
             // count types
-            if ( isset( $record['type'] ) && ! empty( $record['type'] ) )
+            if ( isset( $note['type'] ) && ! empty( $note['type'] ) )
             {
-                if ( ! isset( $types[$record['type']] ) ) {
-                    $types[$record['type']] = [
-                        'code' => $record['type'],
-                        'name' => ucwords( $record['type'] ),
+                if ( ! isset( $types[$note['type']] ) ) {
+                    $types[$note['type']] = [
+                        'code' => $note['type'],
+                        'name' => ucwords( $note['type'] ),
                         'count' => 0,
                     ];
                 }
-                $types[$record['type']]['count']++;
+                $types[$note['type']]['count']++;
             }
 
             // reduce lng to 1.1 km
@@ -3717,8 +3722,8 @@ class Zume_Funnel_App_Heatmap {
             $features[] = array(
                 'type' => 'Feature',
                 'properties' => [
-                    'type' => $record['type'] ?? '',
-                    'language' => $record['language_code'] ?? 'en',
+                    'type' => $note['type'],
+                    'language' => $record['language_code'],
                     'country' => $record['country_code'],
                 ],
                 'geometry' => array(
@@ -3740,13 +3745,13 @@ class Zume_Funnel_App_Heatmap {
 
         $new_data = array(
             'type' => 'FeatureCollection',
+            'features' => $features,
             'countries' => $countries,
             'countries_count' => count( $countries ),
             'languages' => $languages,
             'languages_count' => count( $languages ),
             'types' => $types,
             'total' => $records,
-            'features' => $features,
         );
 
         return $new_data;

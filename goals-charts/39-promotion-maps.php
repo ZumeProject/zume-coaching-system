@@ -19,7 +19,7 @@ class Zume_Goals_Maps extends Zume_Goals_Chart_Base
         if ( !$this->has_permission() ){
             return;
         }
-        $this->base_title = __( '100 Hours', 'zume_goals' );
+        $this->base_title = __( '1000 Hours', 'zume_goals' );
 
         $url_path = dt_get_url_path( true );
         if ( "zume-goals/$this->base_slug" === $url_path ) {
