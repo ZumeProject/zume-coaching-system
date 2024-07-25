@@ -49,7 +49,7 @@ class Zume_Goals_Maps extends Zume_Goals_Chart_Base
                 chart.empty().html(`
                         <div id="zume-goals">
                             <div class="grid-x">
-                                <div class="cell small-6"><h1>100 Hour of Zúme</h1></div>
+                                <div class="cell small-6"><h1>1000 Hours of Zúme</h1></div>
                                 <div class="cell small-6"></div>
                             </div>
                             <hr>
