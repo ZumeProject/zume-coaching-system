@@ -239,7 +239,7 @@ jQuery(document).ready(function(){
     let type = jQuery('#type-dropdown').val()
     return {
       bounds: { 'n_lat': window.current_bounds._ne.lat, 's_lat': window.current_bounds._sw.lat, 'e_lng': window.current_bounds._ne.lng, 'w_lng': window.current_bounds._sw.lng},
-      timezone: 'America/Denver',
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       country: country,
       language: language,
       type: type,

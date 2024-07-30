@@ -357,8 +357,8 @@ jQuery(document).ready(function($) {
               jQuery.each(list, function(i,v)  {
                 container.append( `<div class="grid-x grid-padding-x">
                     <div class="cell small-12">
-                        <h3><a href="https://zume.training/${v.post_type}/${v.post_id}">${ v.name }</a></h3>
-                        <p>${ v.label }</p>
+                        <h3><strong>${ v.name }</strong> (${ v.label })</h3>
+                        <a class="button small" href="https://zume.training/${v.post_type}/${v.post_id}">Training Contact</a>
                         <hr>
                    </div>
                 </div>`)
