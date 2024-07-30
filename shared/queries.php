@@ -73,7 +73,7 @@ class Zume_Queries {
         }
 
         $results = $wpdb->get_results(
-            "SELECT p.post_title as name, tb.user_id, tb.post_id,  'groups' as post_type, tb.stage, lgm.label, lgm.grid_id, lgm.lng, lgm.lat, lgm.level
+            "SELECT p.post_title as name, tb.user_id, tb.post_id, lgm.post_type, tb.stage, lgm.label, lgm.grid_id, lgm.lng, lgm.lat, lgm.level
             FROM
             (
               $query_for_user_stage

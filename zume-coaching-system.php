@@ -24,10 +24,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'ZUME_TRAINING_URL' ) ) {
-    define( 'ZUME_TRAINING_URL', 'https://zume5.training/' );
+    define( 'ZUME_TRAINING_URL', 'https://zume.training/' );
 }
 if ( ! defined( 'ZUME_COACHING_URL' ) ) {
-    define( 'ZUME_COACHING_URL', 'https://zume5.training/coaching/' );
+    define( 'ZUME_COACHING_URL', 'https://zume.training/coaching/' );
 }
 
 /**
