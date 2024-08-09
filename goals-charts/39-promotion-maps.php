@@ -19,7 +19,7 @@ class Zume_Goals_Maps extends Zume_Goals_Chart_Base
         if ( !$this->has_permission() ){
             return;
         }
-        $this->base_title = __( '1000 Hours', 'zume_goals' );
+        $this->base_title = __( '100 Hours', 'zume_goals' );
 
         $url_path = dt_get_url_path( true );
         if ( "zume-goals/$this->base_slug" === $url_path ) {
@@ -36,7 +36,7 @@ class Zume_Goals_Maps extends Zume_Goals_Chart_Base
 
     public function wp_head() {
         $this->js_api();
-        $url = site_url() . '/zume_app/last100_hours/';
+        $url = 'https://zume.training/zume_app/last100_hours/';
         ?>
         <script>
             jQuery(document).ready(function(){
@@ -49,7 +49,7 @@ class Zume_Goals_Maps extends Zume_Goals_Chart_Base
                 chart.empty().html(`
                         <div id="zume-goals">
                             <div class="grid-x">
-                                <div class="cell small-6"><h1>1000 Hours of Zúme</h1></div>
+                                <div class="cell small-6"><h1>Last 100 Hours of Zúme</h1></div>
                                 <div class="cell small-6"></div>
                             </div>
                             <hr>
@@ -97,7 +97,7 @@ class Zume_Goals_Maps_Activity extends Zume_Goals_Chart_Base
 
     public function wp_head() {
         $this->js_api();
-        $url = site_url() . '/zume_app/' . $this->base_slug . '/';
+        $url = 'https://zume.training/zume_app/' . $this->base_slug . '/';
         ?>
         <script>
             jQuery(document).ready(function(){
@@ -110,7 +110,7 @@ class Zume_Goals_Maps_Activity extends Zume_Goals_Chart_Base
                 chart.empty().html(`
                         <div id="zume-goals">
                             <div class="grid-x">
-                                <div class="cell small-6"><h1>Trainees Heatmap</h1></div>
+                                <div class="cell small-6"><h1>Activities Heatmap</h1></div>
                                 <div class="cell small-6"></div>
                             </div>
                             <hr>

@@ -37,7 +37,7 @@ class Zume_Goals_Maps_Trainees extends Zume_Goals_Chart_Base
 
     public function wp_head() {
         $this->js_api();
-        $url = site_url() . '/zume_app/' . $this->base_slug . '/';
+        $url = 'https://zume.training/zume_app/' . $this->base_slug . '/';
         ?>
         <script>
             jQuery(document).ready(function(){
@@ -97,7 +97,7 @@ class Zume_Goals_Maps_Practitioners extends Zume_Goals_Chart_Base
 
     public function wp_head() {
         $this->js_api();
-        $url = site_url() . '/zume_app/' . $this->base_slug . '/';
+        $url = 'https://zume.training/zume_app/' . $this->base_slug . '/';
         ?>
         <script>
             jQuery(document).ready(function(){
@@ -157,7 +157,7 @@ class Zume_Goals_Maps_Churches extends Zume_Goals_Chart_Base
 
     public function wp_head() {
         $this->js_api();
-        $url = site_url() . '/zume_app/' . $this->base_slug . '/';
+        $url = 'https://zume.training/zume_app/' . $this->base_slug . '/';
         ?>
         <script>
             jQuery(document).ready(function(){
