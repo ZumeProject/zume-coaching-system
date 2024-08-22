@@ -58,7 +58,6 @@ class Zume_Goals_Public_Facts extends Zume_Goals_Chart_Base
                                                         <option value="30">In the last 30 days</option>
                                                         <option value="90">In the last 90 days</option>
                                                         <option value="365">In the last year</option>
-                                                        <option value="365">Since the beginning of the year</option>
                                                     </select>
                                                 </div>
                                                 <div class="cell small-2" >
@@ -78,11 +77,9 @@ class Zume_Goals_Public_Facts extends Zume_Goals_Chart_Base
                 // totals
                 window.spin_add()
                 makeRequest('GET', 'total', { stage: "general", key: "all_time_stats" }, window.site_info.rest_root ).done( function( data ) {
+                    console.log(data)
+
                     jQuery('.'+data.key).empty()
-                    data.list =  [
-                        `There are ${window.randNumber()} registered users in the Zúme system.`,
-                        `The Zume project has been running for ${window.randNumber()} days.`
-                    ]
                     jQuery.each( data.list, function( i, v ) {
                         jQuery('.'+data.key).append( `<li>${v}</li>` )
                     })
@@ -93,11 +90,11 @@ class Zume_Goals_Public_Facts extends Zume_Goals_Chart_Base
 
                     window.spin_add()
                     makeRequest('GET', 'total', { stage: "general", key: "range_stats", range: range }, window.site_info.rest_root ).done( function( data ) {
+                        console.log(data)
+
                         jQuery('.'+data.key).empty()
                         let pre_statement = jQuery('#range-filter :selected').text()
                         data.list =  [
-                            `${pre_statement}, there have been ${window.randNumber()} registered users in the Zúme system.`,
-                            `${pre_statement}, ${window.randNumber()} people have visited the Zume.Training site.`
                         ]
                         jQuery.each( data.list, function( i, v ) {
                             jQuery('.'+data.key).append( `<li>${v}</li>` )

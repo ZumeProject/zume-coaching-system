@@ -1259,6 +1259,135 @@ class Zume_Charts_API
                     'value_idle' => zume_format_int( 0 ),
                     'value_out' => zume_format_int( 0 ),
                 ];
+            case 'all_time_stats':
+                global $wpdb;
+                $list = [];
+
+                $thirty_days_ago = strtotime( date( 'Y-m-d H:i:s', time() ) . ' -30 days' );
+                $sql_30_days_ago = date('Y-m-d H:i:s', $thirty_days_ago );
+                $year_to_date = strtotime('first day of january this year');
+                $year_ago = strtotime('365 days ago');
+                $world_sql = Zume_Queries::world_grid_sql();
+
+//                dt_write_log( $thirty_days_ago );
+//                dt_write_log( $year_to_date );
+//                dt_write_log( $year_ago );
+
+                # individual visitors last 30 days
+                $number = $wpdb->get_var("
+                    SELECT COUNT( DISTINCT(user_id) )
+                    FROM zume_dt_reports
+                    WHERE timestamp > $thirty_days_ago;
+                ");
+                $list[] = 'Logged in users engaging training in the last 30 days: '.zume_format_int($number);
+
+                # (probably) individual views of Pieces pages this month
+                $number = $wpdb->get_var("
+                    SELECT COUNT(*)
+                    FROM (
+                    SELECT subtype, lng, count(*)
+                        FROM zume_dt_reports_anonymous
+                        WHERE timestamp > $thirty_days_ago AND type = 'studying'
+                    GROUP BY subtype, lng
+                    ) as tb
+                ");
+                $list[] = 'Pieces pages being studied in the last 30 days: '.zume_format_int($number);
+
+                # (individual) registrations this month
+
+                $number = $wpdb->get_var("
+                    SELECT COUNT( DISTINCT(user_id) )
+                    FROM zume_dt_reports
+                    WHERE timestamp > $thirty_days_ago AND subtype = 'registered';
+                ");
+                $list[] = 'Registrations in the last 30 days: '.zume_format_int($number);
+
+                # (usually probably group) sessions completed this month
+                $number = $wpdb->get_var("
+                    SELECT COUNT( DISTINCT(user_id) )
+                    FROM zume_dt_reports
+                    WHERE timestamp > $thirty_days_ago AND ( subtype LIKE 'set_a_%' OR subtype LIKE 'set_b_%' OR subtype LIKE 'set_c_%' );
+                ");
+                $list[] = 'Individual session checkins in the last 30 days: '.zume_format_int($number);
+
+                # (usually probably group) session 10 completions this month
+                $number = $wpdb->get_var("
+                    SELECT COUNT( DISTINCT(user_id) )
+                    FROM zume_dt_reports
+                    WHERE timestamp > $thirty_days_ago AND subtype = 'training_completed';
+                ");
+                $list[] = 'Individuals completing the training in the last 30 days: '.zume_format_int($number);
+
+                # (indiviudals in) countries this month
+                $number = $wpdb->get_var("
+                   SELECT COUNT( DISTINCT( admin0_grid_id) )
+                    FROM (
+                    SELECT lg.admin0_grid_id
+                    FROM zume_dt_reports r
+                    LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=r.grid_id
+                    WHERE r.timestamp > $thirty_days_ago
+                    GROUP BY lg.admin0_grid_id
+                    UNION ALL
+                    SELECT lg.admin0_grid_id
+                    FROM zume_dt_reports_anonymous ra
+                    LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=ra.grid_id
+                    WHERE ra.timestamp > $thirty_days_ago
+                    GROUP BY lg.admin0_grid_id
+                    ) as tb
+                ");
+                $list[] = 'Countries and territories engaged in the last 30 days: '.zume_format_int($number). ' out of 248';
+
+                // unique training locations
+                $number = $wpdb->get_var("
+                   SELECT COUNT( DISTINCT( r.grid_id ) )
+                    FROM zume_dt_reports r
+                    JOIN ( $world_sql ) as list ON list.grid_id=r.grid_id
+                ");
+                $list[] = 'Targeted training locations engaged: '.zume_format_int($number).' out of 44,395';
+
+                //unique church locations
+                $number = $wpdb->get_var("
+                   SELECT COUNT( DISTINCT( r.grid_id ) )
+                    FROM zume_dt_location_grid_meta r
+                    JOIN ( $world_sql ) as list ON list.grid_id=r.grid_id
+                    WHERE r.post_type = 'groups'");
+                $list[] = 'Targeted church locations engaged: '.zume_format_int($number).' out of 44,395';
+
+                //active contacts (YTD)
+                $number = $wpdb->get_var("
+                   SELECT COUNT( DISTINCT( r.user_id) )
+                    FROM zume_dt_reports r
+                    WHERE timestamp > $year_to_date
+                ");
+                $list[] = 'Active trainees since Jan 1 this year: '.zume_format_int($number);
+
+                $number = $wpdb->get_var("
+                   SELECT COUNT( DISTINCT( r.user_id) )
+                    FROM zume_dt_reports r
+                    WHERE timestamp > $year_ago
+                ");
+                $list[] = 'Active trainees since 1 year ago: '.zume_format_int($number);
+
+                //coaching requests
+                $number = $wpdb->get_var("
+                    SELECT COUNT( DISTINCT(user_id) )
+                    FROM zume_dt_reports
+                    WHERE timestamp > $year_to_date AND subtype = 'requested_a_coach';
+                ");
+                $list[] = 'Coaching requests in since Jan 1 this year: '.zume_format_int($number);
+
+                //coaching requests
+                $number = $wpdb->get_var("
+                    SELECT COUNT( DISTINCT(user_id) )
+                    FROM zume_dt_reports
+                    WHERE timestamp > $year_ago AND subtype = 'requested_a_coach';
+                ");
+                $list[] = 'Coaching requests since 1 year ago: '.zume_format_int($number);
+
+                return [
+                    'key' => 'all_time_stats',
+                    'list' => $list,
+                ];
             default:
                 $value = 0;
                 $goal = 0;
