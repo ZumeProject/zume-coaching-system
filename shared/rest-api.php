@@ -14,7 +14,7 @@ class Zume_Charts_API
         return self::$_instance;
     }
     public function __construct() {
-        if ( dt_is_rest() ) {
+        if ( self::dt_is_rest() ) {
             add_action( 'rest_api_init', [ $this, 'add_api_routes' ] );
             add_filter( 'dt_allow_rest_access', [ $this, 'authorize_url' ], 10, 1 );
         }
@@ -131,27 +131,6 @@ class Zume_Charts_API
                 ],
             ]
         );
-
-//        register_rest_route(
-//            $namespace, '/simulate', [
-//                'methods'  => [ 'GET', 'POST' ],
-//                'callback' => [ $this, 'training_elements' ],
-//                'permission_callback' => function () {
-//                    return $this->has_permission( $this->coach_permissions );
-//                }
-//            ]
-//        );
-
-        // dev
-//        register_rest_route(
-//            $namespace, '/sample', [
-//                'methods'  => [ 'GET', 'POST' ],
-//                'callback' => [ $this, 'sample' ],
-//                'permission_callback' => function () {
-//                    return $this->has_permission( $this->coach_permissions );
-//                }
-//            ]
-//        );
     }
     public function has_permission( $permissions = [] ) {
         $pass = false;
@@ -632,7 +611,7 @@ class Zume_Charts_API
 
         switch ( $params['key'] ) {
 
-            case 'total_churches';
+            case 'total_churches':
                 $label = 'Churches';
                 $description = 'Total number of churches reported by S1 Practitioners.';
                 $value = 0;
@@ -640,7 +619,7 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'total_locations';
+            case 'total_locations':
                 $label = 'Locations';
                 $description = 'Total number of locations reported by S1 Practitioners.';
                 $value = 0;
@@ -648,7 +627,7 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'total_active_reporters';
+            case 'total_active_reporters':
                 $label = 'Reporting';
                 $description = 'Total number of active reporters.';
                 $value = 0;
@@ -656,7 +635,7 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'new_practitioners';
+            case 'new_practitioners':
                 $label = 'New Practitioners';
                 $description = 'Total number of new practitioners.';
                 $value = 0;
@@ -677,21 +656,21 @@ class Zume_Charts_API
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_locations';
+            case 'new_locations':
                 $label = 'New Locations';
                 $description = 'Total number of new locations reported by S1 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'has_no_coach';
+            case 'has_no_coach':
                 $label = 'Has No Coach';
                 $description = 'Total number of S1 Practitioners who have not yet been assigned a coach.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'has_not_reported';
+            case 'has_not_reported':
                 $label = 'Has Not Reported';
                 $description = 'Total number of S1 Practitioners who have not yet reported.';
                 $value = 0;
@@ -756,21 +735,21 @@ class Zume_Charts_API
 
         switch ( $params['key'] ) {
 
-            case 'total_churches';
+            case 'total_churches':
                 $label = 'Churches';
                 $description = 'Total number of churches reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'total_locations';
+            case 'total_locations':
                 $label = 'Locations';
                 $description = 'Total number of locations reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'total_active_reporters';
+            case 'total_active_reporters':
                 $label = 'Active Reporters';
                 $description = 'Total number of active reporters.';
                 $link = 'partial_practitioner_practitioners';
@@ -778,42 +757,42 @@ class Zume_Charts_API
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_practitioners';
+            case 'new_practitioners':
                 $label = 'New Practitioners';
                 $description = 'Total number of new practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_reporters';
+            case 'new_reporters':
                 $label = 'New Reporters';
                 $description = 'Total number of new reporters.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_churches';
+            case 'new_churches':
                 $label = 'New Churches';
                 $description = 'Total number of new churches reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_locations';
+            case 'new_locations':
                 $label = 'New Locations';
                 $description = 'Total number of new locations reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'has_no_coach';
+            case 'has_no_coach':
                 $label = 'Has No Coach';
                 $description = 'Total number of S2 Practitioners who have not yet been assigned a coach.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'has_not_reported';
+            case 'has_not_reported':
                 $label = 'Has Not Reported';
                 $description = 'Total number of S2 Practitioners who have not yet reported.';
                 $value = 0;
@@ -877,21 +856,21 @@ class Zume_Charts_API
         $trend_valence = null;
 
         switch ( $params['key'] ) {
-            case 'total_churches';
+            case 'total_churches':
                 $label = 'Churches';
                 $description = 'Total number of churches reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'total_locations';
+            case 'total_locations':
                 $label = 'Locations';
                 $description = 'Total number of locations reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'total_active_reporters';
+            case 'total_active_reporters':
                 $label = 'Active Reporters';
                 $description = 'Total number of active reporters.';
                 $link = 'partial_practitioner_practitioners';
@@ -899,42 +878,42 @@ class Zume_Charts_API
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_practitioners';
+            case 'new_practitioners':
                 $label = 'New Practitioners';
                 $description = 'Total number of new practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_reporters';
+            case 'new_reporters':
                 $label = 'New Reporters';
                 $description = 'Total number of new reporters.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_churches';
+            case 'new_churches':
                 $label = 'New Churches';
                 $description = 'Total number of new churches reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_locations';
+            case 'new_locations':
                 $label = 'New Locations';
                 $description = 'Total number of new locations reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'has_no_coach';
+            case 'has_no_coach':
                 $label = 'Has No Coach';
                 $description = 'Total number of S2 Practitioners who have not yet been assigned a coach.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'has_not_reported';
+            case 'has_not_reported':
                 $label = 'Has Not Reported';
                 $description = 'Total number of S2 Practitioners who have not yet reported.';
                 $value = 0;
@@ -999,7 +978,7 @@ class Zume_Charts_API
 
         switch ( $params['key'] ) {
 
-            case 'new_coaching_requests';
+            case 'new_coaching_requests':
                 $label = 'New Coaching Requests';
                 $description = 'Total number of new coaching requests submitted to Facilitator Coaches.';
                 $value = 0;
@@ -1007,7 +986,7 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'languages';
+            case 'languages':
                 $label = 'Languages';
                 $description = 'Number of languages from requests';
                 $value = 0;
@@ -1015,7 +994,7 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'locations';
+            case 'locations':
                 $label = 'Locations';
                 $description = 'Locations from requests.';
                 $value = 0;
@@ -1062,7 +1041,7 @@ class Zume_Charts_API
 
 
         switch ( $params['key'] ) {
-            case 'new_coaching_requests';
+            case 'new_coaching_requests':
                 $label = 'Languages';
                 $description = '';
                 $value = 0;
@@ -1070,14 +1049,14 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'languages';
+            case 'languages':
                 $label = 'New Coaching Requests';
                 $description = 'Number of languages from requests';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'locations';
+            case 'locations':
                 $label = 'Locations';
                 $description = 'Locations from requests.';
                 $value = 0;
@@ -1085,7 +1064,7 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'total_multiplying_practitioner';
+            case 'total_multiplying_practitioner':
             default:
                 $label = '(S3) Multiplying Practitioners';
                 $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
@@ -1127,21 +1106,21 @@ class Zume_Charts_API
         $trend_valence = null;
 
         switch ( $params['key'] ) {
-            case 'total_churches';
+            case 'total_churches':
                 $label = 'Total Churches';
                 $description = 'Total number of churches reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'total_locations';
+            case 'total_locations':
                 $label = 'Total Locations';
                 $description = 'Total number of locations reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'total_active_reporters';
+            case 'total_active_reporters':
                 $label = 'Total Active Reporters';
                 $description = 'Total number of active reporters.';
                 $link = 'partial_practitioner_practitioners';
@@ -1149,42 +1128,42 @@ class Zume_Charts_API
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_practitioners';
+            case 'new_practitioners':
                 $label = 'New Practitioners';
                 $description = 'Total number of new practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_reporters';
+            case 'new_reporters':
                 $label = 'New Reporters';
                 $description = 'Total number of new reporters.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_churches';
+            case 'new_churches':
                 $label = 'New Churches';
                 $description = 'Total number of new churches reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_locations';
+            case 'new_locations':
                 $label = 'New Locations';
                 $description = 'Total number of new locations reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'has_no_coach';
+            case 'has_no_coach':
                 $label = 'Has No Coach';
                 $description = 'Total number of S2 Practitioners who have not yet been assigned a coach.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'has_not_reported';
+            case 'has_not_reported':
                 $label = 'Has Not Reported';
                 $description = 'Total number of S2 Practitioners who have not yet reported.';
                 $value = 0;
@@ -1238,7 +1217,7 @@ class Zume_Charts_API
 
         switch ( $params['key'] ) {
 
-            case 'active_coaches';
+            case 'active_coaches':
                 $label = 'Active Coaches';
                 $description = 'Number of active coaches';
                 $value = 0;
@@ -1246,7 +1225,7 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'total_people_in_coaching';
+            case 'total_people_in_coaching':
                 $label = 'People in Coaching';
                 $description = 'Number of people in coaching';
                 $value = 0;
@@ -1254,7 +1233,7 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'people_in_coaching';
+            case 'people_in_coaching':
                 $label = 'People in Coaching';
                 $description = 'Number of people in coaching';
                 $value = 0;
@@ -1262,7 +1241,7 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'coaching_engagements';
+            case 'coaching_engagements':
                 $label = 'Coaching Engagements';
                 $description = 'Number of coaching engagements';
                 $value = 0;

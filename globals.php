@@ -5977,13 +5977,15 @@ if ( ! class_exists( 'Zume_Global_Endpoints' ) ) {
 
             $row = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM zume_dt_post_user_meta WHERE id = %d AND user_id = %d', $params['id'], $user_id ), ARRAY_A );
             $data = maybe_unserialize( $row['meta_value'] );
-            if ( isset( $params['question'] ) ) {
+            if ( isset( $params['question'] ) && !empty( $params['question'] ) ) {
                 $data['question'] = $params['question'];
             }
             if ( isset( $params['answer'] ) ) {
                 $data['answer'] = $params['answer'];
             }
-            $data['note'] = esc_html__( 'Question', 'zume' ) . ': ' . $data['question'] . ' ' . esc_html__( 'Answer', 'zume' ) . ': ' . $data['answer'];
+            if ( isset( $params['note'] ) ) {
+                $data['note'] = $params['note'];
+            }
             $data = maybe_serialize( $data );
             $where = [
                 'id' => $params['id'],
@@ -6440,7 +6442,6 @@ if ( ! class_exists( 'Zume_System_Log_API' ) ) {
                     $data_item['hash'] = hash( 'sha256', maybe_serialize( $data_item ) . time() );
                     $added_log[] = self::insert( $data_item, true, false );
                 }
-
             }
 
             /**
@@ -7539,7 +7540,7 @@ if ( ! class_exists( 'Zume_User_Genmap' ) ) {
                             let spinner = ' <span class="loading-spinner active"></span> '
                             jQuery('#genmap-details').html(spinner)
 
-                            makeRequest('GET', post_type + '/' + id, null, 'zume_training/v1/' )
+                            zumeRequest.get( post_type + '/' + id, null )
                                 .then(data => {
                                     console.log(data)
                                     let container = jQuery('#genmap-details')
