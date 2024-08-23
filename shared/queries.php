@@ -4,7 +4,7 @@ if ( !defined( 'ABSPATH' ) ) { exit; } // Exit if accessed directly.
 class Zume_Queries {
 
     // this is a reusable query that gets the user_id, post_id (contact_id), stage, and report id (rid) from the reports table.
-    public static $query_for_user_stage = "SELECT r.user_id, r.post_id, r.post_id as contact_id, MAX(r.value) as stage, MAX(r.id) as rid FROM zume_dt_reports r
+    public static $query_for_user_stage = "SELECT r.user_id, r.post_id, r.post_id as contact_id, MAX(r.value) as stage, MAX(r.id) as rid, r.timestamp FROM zume_dt_reports r
                                                   WHERE r.type = 'stage' and r.subtype = 'current_level'
                                                   GROUP BY r.user_id, r.post_id";
 
@@ -21,6 +21,35 @@ class Zume_Queries {
                 ) as tb
                 GROUP BY tb.stage;",
         ARRAY_A );
+
+        $stages = [];
+
+        if ( empty( $results ) ) {
+            return $stages;
+        }
+
+        foreach ( $results as $result ) {
+            $stages[ $result['stage'] ] = $result;
+        }
+
+        return $stages;
+    }
+
+    public static function stage_totals_by_range( $range ) {
+        global $wpdb;
+        $query_for_user_stage = self::$query_for_user_stage;
+
+        $timestamp = strtotime( $range . ' days ago' );
+
+        $results = $wpdb->get_results(
+            "SELECT tb.stage, COUNT(tb.user_id) as total
+                FROM
+                (
+                   $query_for_user_stage
+                ) as tb
+                WHERE tb.timestamp > $timestamp
+                GROUP BY tb.stage;",
+            ARRAY_A );
 
         $stages = [];
 

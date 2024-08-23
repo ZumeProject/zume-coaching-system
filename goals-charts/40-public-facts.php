@@ -27,6 +27,13 @@ class Zume_Goals_Public_Facts extends Zume_Goals_Chart_Base
         }
     }
 
+    public function base_menu( $content ) {
+        $content .= '<li><hr></li>';
+        $content .= '<li>MARKETING</li>';
+        $content .= '<li><a href="'.site_url( '/zume-goals/'.$this->base_slug ).'" id="'.$this->base_slug.'-menu">' .  $this->base_title . '</a></li>';
+        return $content;
+    }
+
     public function wp_head() {
         $this->js_api();
         ?>
@@ -57,7 +64,8 @@ class Zume_Goals_Public_Facts extends Zume_Goals_Chart_Base
                                                     <select id="range-filter">
                                                         <option value="30">In the last 30 days</option>
                                                         <option value="90">In the last 90 days</option>
-                                                        <option value="365">In the last year</option>
+                                                        <option value="365">In the last year (365 days)</option>
+                                                        <option value="<?php echo date('z'); ?>">Beginning of the year</option>
                                                     </select>
                                                 </div>
                                                 <div class="cell small-2" >

@@ -360,7 +360,13 @@ class Zume_Charts_API
                 $label = 'Registrants';
                 $description = 'People who have registered but have not progressed into training.';
                 $link = 'registrants';
-                $value = Zume_Views::stage_totals( 1 );
+
+                if( $params['range'] < 0 ) {
+                    $value = Zume_Views::stage_totals( 1 );
+                } else {
+                    $value = Zume_Views::stage_totals( 1, $params['range'] );
+                }
+
                 $goal = 0;
                 $trend = 0;
                 break;
@@ -473,7 +479,13 @@ class Zume_Charts_API
             case 'total_active_training_trainee':
                 $label = 'Active Training Trainees';
                 $description = 'People who are actively working a training plan or have only partially completed the training.';
-                $value = Zume_Views::stage_totals( 2 );
+
+                if( $params['range'] < 0 ) {
+                    $value = Zume_Views::stage_totals( 2 );
+                } else {
+                    $value = Zume_Views::stage_totals( 2, $params['range'] );
+                }
+
                 $goal = 0;
                 $trend = 0;
                 break;
@@ -557,7 +569,13 @@ class Zume_Charts_API
                 $label = 'Post-Training Trainees';
                 $description = 'People who have completed the training and are working on a post training plan.';
                 $link = 'post';
-                $value = Zume_Views::stage_totals( 3 );
+
+                if( $params['range'] < 0 ) {
+                    $value = Zume_Views::stage_totals( 3 );
+                } else {
+                    $value = Zume_Views::stage_totals( 3, $params['range'] );
+                }
+
                 $goal = 0;
                 $trend = 0;
                 break;
@@ -681,7 +699,13 @@ class Zume_Charts_API
                 $label = '(S1) Partial Practitioners';
                 $description = 'Learning through doing. Implementing partial checklist / 4-fields';
                 $link = 'partial_practitioner_practitioners';
-                $value = Zume_Views::stage_totals( 4 );
+
+                if( $params['range'] < 0 ) {
+                    $value = Zume_Views::stage_totals( 4 );
+                } else {
+                    $value = Zume_Views::stage_totals( 4, $params['range'] );
+                }
+
                 $goal = 0;
                 $trend = 0;
                 break;
@@ -803,7 +827,13 @@ class Zume_Charts_API
                 $label = 'Full Practitioners';
                 $description = 'People who are seeking multiplicative movement and are completely skilled with the coaching checklist.';
                 $link = 'full_practitioner_practitioners';
-                $value = Zume_Views::stage_totals( 5 );
+
+                if( $params['range'] < 0 ) {
+                    $value = Zume_Views::stage_totals( 5 );
+                } else {
+                    $value = Zume_Views::stage_totals( 5, $params['range'] );
+                }
+
                 $goal = 5;
                 $trend = rand( 1, 10 );
                 break;
@@ -924,7 +954,13 @@ class Zume_Charts_API
                 $label = 'Multiplying Practitioners';
                 $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
                 $link = 'multiplying_practitioner_practitioners';
-                $value = Zume_Views::stage_totals( 6 );
+
+                if( $params['range'] < 0 ) {
+                    $value = Zume_Views::stage_totals( 6 );
+                } else {
+                    $value = Zume_Views::stage_totals( 6, $params['range'] );
+                }
+
                 $goal = 0;
                 $trend = 0;
                 break;

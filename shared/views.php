@@ -17,8 +17,13 @@ class Zume_Views {
         return $results;
     }
 
-    public static function stage_totals( $stage = null ) {
-        $results = Zume_Queries::stage_totals();
+    public static function stage_totals( $stage = null, $range = null ) {
+        if ( $range ) {
+            $results = Zume_Queries::stage_totals_by_range( $range );
+        } else {
+            $results = Zume_Queries::stage_totals();
+        }
+
 
         $totals = [
             '1' => 0,
@@ -53,32 +58,4 @@ class Zume_Views {
 
         return $totals;
     }
-
-
-    // @remove after development
-//    public static function sample( $params ) {
-//        $negative_stat = false;
-//        if ( isset( $params['negative_stat'] ) && $params['negative_stat'] ) {
-//            $negative_stat = $params['negative_stat'];
-//        }
-//
-//        $value = rand(100, 1000);
-//        $goal = rand(500, 700);
-//        $trend = rand(500, 700);
-//        return [
-//            'key' => 'sample',
-//            'label' => 'Sample',
-//            'link' => 'sample',
-//            'description' => 'Sample description.',
-//            'value' => self::format_int( $value ),
-//            'valence' => self::get_valence( $value, $goal, $negative_stat ),
-//            'goal' => $goal,
-//            'goal_valence' => self::get_valence( $value, $goal, $negative_stat ),
-//            'goal_percent' => self::get_percent( $value, $goal ),
-//            'trend' => $trend,
-//            'trend_valence' => self::get_valence( $value, $trend, $negative_stat ),
-//            'trend_percent' => self::get_percent( $value, $trend ),
-//            'negative_stat' => $negative_stat,
-//        ];
-//    }
 }

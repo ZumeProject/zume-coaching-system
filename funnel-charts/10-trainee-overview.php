@@ -77,6 +77,7 @@ class Zume_Funnel_Trainee extends Zume_Funnel_Chart_Base
                                             <option value="7">Last 7 days</option>
                                             <option value="90">Last 90 days</option>
                                             <option value="365">Last 1 Year</option>
+                                            <option value="<?php echo date('z'); ?>">Since year start</option>
                                         </select>
                                     </span>
                                     <span class="loading-spinner active right" style="margin:.5em 1em;"></span>
