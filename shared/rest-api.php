@@ -1754,7 +1754,7 @@ class Zume_Charts_API
                    SELECT r.user_id, MAX(r.value) as stage, (
 						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
 					) as grid_id FROM zume_dt_reports r
-                   WHERE r.type = 'stage' AND r.subtype = 'current_level'
+                   WHERE r.type = 'system' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
@@ -1770,7 +1770,7 @@ class Zume_Charts_API
                    SELECT r.user_id, MAX(r.value) as stage, (
 						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
 					) as grid_id FROM zume_dt_reports r
-                   WHERE r.type = 'stage' AND r.subtype = 'current_level'
+                   WHERE r.type = 'system' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
@@ -1786,7 +1786,7 @@ class Zume_Charts_API
                    SELECT r.user_id, MAX(r.value) as stage, (
 						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
 					) as grid_id FROM zume_dt_reports r
-                   WHERE r.type = 'stage' AND r.subtype = 'current_level'
+                   WHERE r.type = 'system' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
@@ -1802,7 +1802,7 @@ class Zume_Charts_API
                    SELECT r.user_id, MAX(r.value) as stage, (
 						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
 					) as grid_id FROM zume_dt_reports r
-                   WHERE r.type = 'stage' AND r.subtype = 'current_level'
+                   WHERE r.type = 'system' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
@@ -1885,8 +1885,8 @@ class Zume_Charts_API
     public function location_goals() {
         $data = DT_Mapping_Module::instance()->data();
 
-        $practitioners = $this->query_practitioner_funnel( [ '4','5','6' ] );
-        $data = $this->add_goals_column( $data, 'practitioners', 'Practitioners', $practitioners );
+        $practitioners = $this->query_practitioner_funnel( [ '3','4','5','6' ] );
+        $data = $this->add_goals_column( $data, 'trainees', 'Trainees', $practitioners );
         $data = $this->add_practitioners_goal_column( $data );
 
         $churches = $this->query_churches_funnel();
@@ -1913,7 +1913,7 @@ class Zume_Charts_API
                    SELECT r.user_id, MAX(r.value) as stage, (
 						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
 					) as grid_id FROM zume_dt_reports r
-                   WHERE r.type = 'stage' AND r.subtype = 'current_level'
+                   WHERE r.type = 'system' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
@@ -1929,7 +1929,7 @@ class Zume_Charts_API
                    SELECT r.user_id, MAX(r.value) as stage, (
 						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
 					) as grid_id FROM zume_dt_reports r
-                   WHERE r.type = 'stage' AND r.subtype = 'current_level'
+                   WHERE r.type = 'system' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
@@ -1945,7 +1945,7 @@ class Zume_Charts_API
                    SELECT r.user_id, MAX(r.value) as stage, (
 						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
 					) as grid_id FROM zume_dt_reports r
-                   WHERE r.type = 'stage' AND r.subtype = 'current_level'
+                   WHERE r.type = 'system' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
@@ -1961,7 +1961,7 @@ class Zume_Charts_API
                    SELECT r.user_id, MAX(r.value) as stage, (
 						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
 					) as grid_id FROM zume_dt_reports r
-                   WHERE r.type = 'stage' AND r.subtype = 'current_level'
+                   WHERE r.type = 'system' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
@@ -2079,7 +2079,7 @@ class Zume_Charts_API
                     }
 
                     // add new record to column
-                    $column_data[$grid_id][$next_column_number] = (int) $result['count'] ?? 0; // must be string
+                    $column_data[$grid_id][$next_column_number] = number_format(  $result['count'] ); // must be string
                 }
             }
         }
@@ -2100,8 +2100,8 @@ class Zume_Charts_API
             $next_column_number = count( $column_labels );
         }
         $column_labels[ $next_column_number ] = [
-            'key'   => 'practitioner_goal',
-            'label' => __( 'Practitioner Goal', 'zume_funnels' ),
+            'key'   => 'trainee_goal',
+            'label' => __( 'Trainee Goal', 'zume_funnels' ),
         ];
         if ( ! empty( $column_data ) ) {
             foreach ( $column_data as $key => $value ) {

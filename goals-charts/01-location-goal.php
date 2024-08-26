@@ -14,7 +14,7 @@ class Zume_Goals_Locations_Goals extends Zume_Goals_Chart_Base
     public $slug = 'locations_goals'; // lowercase
     public $js_object_name = 'wp_js_object'; // This object will be loaded into the metrics.js file by the wp_localize_script.
     public $js_file_name = '/dt-metrics/combined/locations-list.js'; // should be full file name plus extension
-    public $permissions = [ 'dt_all_access_contacts', 'view_project_metrics' ];
+    public $permissions = [ 'access_contacts', 'view_project_metrics' ];
     public $namespace = 'zume_funnel/v1';
 
     public function __construct() {
@@ -22,7 +22,7 @@ class Zume_Goals_Locations_Goals extends Zume_Goals_Chart_Base
         if ( !$this->has_permission() ){
             return;
         }
-        $this->base_title = __( 'Goals by Location', 'zume_goals' );
+        $this->base_title = __( 'Goals by Location', 'zume' );
 
         $url_path = dt_get_url_path( true );
         if ( "zume-goals/$this->base_slug" === $url_path ) {
