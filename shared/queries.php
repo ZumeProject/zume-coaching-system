@@ -5,7 +5,7 @@ class Zume_Queries {
 
     // this is a reusable query that gets the user_id, post_id (contact_id), stage, and report id (rid) from the reports table.
     public static $query_for_user_stage = "SELECT r.user_id, r.post_id, r.post_id as contact_id, MAX(r.value) as stage, MAX(r.id) as rid, r.timestamp FROM zume_dt_reports r
-                                                  WHERE r.type = 'stage' and r.subtype = 'current_level'
+                                                  WHERE r.type = 'system' and r.subtype = 'current_level'
                                                   GROUP BY r.user_id, r.post_id";
 
 
