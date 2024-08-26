@@ -35,30 +35,33 @@ class Zume_Funnel_Trainee extends Zume_Funnel_Chart_Base
             $this->js_api();
             $stages = zume_funnel_stages();
             $html = '';
-        foreach ( $stages as $stage ) {
-            if ( 'anonymous' === $stage['key'] ) {
-                continue;
-            }
-            $html .= '<div class="cell medium-9 zume-funnel">
-                             <div class="'.$stage['key'].'"><span class="loading-spinner active"></span></div>
-                        </div>
-                        <div class="cell medium-3 padding-top">
-                            <h3>Characteristics</h3>';
 
-            $html .='<ul>';
-            foreach ( $stage['characteristics'] as $item ) {
-                $html .='<li>'.$item.'</li>';
-            }
-            $html .= '</ul>';
+            foreach ( $stages as $stage ) {
+                if ( 'anonymous' === $stage['key'] ) {
+                    continue;
+                }
+                $html .= '<div class="cell medium-9 zume-funnel">
+                                 <div class="'.$stage['key'].'"><span class="loading-spinner active"></span></div>
+                            </div>
+                            <div class="cell medium-3 padding-top">
+                                <h3>Characteristics</h3>';
 
-            $html .= '<h3>Next Steps</h3>';
+                $html .='<ul>';
+                foreach ( $stage['characteristics'] as $item ) {
+                    $html .='<li>'.$item.'</li>';
+                }
+                $html .= '</ul>';
 
-            $html .= '<ul>';
-            foreach ( $stage['next_steps'] as $item ) {
-                $html .= '<li>'.$item.'</li>';
+                $html .= '<h3>Next Steps</h3>';
+
+                $html .= '<ul>';
+                foreach ( $stage['next_steps'] as $item ) {
+                    $html .= '<li>'.$item.'</li>';
+                }
+                $html .= '</ul></div>';
             }
-            $html .= '</ul></div>';
-        }
+
+
         ?>
             <script>
                 jQuery(document).ready(function(){

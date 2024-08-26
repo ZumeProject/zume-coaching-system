@@ -97,8 +97,6 @@ class Zume_Funnel_Registrant extends Zume_Funnel_Chart_Base
                 window.spin_add()
                 makeRequest('GET', 'total', { stage: "registrant", key: "no_plan" }, window.site_info.rest_root ).done( function( data ) {
                     data.valence = 'valence-grey'
-                    data.label = 'Has No Plan'
-                    data.description = 'Description'
                     jQuery('.'+data.key).html(window.template_single_list(data))
                     window.click_listener( data )
                     window.spin_remove()

@@ -272,6 +272,7 @@ class Zume_Charts_API
         ];
     }
     public function total_registrants( $params ) {
+        global $wpdb;
         $negative_stat = $params['negative_stat'] ?? false;
 
         $label = '';
@@ -329,7 +330,13 @@ class Zume_Charts_API
                 // lookup the query
                 $label = 'Has No Plan';
                 $description = 'Total number of registrants who have no plan.';
-                $value = 2;
+
+                $value = $wpdb->get_var("
+
+                ");
+
+
+
                 $goal = 4;
                 $trend = 4;
                 $valence = null;
