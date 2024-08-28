@@ -456,11 +456,12 @@ class Zume_Charts_API
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
+                $valence = 'valence-grey';
                 break;
             case 'has_no_coach':
                 $label = 'Has No Coach';
                 $description = 'People who have no coach.';
-                $value = 0;
+                $value = Zume_Queries::has_plan( [2], true );
                 $goal = 0;
                 $trend = 0;
                 break;
@@ -1530,7 +1531,6 @@ class Zume_Charts_API
                 $value = Zume_Queries::query_total_churches();
                 $goal = 0;
                 $trend = 0;
-                ;
                 $valence = 'valence-grey';
                 break;
             case 'practitioners_total':
@@ -1582,7 +1582,7 @@ class Zume_Charts_API
     }
 
     public function list( WP_REST_Request $request ) {
-        return Zume_Goals_Query::list( dt_recursive_sanitize_array( $request->get_params() ) );
+        return true;
     }
 
 

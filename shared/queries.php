@@ -365,4 +365,27 @@ class Zume_Queries {
               AND lg5.admin0_grid_id NOT IN (100314737,100083318,100041128,100133112,100341242,100132648,100222839,100379914,100055707,100379993,100130389,100255271,100363975,100248845,100001527,100342458,100024289,100132795,100054605,100253456,100342975,100074571)
         ";
     }
+
+    public static function has_plan( $stages = [], $negative = false ) {
+        global $wpdb;
+        $query_for_user_stage = self::$query_for_user_stage;
+        $stages_string = implode(',', $stages );
+        if ( $negative ) {
+            $where = "AND pm.meta_value = ''";
+        } else {
+            $where = "AND pm.meta_value = ''";
+        }
+        $sql = "
+            SELECT COUNT(*)
+            FROM
+               (
+                  $query_for_user_stage
+                ) as tb
+            JOIN zume_postmeta pm ON pm.post_id=tb.post_id AND pm.meta_key = 'coaching_contact_id' $where
+            WHERE tb.stage IN ( $stages_string );
+            ";
+        $count = $wpdb->get_var( $sql );
+
+        return $count;
+    }
 }
