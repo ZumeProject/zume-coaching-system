@@ -61,17 +61,14 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
 
         // get coaching connections
         $coaches = [];
-        $coaching_contact_id = get_post_meta( $contact_id, 'coaching_contact_id', true );
-        if ( ! $coaching_contact_id ) {
-            $coaching_contact_id = $wpdb->get_var(
-                $wpdb->prepare(
-                    "SELECT post_id
+        $coaching_contact_id = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT post_id
                     FROM zume_3_postmeta
                     WHERE meta_key = 'trainee_user_id'
                       AND meta_value = %s",
                 $user_id )
-            );
-        }
+        );
 
         $coach_list = [];
         if ( $coaching_contact_id ) {
