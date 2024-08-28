@@ -1072,7 +1072,11 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'displayCode' => 'zhcn',
                 'locale' => 'zh_CN',
                 'weblate' => 'zh_Hans',
+<<<<<<< Updated upstream
                 'nativeName' => '中文（简体）',
+=======
+                'nativeName' => '国语（简体)',
+>>>>>>> Stashed changes
                 'rtl' => false,
                 'flag' => '🇨🇳',
                 'population' => 1300000000,
@@ -1091,7 +1095,11 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'displayCode' => 'zhtw',
                 'locale' => 'zh_TW',
                 'weblate' => 'zh_Hant',
+<<<<<<< Updated upstream
                 'nativeName' => '中文（繁體）',
+=======
+                'nativeName' => '國語（繁體)',
+>>>>>>> Stashed changes
                 'rtl' => false,
                 'flag' => '🇹🇼',
                 'population' => 0,
