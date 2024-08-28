@@ -24,10 +24,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'ZUME_TRAINING_URL' ) ) {
-    define( 'ZUME_TRAINING_URL', 'https://zume5.training/' );
+    define( 'ZUME_TRAINING_URL', 'https://zume.training/' );
 }
 if ( ! defined( 'ZUME_COACHING_URL' ) ) {
-    define( 'ZUME_COACHING_URL', 'https://zume5.training/coaching/' );
+    define( 'ZUME_COACHING_URL', 'https://zume.training/coaching/' );
 }
 
 /**
@@ -68,12 +68,11 @@ function zume_coaching() {
     }
 
     return Zume_Coaching::instance();
-
 }
 add_action( 'after_setup_theme', 'zume_coaching', 20 );
 
 //register the D.T Plugin
-add_filter( 'dt_plugins', function ( $plugins ){
+add_filter( 'dt_plugins', function ( $plugins ) {
     $plugin_data = get_file_data( __FILE__, [ 'Version' => 'Version', 'Plugin Name' => 'Zume Coaching' ], false );
     $plugins['zume-coaching'] = [
         'plugin_url' => trailingslashit( plugin_dir_url( __FILE__ ) ),
@@ -98,7 +97,7 @@ class Zume_Coaching {
         global $wpdb;
         $wpdb->zume_reports = 'zume_dt_reports';
         $wpdb->zume_activity = 'zume_dt_activity_log';
-        $wpdb->dt_movement_log = 'wp_3_dt_movement_log'; // @remove temp support for legacy movement log
+        $wpdb->dt_movement_log = 'zume_3_dt_movement_log'; // @remove temp support for legacy movement log
         /* end custom table setup */
 
         require_once( 'globals.php' );
@@ -108,19 +107,12 @@ class Zume_Coaching {
 
         require_once( 'funnel-charts/loader.php' );
         require_once( 'goals-charts/loader.php' );
-        require_once( 'magic-maps/cluster-1-last100.php' );
-        require_once( 'magic-maps/heatmap.php' );
-        require_once( 'magic-maps/map-2-network-activities.php' );
-        require_once( 'magic-maps/map-3-trainees.php' );
-        require_once( 'magic-maps/map-4-practitioners.php' );
-        require_once( 'magic-maps/map-5-churches.php' );
 
         $this->i18n();
 
         if ( is_admin() ) {
             add_filter( 'plugin_row_meta', [ $this, 'plugin_description_links' ], 10, 4 );
         }
-
     }
     public function plugin_description_links( $links_array, $plugin_file_name, $plugin_data, $status ) {
         if ( strpos( $plugin_file_name, basename( __FILE__ ) ) ) {

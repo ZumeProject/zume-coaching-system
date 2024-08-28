@@ -22,14 +22,14 @@ class Zume_Funnel_Concept extends Zume_Funnel_Chart_Base
         $url_path = dt_get_url_path( true );
         if ( "zume-funnel/$this->base_slug" === $url_path ) {
             add_action( 'wp_enqueue_scripts', [ $this, 'base_scripts' ], 99 );
-            add_action( 'wp_head',[ $this, 'wp_head' ], 1000);
+            add_action( 'wp_head', [ $this, 'wp_head' ], 1000 );
         }
     }
 
     public function base_menu( $content ) {
         $content .= '<li class=""><hr></li>';
         $content .= '<li class="">HELP</li>';
-        $content .= '<li class=""><a href="'.site_url('/zume-funnel/'.$this->base_slug).'" id="'.$this->base_slug.'-menu">' .  $this->base_title . '</a></li>';
+        $content .= '<li class=""><a href="'.site_url( '/zume-funnel/'.$this->base_slug ).'" id="'.$this->base_slug.'-menu">' .  $this->base_title . '</a></li>';
         return $content;
     }
 
@@ -53,32 +53,32 @@ class Zume_Funnel_Concept extends Zume_Funnel_Chart_Base
                             <div class="grid-x">
                                 <div class="cell small-12">
                                     <h1 style="background-color: lightgrey; padding: 1em;"><strong>FUNNEL RELATIONSHIPS</strong></h1>
-                                    <img src="<?php  echo plugin_dir_url(__FILE__) . 'images/funnel-relationships.png' ?>" />
+                                    <img src="<?php echo plugin_dir_url( __FILE__ ) . 'images/funnel-relationships.png' ?>" />
                                 </div>
                                 <div class="cell"><hr></div>
                                 <div class="cell small-12">
                                     <h1 style="background-color: lightgrey; padding: 1em;"><strong>STAGE SUMMARIES</strong></h1>
                                     <div class="grid-x grid-padding-x grid-margin-x grid-margin-y">
                                         <div class="cell small-4 center tile">
-                                            <img src="<?php  echo plugin_dir_url(__FILE__) . 'images/stage-anonymous.png' ?>" />
+                                            <img src="<?php echo plugin_dir_url( __FILE__ ) . 'images/stage-anonymous.png' ?>" />
                                         </div>
                                         <div class="cell small-4 center tile">
-                                            <img src="<?php  echo plugin_dir_url(__FILE__) . 'images/stage-registrant.png' ?>" />
+                                            <img src="<?php echo plugin_dir_url( __FILE__ ) . 'images/stage-registrant.png' ?>" />
                                         </div>
                                         <div class="cell small-4 center tile">
-                                            <img src="<?php  echo plugin_dir_url(__FILE__) . 'images/stage-active.png' ?>" />
+                                            <img src="<?php echo plugin_dir_url( __FILE__ ) . 'images/stage-active.png' ?>" />
                                         </div>
                                         <div class="cell small-4 center tile">
-                                            <img src="<?php  echo plugin_dir_url(__FILE__) . 'images/stage-post.png' ?>" />
+                                            <img src="<?php echo plugin_dir_url( __FILE__ ) . 'images/stage-post.png' ?>" />
                                         </div>
                                         <div class="cell small-4 center tile">
-                                            <img src="<?php  echo plugin_dir_url(__FILE__) . 'images/stage-partial-practitioner.png' ?>" />
+                                            <img src="<?php echo plugin_dir_url( __FILE__ ) . 'images/stage-partial-practitioner.png' ?>" />
                                         </div>
                                         <div class="cell small-4 center tile">
-                                            <img src="<?php  echo plugin_dir_url(__FILE__) . 'images/stage-full-practitioner.png' ?>" />
+                                            <img src="<?php echo plugin_dir_url( __FILE__ ) . 'images/stage-full-practitioner.png' ?>" />
                                         </div>
                                         <div class="cell small-4 center tile">
-                                            <img src="<?php  echo plugin_dir_url(__FILE__) . 'images/stage-multiplying-practitioner.png' ?>" />
+                                            <img src="<?php echo plugin_dir_url( __FILE__ ) . 'images/stage-multiplying-practitioner.png' ?>" />
                                         </div>
                                     </div>
                                     <style>.cell.tile { border: 1px solid grey; border-radius: 10px; padding: 1em; }</style>
@@ -86,7 +86,7 @@ class Zume_Funnel_Concept extends Zume_Funnel_Chart_Base
                                 <div class="cell"><hr></div>
                                 <div class="cell small-12">
                                     <h1 style="background-color: lightgrey; padding: 1em;"><strong>DIFFICULTY OVER TIME</strong></h1>
-                                    <img src="<?php  echo plugin_dir_url(__FILE__) . 'images/difficulty-vs-time.png' ?>" />
+                                    <img src="<?php echo plugin_dir_url( __FILE__ ) . 'images/difficulty-vs-time.png' ?>" />
                                 </div>
                                 <div class="cell"><hr></div>
                                 <div class="cell">
@@ -109,6 +109,5 @@ class Zume_Funnel_Concept extends Zume_Funnel_Chart_Base
         </script>
         <?php
     }
-
 }
 new Zume_Funnel_Concept();

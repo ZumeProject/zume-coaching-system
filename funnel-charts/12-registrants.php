@@ -22,7 +22,7 @@ class Zume_Funnel_Registrant extends Zume_Funnel_Chart_Base
         $url_path = dt_get_url_path( true );
         if ( "zume-funnel/$this->base_slug" === $url_path ) {
             add_action( 'wp_enqueue_scripts', [ $this, 'base_scripts' ], 99 );
-            add_action( 'wp_head',[ $this, 'wp_head' ], 1000);
+            add_action( 'wp_head', [ $this, 'wp_head' ], 1000 );
         }
     }
 
@@ -97,8 +97,6 @@ class Zume_Funnel_Registrant extends Zume_Funnel_Chart_Base
                 window.spin_add()
                 makeRequest('GET', 'total', { stage: "registrant", key: "no_plan" }, window.site_info.rest_root ).done( function( data ) {
                     data.valence = 'valence-grey'
-                    data.label = 'Has No Plan'
-                    data.description = 'Description'
                     jQuery('.'+data.key).html(window.template_single_list(data))
                     window.click_listener( data )
                     window.spin_remove()
@@ -196,6 +194,5 @@ class Zume_Funnel_Registrant extends Zume_Funnel_Chart_Base
             ],
         ];
     }
-
 }
 new Zume_Funnel_Registrant();

@@ -227,14 +227,14 @@ jQuery(document).ready(function($) {
     window.load_list = ( data ) => {
       jQuery('.zume-list.'+data.key).click(function(){
         jQuery('#modal-large').foundation('open')
-        jQuery('#modal-large-title').empty().html(`${data.label} <span style="float:right; margin-right: 2em;"><a href="https://zume5.training/contacts?query=eyJmaWVsZHMiOlt7InR5cGUiOlsidXNlciJdfV0sInNvcnQiOiJuYW1lIiwib2Zmc2V0IjowfQ%3D%3D&labels=W3siaWQiOiJ1c2VyIiwibmFtZSI6IkNvbnRhY3QgVHlwZTogVXNlciIsImZpZWxkIjoidHlwZSJ9XQ%3D%3D&filter_id=1689018512.323&filter_tab=" class="button small">Take Action</a></span> <hr>`)
+        jQuery('#modal-large-title').empty().html(`${data.label} <span style="float:right; margin-right: 2em;"><a href="https://zume.training/contacts?query=eyJmaWVsZHMiOlt7InR5cGUiOlsidXNlciJdfV0sInNvcnQiOiJuYW1lIiwib2Zmc2V0IjowfQ%3D%3D&labels=W3siaWQiOiJ1c2VyIiwibmFtZSI6IkNvbnRhY3QgVHlwZTogVXNlciIsImZpZWxkIjoidHlwZSJ9XQ%3D%3D&filter_id=1689018512.323&filter_tab=" class="button small">Take Action</a></span> <hr>`)
         jQuery('#modal-large-content').empty().html('<span class="loading-spinner active"></span>')
 
         makeRequest('GET', 'list', {}, window.site_info.rest_root ).done( function( data_list ) {
           jQuery('#modal-large-content').empty().html('<table class="hover"><tbody id="zume-goals-list-modal"></tbody></table>')
           jQuery('#zume-goals-list-modal').append( `<tr><td></td><td><strong>Name</strong></td><td><strong>Registered</strong></td></tr>`)
           jQuery.each(data_list, function(i,v)  {
-            jQuery('#zume-goals-list-modal').append( `<tr><td><input type="checkbox" /></td><td><a href="https://zume5.training/contacts?query=eyJmaWVsZHMiOlt7InR5cGUiOlsidXNlciJdfV0sInNvcnQiOiJuYW1lIiwib2Zmc2V0IjowfQ%3D%3D&labels=W3siaWQiOiJ1c2VyIiwibmFtZSI6IkNvbnRhY3QgVHlwZTogVXNlciIsImZpZWxkIjoidHlwZSJ9XQ%3D%3D&filter_id=1689018512.323&filter_tab=">${ v.display_name }</a></td><td>${v.user_registered}</td></tr>`)
+            jQuery('#zume-goals-list-modal').append( `<tr><td><input type="checkbox" /></td><td><a href="https://zume.training/contacts?query=eyJmaWVsZHMiOlt7InR5cGUiOlsidXNlciJdfV0sInNvcnQiOiJuYW1lIiwib2Zmc2V0IjowfQ%3D%3D&labels=W3siaWQiOiJ1c2VyIiwibmFtZSI6IkNvbnRhY3QgVHlwZTogVXNlciIsImZpZWxkIjoidHlwZSJ9XQ%3D%3D&filter_id=1689018512.323&filter_tab=">${ v.display_name }</a></td><td>${v.user_registered}</td></tr>`)
           })
           jQuery('.loading-spinner').removeClass('active')
         })
@@ -357,8 +357,8 @@ jQuery(document).ready(function($) {
               jQuery.each(list, function(i,v)  {
                 container.append( `<div class="grid-x grid-padding-x">
                     <div class="cell small-12">
-                        <h3><a href="https://zume5.training/${v.post_type}/${v.post_id}">${ v.name }</a></h3>
-                        <p>${ v.label }</p>
+                        <h3><strong>${ v.name }</strong> (${ v.label })</h3>
+                        <a class="button small" href="https://zume.training/${v.post_type}/${v.post_id}">Training Contact</a>
                         <hr>
                    </div>
                 </div>`)

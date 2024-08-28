@@ -30,17 +30,16 @@ abstract class Zume_Goals_Chart_Base
                 add_action( 'wp_enqueue_scripts', [ $this, 'base_scripts' ], 99 );
             }
         }
-
     }
 
     public function base_menu( $content ) {
-        $content .= '<li class=""><a href="'.site_url('/zume-goals/'.$this->base_slug).'" id="'.$this->base_slug.'-menu">' .  $this->base_title . '</a></li>';
+        $content .= '<li class=""><a href="'.site_url( '/zume-goals/'.$this->base_slug ).'" id="'.$this->base_slug.'-menu">' .  $this->base_title . '</a></li>';
         return $content;
     }
 
     public function base_add_url( $template_for_url ) {
-        if ( empty ( $this->base_slug ) ) {
-            $template_for_url["zume-goals"] = 'template-metrics.php';
+        if ( empty( $this->base_slug ) ) {
+            $template_for_url['zume-goals'] = 'template-metrics.php';
         } else {
             $template_for_url["zume-goals/$this->base_slug"] = 'template-metrics.php';
         }
@@ -53,7 +52,7 @@ abstract class Zume_Goals_Chart_Base
         wp_register_script( 'amcharts-animated', 'https://www.amcharts.com/lib/4/themes/animated.js', [ 'amcharts-core' ], '4' );
 
         wp_enqueue_style( 'datatable_css', '//cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css', [], '1.13.4' );
-        wp_enqueue_script( 'datatable', '//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js', ['jquery'], '1.13.4');
+        wp_enqueue_script( 'datatable', '//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js', [ 'jquery' ], '1.13.4' );
 
         wp_localize_script(
             'dt_'.$this->base_slug.'_script', 'wpMetricsBase', [
@@ -62,7 +61,7 @@ abstract class Zume_Goals_Chart_Base
                 'plugin_uri' => plugin_dir_url( __DIR__ ),
                 'nonce' => wp_create_nonce( 'wp_rest' ),
                 'current_user_login' => wp_get_current_user()->user_login,
-                'current_user_id' => get_current_user_id()
+                'current_user_id' => get_current_user_id(),
             ]
         );
     }
@@ -81,7 +80,7 @@ abstract class Zume_Goals_Chart_Base
     public function js_api() {
         ?>
         <style>
-            <?php echo file_get_contents( trailingslashit( plugin_dir_path(__DIR__) ) . 'shared/chart-templates.css' ); ?>
+            <?php echo file_get_contents( trailingslashit( plugin_dir_path( __DIR__ ) ) . 'shared/chart-templates.css' ); ?>
         </style>
         <script>
             window.site_info = {
@@ -100,10 +99,8 @@ abstract class Zume_Goals_Chart_Base
                 'current_user_id': '<?php echo get_current_user_id(); ?>'
             };
 
-            <?php echo  file_get_contents( trailingslashit( plugin_dir_path(__DIR__) ) . 'shared/chart-templates.js' ); ?>
+            <?php echo file_get_contents( trailingslashit( plugin_dir_path( __DIR__ ) ) . 'shared/chart-templates.js' ); ?>
         </script>
         <?php
     }
-
-
 }

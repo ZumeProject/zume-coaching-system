@@ -21,11 +21,11 @@ class Zume_Tile_Funnel {
             return;
         }
         $funnel_stages = zume_funnel_stages();
-        $funnel_number = zume_get_user_stage( $this_post['trainee_user_id'], NULL, true );
+        $funnel_number = zume_get_user_stage( $this_post['trainee_user_id'], null, true );
         ?>
         <div class="cell small-12 medium-4">
             <?php
-            foreach( $funnel_stages as $stage ) {
+            foreach ( $funnel_stages as $stage ) {
                 if ( 'anonymous' === $stage['key'] ) {
                     continue;
                 }
@@ -48,13 +48,13 @@ class Zume_Tile_Funnel {
                             <hr>
                             <h3>Characteristics</h3>
                             <?php
-                                if ( ! empty( $stage['characteristics'] ) ) {
-                                    echo '<ul>';
-                                    foreach( $stage['characteristics'] as $item ) {
-                                        echo '<li>'.$item.'</li>';
-                                    }
-                                    echo '</ul>';
+                            if ( ! empty( $stage['characteristics'] ) ) {
+                                echo '<ul>';
+                                foreach ( $stage['characteristics'] as $item ) {
+                                    echo '<li>'.$item.'</li>';
                                 }
+                                echo '</ul>';
+                            }
                             ?>
                         </div>
 
@@ -62,13 +62,13 @@ class Zume_Tile_Funnel {
                             <hr>
                             <h3>Next Steps</h3>
                             <?php
-                                if ( ! empty( $stage['next_steps'] ) ) {
-                                    echo '<ul>';
-                                    foreach( $stage['next_steps'] as $item ) {
-                                        echo '<li>'.$item.'</li>';
-                                    }
-                                    echo '</ul>';
+                            if ( ! empty( $stage['next_steps'] ) ) {
+                                echo '<ul>';
+                                foreach ( $stage['next_steps'] as $item ) {
+                                    echo '<li>'.$item.'</li>';
                                 }
+                                echo '</ul>';
+                            }
                             ?>
                         </div>
                     </div>

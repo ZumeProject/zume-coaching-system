@@ -22,7 +22,6 @@ class Zume_Coaching_Tile
         if ( dt_is_rest() ) {
             add_action( 'rest_api_init', [ $this, 'add_api_routes' ] );
         }
-
     }
     public function scripts() {
         global $post_type;
@@ -31,7 +30,7 @@ class Zume_Coaching_Tile
                 'jquery',
             ], '3.7.0', true );
             $css_file_name = 'genmap/jquery.orgchart.custom.css';
-            wp_enqueue_style( 'orgchart_css', plugin_dir_url(__FILE__) . $css_file_name, [], filemtime( plugin_dir_path(__FILE__)  . $css_file_name ) );
+            wp_enqueue_style( 'orgchart_css', plugin_dir_url( __FILE__ ) . $css_file_name, [], filemtime( plugin_dir_path( __FILE__ )  . $css_file_name ) );
         }
     }
     public function dt_details_additional_tiles( $tiles, $post_type = '' ) {
@@ -128,16 +127,16 @@ class Zume_Coaching_Tile
             $namespace, '/activity', [
                 'methods'  => [ 'GET', 'POST' ],
                 'callback' => [ $this, 'api_action_switch' ],
-                'permission_callback' => '__return_true'
+                'permission_callback' => '__return_true',
             ]
         );
     }
     public function api_action_switch( WP_REST_Request $request ) {
-        $params =  dt_recursive_sanitize_array( $request->get_params() );
+        $params = dt_recursive_sanitize_array( $request->get_params() );
         if ( ! isset( $params['action'] ) ) {
             return new WP_Error( 'no_stage', __( 'No stage key provided.', 'zume' ), array( 'status' => 400 ) );
         }
-        switch( $params['action'] ) {
+        switch ( $params['action'] ) {
             default:
                 return self::api_general( $params );
         }
@@ -151,10 +150,10 @@ class Zume_Coaching_Tile
         if ( ! empty( $log_by_date ) ) {
             echo '<div class="grid-x grid-padding-x">';
             $days_skipped = 0;
-            foreach( $log_by_date as $year => $days ) {
+            foreach ( $log_by_date as $year => $days ) {
                 echo '<div class="cell"><h2>' . $year  . '</h2></div>';
 
-                foreach( $days as $day => $day_activity ) {
+                foreach ( $days as $day => $day_activity ) {
                     if ( empty( $day_activity ) ) {
                         $days_skipped++;
                     } else {
@@ -163,7 +162,7 @@ class Zume_Coaching_Tile
                             $days_skipped = 0;
                         }
                         echo '<div class="cell small-3" style="text-align:right;">' . $day  . '</div><div class="cell small-9" style="border-left:1px solid lightgrey;">';
-                        foreach( $day_activity as $row) {
+                        foreach ( $day_activity as $row ) {
                             echo date( 'h:i a', $row['time_end'] ) ?> - <strong><?php echo ucwords( str_replace( '_', ' ', $row['log_key'] ) ) ?></strong><br><?php
                         }
                         echo '</div>';
@@ -181,9 +180,9 @@ class Zume_Coaching_Tile
         $range = self::create_date_range_array( date( 'Y-m-d', $log[0]['time_end'] ), date( 'Y-m-d', time() ) );
 
         $new_activity = [];
-        foreach ($range as $value) {
-            $year = substr($value, 0, 4);
-            $day = substr($value, 5, 2) . '-' . substr($value, 8, 2);
+        foreach ( $range as $value ) {
+            $year = substr( $value, 0, 4 );
+            $day = substr( $value, 5, 2 ) . '-' . substr( $value, 8, 2 );
 
             if ( ! isset( $new_activity[$year] ) ) {
                 $new_activity[$year] = [];
@@ -195,7 +194,7 @@ class Zume_Coaching_Tile
             $year = date( 'Y', $item['time_end'] );
             $day = date( 'm-d', $item['time_end'] );
 
-            if( ! isset( $new_activity[$year][$day] ) ) {
+            if ( ! isset( $new_activity[$year][$day] ) ) {
                 continue;
             }
 
@@ -204,23 +203,21 @@ class Zume_Coaching_Tile
         }
         return $new_activity;
     }
-    public static function create_date_range_array($start_date,$end_date)
+    public static function create_date_range_array( $start_date, $end_date )
     {
         $aryRange = [];
 
-        $iDateFrom = mktime(1, 0, 0, substr($start_date, 5, 2), substr($start_date, 8, 2), substr($start_date, 0, 4));
-        $iDateTo = mktime(1, 0, 0, substr($end_date, 5, 2), substr($end_date, 8, 2), substr($end_date, 0, 4));
+        $iDateFrom = mktime( 1, 0, 0, substr( $start_date, 5, 2 ), substr( $start_date, 8, 2 ), substr( $start_date, 0, 4 ) );
+        $iDateTo = mktime( 1, 0, 0, substr( $end_date, 5, 2 ), substr( $end_date, 8, 2 ), substr( $end_date, 0, 4 ) );
 
-        if ($iDateTo >= $iDateFrom) {
-            array_push($aryRange, date('Y-m-d', $iDateFrom)); // first entry
-            while ($iDateFrom<$iDateTo) {
+        if ( $iDateTo >= $iDateFrom ) {
+            array_push( $aryRange, date( 'Y-m-d', $iDateFrom ) ); // first entry
+            while ( $iDateFrom <$iDateTo ) {
                 $iDateFrom += 86400; // add 24 hours
-                array_push($aryRange, date('Y-m-d', $iDateFrom));
+                array_push( $aryRange, date( 'Y-m-d', $iDateFrom ) );
             }
         }
         return $aryRange;
     }
-
-
 }
 Zume_Coaching_Tile::instance();

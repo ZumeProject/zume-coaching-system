@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-class Zume_Tile_System  {
+class Zume_Tile_System {
     private static $_instance = null;
     public static function instance(){
         if ( is_null( self::$_instance ) ) {
@@ -26,6 +26,7 @@ class Zume_Tile_System  {
         }
 
         $profile = zume_get_user_profile( $trainee_user_id );
+        $plans = zume_get_user_plans( $trainee_user_id );
         $log = zume_get_user_log( $trainee_user_id );
         $active_commitments = zume_get_user_commitments( $trainee_user_id );
         $completed_commitments = zume_get_user_commitments( $trainee_user_id, 'closed' );
@@ -35,7 +36,7 @@ class Zume_Tile_System  {
         $profile['churches'] = 0;
         $profile['activities'] = 0;
         $reports = [];
-        foreach( $log as $item ) {
+        foreach ( $log as $item ) {
             if ( $item['type'] == 'reports' && $item['subtype'] == 'new_church' ) {
                 $profile['churches']++;
             }
@@ -45,17 +46,18 @@ class Zume_Tile_System  {
             }
             $profile['activities']++;
         }
-        if ( count($active_commitments) > 0 ) {
-            $profile['commitments'] = count($active_commitments);
+        if ( count( $active_commitments ) > 0 ) {
+            $profile['commitments'] = count( $active_commitments );
         }
 
         ?>
         <div class="cell small-12 medium-4">
-            <button class="button expanded" data-open="modal_activity">User Activities <?php echo !empty( $profile['activities'] ) ? '('. $profile['activities'] . ')': ''; ?></button>
-            <button class="button expanded" id="open_commitments">Commitments <?php echo !empty( $profile['commitments'] ) ? '('. $profile['commitments'] . ')': ''; ?></button>
-            <button class="button expanded" data-open="modal_reports">Reports <?php echo !empty( $profile['reports'] ) ? '('. $profile['reports'] . ')': ''; ?></button>
-            <button class="button expanded" data-open="modal_genmap">Church GenMap <?php echo !empty( $profile['churches'] ) ? '('. $profile['churches'] . ')': ''; ?></button>
-            <button class="button expanded" data-open="modal_localized_vision">Localized Vision</button>
+            <button class="button expanded" data-open="modal_activity">User Activities <?php echo !empty( $profile['activities'] ) ? '('. $profile['activities'] . ')' : ''; ?></button>
+            <button class="button expanded" data-open="modal_plans">Plans <?php echo !empty( $plans ) ? '('. count($plans) . ')' : ''; ?></button>
+            <button class="button expanded" id="open_commitments">Commitments <?php echo !empty( $profile['commitments'] ) ? '('. $profile['commitments'] . ')' : ''; ?></button>
+            <button class="button expanded" data-open="modal_reports" disabled>Reports <?php echo !empty( $profile['reports'] ) ? '('. $profile['reports'] . ')' : ''; ?></button>
+            <button class="button expanded" data-open="modal_genmap" disabled>Church GenMap <?php echo !empty( $profile['churches'] ) ? '('. $profile['churches'] . ')' : ''; ?></button>
+            <button class="button expanded" data-open="modal_localized_vision" disabled>Localized Vision</button>
         </div>
         <?php
 
@@ -65,7 +67,7 @@ class Zume_Tile_System  {
         self::_modal_commitments( $profile, $active_commitments, $completed_commitments );
         self::_modal_genmap( $profile, $trainee_user_id );
         self::_modal_activity( $profile, $log );
-
+        self::_modal_plans( $profile, $log, $plans );
     }
     private function _modal_localized_vision( $profile ) {
         ?>
@@ -207,19 +209,87 @@ class Zume_Tile_System  {
         <?php
     }
     private function _modal_genmap( $profile, $user_id ) {
-        Zume_User_Genmap::instance()->modal( $profile, $user_id);
+        Zume_User_Genmap::instance()->modal( $profile, $user_id );
     }
     private function _modal_activity( $profile, $log ) {
         ?>
         <div class="reveal" id="modal_activity" data-v-offset="0" data-reveal>
             <h1>Activity History for <?php echo $profile['name'] ?></h1>
             <hr>
-            <?php Zume_Coaching_Tile::print_activity_list( $log) ?>
+            <?php Zume_Coaching_Tile::print_activity_list( $log ) ?>
             <button class="close-button" data-close aria-label="Close modal" type="button">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <?php
     }
+    private function _modal_plans( $profile, $log, $plans ) {
+        ?>
+        <style>
+            span.green {
+                background-color: green;
+                width: 20px;
+                height: 20px;
+                padding: 0 .6em;
+                color: white;
+            }
+            span.green::after {
+                content: "\2713";
+            }
+            span.red {
+                background-color: red;
+                width: 20px;
+                height: 20px;
+                padding: 0 .7em;
+            }
+            span.red::after {
+                content: "\2717";
+            }
+        </style>
+        <div class="reveal" id="modal_plans" data-v-offset="0" data-reveal>
+            <h1>Plans for <?php echo $profile['name'] ?></h1>
+            <hr>
+            <?php
+                if ( ! empty( $plans ) ) {
+                    echo '<div class="grid-x grid-padding-x">';
+                    foreach ( $plans as $plan ) {
+                        echo '<div class="cell"><h2>Plan Title: <a href="https://zume.training/dashboard/my-training/'.$plan['join_key'].'" target="_blank">' . $plan['title']  . '</a></h2></div>';
+                        echo '<div class="cell">Members:</div><div class="cell"><ul>';
+                        foreach ( $plan['participants'] as $participant ) {
+                            $coaching_contact_id = zume_get_user_coaching_contact_id( $participant['user_id'] );
+                            if ( $coaching_contact_id ) {
+                                echo '<li><a href="https://zume.training/coaching/contacts/'.$coaching_contact_id.'">' . $participant['name']  . '</a></li>';
+                            } else {
+                                echo '<li>' . $participant['name']  . ' (no coaching contact)</li>';
+                            }
+                        }
+                        echo '</ul></div>';
 
+                        echo '<div class="cell">Completion:</div><div class="cell"><ul>';
+                        foreach ( $plan as $index => $item ) {
+                            if ( str_contains( $index, 'set_' ) ) {
+//                                $index_array = explode('_', $index );
+//                                if ( isset( $index_array[2] ) && ! isset( $index_array[3] ) ) {
+//                                    echo '<li>Session '. $index_array[2] . ': ' . $item['date'] . ' ';
+//                                    echo $item['completed'] ? '<span class="green"></span>' : '<span class="red"></span>';
+//                                    echo '</li>';
+//                                }
+                            }
+                        }
+                        echo '</ul></div>';
+
+                        echo '<div class="cell"><hr></div>';
+                    }
+                    echo '</div>';
+                }
+                else {
+                    'No plans';
+                }
+            ?>
+            <button class="close-button" data-close aria-label="Close modal" type="button">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <?php
+    }
 }

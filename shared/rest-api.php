@@ -3,8 +3,8 @@ if ( !defined( 'ABSPATH' ) ) { exit; } // Exit if accessed directly.
 
 class Zume_Charts_API
 {
-    public $leadership_permissions = ['manage_dt'];
-    public $coach_permissions = ['access_contacts'];
+    public $leadership_permissions = [ 'manage_dt' ];
+    public $coach_permissions = [ 'access_contacts' ];
     public $namespace = 'zume_funnel/v1';
     private static $_instance = null;
     public static function instance() {
@@ -14,7 +14,7 @@ class Zume_Charts_API
         return self::$_instance;
     }
     public function __construct() {
-        if ( dt_is_rest() ) {
+        if ( self::dt_is_rest() ) {
             add_action( 'rest_api_init', [ $this, 'add_api_routes' ] );
             add_filter( 'dt_allow_rest_access', [ $this, 'authorize_url' ], 10, 1 );
         }
@@ -28,7 +28,7 @@ class Zume_Charts_API
                 'callback' => [ $this, 'total' ],
                 'permission_callback' => function () {
                     return $this->has_permission( $this->coach_permissions );
-                }
+                },
             ]
         );
         register_rest_route(
@@ -37,7 +37,7 @@ class Zume_Charts_API
                 'callback' => [ $this, 'location' ],
                 'permission_callback' => function () {
                     return $this->has_permission( $this->coach_permissions );
-                }
+                },
             ]
         );
         register_rest_route(
@@ -46,7 +46,7 @@ class Zume_Charts_API
                 'callback' => [ $this, 'map_switcher' ],
                 'permission_callback' => function () {
                     return $this->has_permission( $this->coach_permissions );
-                }
+                },
             ]
         );
         register_rest_route(
@@ -55,7 +55,7 @@ class Zume_Charts_API
                 'callback' => [ $this, 'map_list_switcher' ],
                 'permission_callback' => function () {
                     return $this->has_permission( $this->coach_permissions );
-                }
+                },
             ]
         );
         register_rest_route(
@@ -64,7 +64,7 @@ class Zume_Charts_API
                 'callback' => [ $this, 'list' ],
                 'permission_callback' => function () {
                     return $this->has_permission( $this->coach_permissions );
-                }
+                },
             ]
         );
         register_rest_route(
@@ -73,7 +73,7 @@ class Zume_Charts_API
                 'callback' => [ $this, 'training_elements' ],
                 'permission_callback' => function () {
                     return $this->has_permission( $this->coach_permissions );
-                }
+                },
             ]
         );
         register_rest_route(
@@ -83,7 +83,7 @@ class Zume_Charts_API
                     'callback' => [ $this, 'location_funnel' ],
                     'permission_callback' => function () {
                         return $this->has_permission( $this->coach_permissions );
-                    }
+                    },
                 ],
             ]
         );
@@ -94,7 +94,7 @@ class Zume_Charts_API
                     'callback' => [ $this, 'location_goals' ],
                     'permission_callback' => function () {
                         return $this->has_permission( $this->coach_permissions );
-                    }
+                    },
                 ],
             ]
         );
@@ -105,7 +105,7 @@ class Zume_Charts_API
                     'callback' => [ $this, 'list_mawl' ],
                     'permission_callback' => function () {
                         return $this->has_permission( $this->coach_permissions );
-                    }
+                    },
                 ],
             ]
         );
@@ -116,7 +116,7 @@ class Zume_Charts_API
                     'callback' => [ $this, 'create_mawl' ],
                     'permission_callback' => function () {
                         return $this->has_permission( $this->coach_permissions );
-                    }
+                    },
                 ],
             ]
         );
@@ -127,30 +127,10 @@ class Zume_Charts_API
                     'callback' => [ $this, 'delete_mawl' ],
                     'permission_callback' => function () {
                         return $this->has_permission( $this->coach_permissions );
-                    }
+                    },
                 ],
             ]
         );
-//        register_rest_route(
-//            $namespace, '/simulate', [
-//                'methods'  => [ 'GET', 'POST' ],
-//                'callback' => [ $this, 'training_elements' ],
-//                'permission_callback' => function () {
-//                    return $this->has_permission( $this->coach_permissions );
-//                }
-//            ]
-//        );
-
-        // dev
-//        register_rest_route(
-//            $namespace, '/sample', [
-//                'methods'  => [ 'GET', 'POST' ],
-//                'callback' => [ $this, 'sample' ],
-//                'permission_callback' => function () {
-//                    return $this->has_permission( $this->coach_permissions );
-//                }
-//            ]
-//        );
     }
     public function has_permission( $permissions = [] ) {
         $pass = false;
@@ -167,7 +147,7 @@ class Zume_Charts_API
      * @return array|WP_Error
      */
     public function total( WP_REST_Request $request ) {
-        $params =  dt_recursive_sanitize_array( $request->get_params() );
+        $params = dt_recursive_sanitize_array( $request->get_params() );
         if ( ! isset( $params['stage'] ) ) {
             return new WP_Error( 'no_stage', __( 'No stage key provided.', 'zume' ), array( 'status' => 400 ) );
         }
@@ -180,7 +160,7 @@ class Zume_Charts_API
             $params['range'] = false;
         }
 
-        switch( $params['stage'] ) {
+        switch ( $params['stage'] ) {
             case 'anonymous':
                 return $this->total_anonymous( $params );
             case 'registrant':
@@ -218,9 +198,9 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
+        $valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
 
             case 'total_registrations':
                 $label = 'Total Registrations';
@@ -290,9 +270,9 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
     public function total_registrants( $params ) {
+        global $wpdb;
         $negative_stat = $params['negative_stat'] ?? false;
 
         $label = '';
@@ -301,11 +281,11 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
-        $goal_valence = NULL;
-        $trend_valence = NULL;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
             case 'locations':
                 $label = 'Locations';
                 $description = 'Cumulative number of locations in this stage.';
@@ -350,10 +330,16 @@ class Zume_Charts_API
                 // lookup the query
                 $label = 'Has No Plan';
                 $description = 'Total number of registrants who have no plan.';
-                $value = 2;
+
+                $value = $wpdb->get_var('
+
+                ');
+
+
+
                 $goal = 4;
                 $trend = 4;
-                $valence = NULL;
+                $valence = null;
                 break;
             case 'no_friends':
                 $label = 'Has No Friends';
@@ -381,7 +367,13 @@ class Zume_Charts_API
                 $label = 'Registrants';
                 $description = 'People who have registered but have not progressed into training.';
                 $link = 'registrants';
-                $value = Zume_Views::stage_totals( 1 );
+
+                if ( $params['range'] < 0 ) {
+                    $value = Zume_Views::stage_totals( 1 );
+                } else {
+                    $value = Zume_Views::stage_totals( 1, $params['range'] );
+                }
+
                 $goal = 0;
                 $trend = 0;
                 break;
@@ -420,7 +412,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
     public function total_active_training_trainee( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -431,11 +422,11 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
-        $goal_valence = NULL;
-        $trend_valence = NULL;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
             case 'has_coach':
                 $label = 'Has Coach';
                 $description = 'Active trainees who have a coach.';
@@ -479,7 +470,7 @@ class Zume_Charts_API
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
-                $valence = NULL;
+                $valence = null;
                 break;
             case 'in_and_out':
                 return [
@@ -495,7 +486,13 @@ class Zume_Charts_API
             case 'total_active_training_trainee':
                 $label = 'Active Training Trainees';
                 $description = 'People who are actively working a training plan or have only partially completed the training.';
-                $value = Zume_Views::stage_totals( 2 );
+
+                if ( $params['range'] < 0 ) {
+                    $value = Zume_Views::stage_totals( 2 );
+                } else {
+                    $value = Zume_Views::stage_totals( 2, $params['range'] );
+                }
+
                 $goal = 0;
                 $trend = 0;
                 break;
@@ -506,7 +503,7 @@ class Zume_Charts_API
                 break;
         }
 
-       return [
+        return [
             'key' => $params['key'],
             'stage' => $params['stage'],
             'label' => $label,
@@ -522,7 +519,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
     public function total_post_training_trainee( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -533,11 +529,11 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
-        $goal_valence = NULL;
-        $trend_valence = NULL;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
 
             case 'needs_3_month_plan':
                 $label = 'Needs 3 Month Plan';
@@ -580,7 +576,13 @@ class Zume_Charts_API
                 $label = 'Post-Training Trainees';
                 $description = 'People who have completed the training and are working on a post training plan.';
                 $link = 'post';
-                $value = Zume_Views::stage_totals( 3 );
+
+                if ( $params['range'] < 0 ) {
+                    $value = Zume_Views::stage_totals( 3 );
+                } else {
+                    $value = Zume_Views::stage_totals( 3, $params['range'] );
+                }
+
                 $goal = 0;
                 $trend = 0;
                 break;
@@ -618,7 +620,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
     public function total_partial_practitioner( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -629,13 +630,13 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
-        $goal_valence = NULL;
-        $trend_valence = NULL;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
 
-            case 'total_churches';
+            case 'total_churches':
                 $label = 'Churches';
                 $description = 'Total number of churches reported by S1 Practitioners.';
                 $value = 0;
@@ -643,7 +644,7 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'total_locations';
+            case 'total_locations':
                 $label = 'Locations';
                 $description = 'Total number of locations reported by S1 Practitioners.';
                 $value = 0;
@@ -651,7 +652,7 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'total_active_reporters';
+            case 'total_active_reporters':
                 $label = 'Reporting';
                 $description = 'Total number of active reporters.';
                 $value = 0;
@@ -659,7 +660,7 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'new_practitioners';
+            case 'new_practitioners':
                 $label = 'New Practitioners';
                 $description = 'Total number of new practitioners.';
                 $value = 0;
@@ -680,21 +681,21 @@ class Zume_Charts_API
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_locations';
+            case 'new_locations':
                 $label = 'New Locations';
                 $description = 'Total number of new locations reported by S1 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'has_no_coach';
+            case 'has_no_coach':
                 $label = 'Has No Coach';
                 $description = 'Total number of S1 Practitioners who have not yet been assigned a coach.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'has_not_reported';
+            case 'has_not_reported':
                 $label = 'Has Not Reported';
                 $description = 'Total number of S1 Practitioners who have not yet reported.';
                 $value = 0;
@@ -705,7 +706,13 @@ class Zume_Charts_API
                 $label = '(S1) Partial Practitioners';
                 $description = 'Learning through doing. Implementing partial checklist / 4-fields';
                 $link = 'partial_practitioner_practitioners';
-                $value = Zume_Views::stage_totals( 4 );
+
+                if ( $params['range'] < 0 ) {
+                    $value = Zume_Views::stage_totals( 4 );
+                } else {
+                    $value = Zume_Views::stage_totals( 4, $params['range'] );
+                }
+
                 $goal = 0;
                 $trend = 0;
                 break;
@@ -743,7 +750,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
     public function total_full_practitioner( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -754,27 +760,27 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
-        $goal_valence = NULL;
-        $trend_valence = NULL;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
 
-            case 'total_churches';
+            case 'total_churches':
                 $label = 'Churches';
                 $description = 'Total number of churches reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'total_locations';
+            case 'total_locations':
                 $label = 'Locations';
                 $description = 'Total number of locations reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'total_active_reporters';
+            case 'total_active_reporters':
                 $label = 'Active Reporters';
                 $description = 'Total number of active reporters.';
                 $link = 'partial_practitioner_practitioners';
@@ -782,42 +788,42 @@ class Zume_Charts_API
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_practitioners';
+            case 'new_practitioners':
                 $label = 'New Practitioners';
                 $description = 'Total number of new practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_reporters';
+            case 'new_reporters':
                 $label = 'New Reporters';
                 $description = 'Total number of new reporters.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_churches';
+            case 'new_churches':
                 $label = 'New Churches';
                 $description = 'Total number of new churches reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_locations';
+            case 'new_locations':
                 $label = 'New Locations';
                 $description = 'Total number of new locations reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'has_no_coach';
+            case 'has_no_coach':
                 $label = 'Has No Coach';
                 $description = 'Total number of S2 Practitioners who have not yet been assigned a coach.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'has_not_reported';
+            case 'has_not_reported':
                 $label = 'Has Not Reported';
                 $description = 'Total number of S2 Practitioners who have not yet reported.';
                 $value = 0;
@@ -828,9 +834,15 @@ class Zume_Charts_API
                 $label = 'Full Practitioners';
                 $description = 'People who are seeking multiplicative movement and are completely skilled with the coaching checklist.';
                 $link = 'full_practitioner_practitioners';
-                $value = Zume_Views::stage_totals( 5 );
+
+                if ( $params['range'] < 0 ) {
+                    $value = Zume_Views::stage_totals( 5 );
+                } else {
+                    $value = Zume_Views::stage_totals( 5, $params['range'] );
+                }
+
                 $goal = 5;
-                $trend = rand(1, 10);
+                $trend = rand( 1, 10 );
                 break;
             case 'in_and_out':
                 return [
@@ -866,7 +878,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
     public function total_multiplying_practitioner( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -877,26 +888,26 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
-        $goal_valence = NULL;
-        $trend_valence = NULL;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
 
-        switch( $params['key'] ) {
-            case 'total_churches';
+        switch ( $params['key'] ) {
+            case 'total_churches':
                 $label = 'Churches';
                 $description = 'Total number of churches reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'total_locations';
+            case 'total_locations':
                 $label = 'Locations';
                 $description = 'Total number of locations reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'total_active_reporters';
+            case 'total_active_reporters':
                 $label = 'Active Reporters';
                 $description = 'Total number of active reporters.';
                 $link = 'partial_practitioner_practitioners';
@@ -904,42 +915,42 @@ class Zume_Charts_API
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_practitioners';
+            case 'new_practitioners':
                 $label = 'New Practitioners';
                 $description = 'Total number of new practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_reporters';
+            case 'new_reporters':
                 $label = 'New Reporters';
                 $description = 'Total number of new reporters.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_churches';
+            case 'new_churches':
                 $label = 'New Churches';
                 $description = 'Total number of new churches reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_locations';
+            case 'new_locations':
                 $label = 'New Locations';
                 $description = 'Total number of new locations reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'has_no_coach';
+            case 'has_no_coach':
                 $label = 'Has No Coach';
                 $description = 'Total number of S2 Practitioners who have not yet been assigned a coach.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'has_not_reported';
+            case 'has_not_reported':
                 $label = 'Has Not Reported';
                 $description = 'Total number of S2 Practitioners who have not yet reported.';
                 $value = 0;
@@ -950,7 +961,13 @@ class Zume_Charts_API
                 $label = 'Multiplying Practitioners';
                 $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
                 $link = 'multiplying_practitioner_practitioners';
-                $value = Zume_Views::stage_totals( 6 );
+
+                if ( $params['range'] < 0 ) {
+                    $value = Zume_Views::stage_totals( 6 );
+                } else {
+                    $value = Zume_Views::stage_totals( 6, $params['range'] );
+                }
+
                 $goal = 0;
                 $trend = 0;
                 break;
@@ -988,7 +1005,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
     public function total_facilitator( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -999,13 +1015,13 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
-        $goal_valence = NULL;
-        $trend_valence = NULL;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
 
-            case 'new_coaching_requests';
+            case 'new_coaching_requests':
                 $label = 'New Coaching Requests';
                 $description = 'Total number of new coaching requests submitted to Facilitator Coaches.';
                 $value = 0;
@@ -1013,7 +1029,7 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'languages';
+            case 'languages':
                 $label = 'Languages';
                 $description = 'Number of languages from requests';
                 $value = 0;
@@ -1021,7 +1037,7 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'locations';
+            case 'locations':
                 $label = 'Locations';
                 $description = 'Locations from requests.';
                 $value = 0;
@@ -1052,7 +1068,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
     public function total_early( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -1063,13 +1078,13 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
-        $goal_valence = NULL;
-        $trend_valence = NULL;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
 
 
-        switch( $params['key'] ) {
-            case 'new_coaching_requests';
+        switch ( $params['key'] ) {
+            case 'new_coaching_requests':
                 $label = 'Languages';
                 $description = '';
                 $value = 0;
@@ -1077,14 +1092,14 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'languages';
+            case 'languages':
                 $label = 'New Coaching Requests';
                 $description = 'Number of languages from requests';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'locations';
+            case 'locations':
                 $label = 'Locations';
                 $description = 'Locations from requests.';
                 $value = 0;
@@ -1092,7 +1107,7 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'total_multiplying_practitioner';
+            case 'total_multiplying_practitioner':
             default:
                 $label = '(S3) Multiplying Practitioners';
                 $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
@@ -1119,8 +1134,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
-
     }
     public function total_advanced( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -1131,26 +1144,26 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
-        $goal_valence = NULL;
-        $trend_valence = NULL;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
 
-        switch( $params['key'] ) {
-            case 'total_churches';
+        switch ( $params['key'] ) {
+            case 'total_churches':
                 $label = 'Total Churches';
                 $description = 'Total number of churches reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'total_locations';
+            case 'total_locations':
                 $label = 'Total Locations';
                 $description = 'Total number of locations reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'total_active_reporters';
+            case 'total_active_reporters':
                 $label = 'Total Active Reporters';
                 $description = 'Total number of active reporters.';
                 $link = 'partial_practitioner_practitioners';
@@ -1158,42 +1171,42 @@ class Zume_Charts_API
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_practitioners';
+            case 'new_practitioners':
                 $label = 'New Practitioners';
                 $description = 'Total number of new practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_reporters';
+            case 'new_reporters':
                 $label = 'New Reporters';
                 $description = 'Total number of new reporters.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_churches';
+            case 'new_churches':
                 $label = 'New Churches';
                 $description = 'Total number of new churches reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'new_locations';
+            case 'new_locations':
                 $label = 'New Locations';
                 $description = 'Total number of new locations reported by S2 Practitioners.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'has_no_coach';
+            case 'has_no_coach':
                 $label = 'Has No Coach';
                 $description = 'Total number of S2 Practitioners who have not yet been assigned a coach.';
                 $value = 0;
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'has_not_reported';
+            case 'has_not_reported':
                 $label = 'Has Not Reported';
                 $description = 'Total number of S2 Practitioners who have not yet reported.';
                 $value = 0;
@@ -1231,7 +1244,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
     public function general( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -1242,13 +1254,13 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
-        $goal_valence = NULL;
-        $trend_valence = NULL;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
 
-            case 'active_coaches';
+            case 'active_coaches':
                 $label = 'Active Coaches';
                 $description = 'Number of active coaches';
                 $value = 0;
@@ -1256,7 +1268,7 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'total_people_in_coaching';
+            case 'total_people_in_coaching':
                 $label = 'People in Coaching';
                 $description = 'Number of people in coaching';
                 $value = 0;
@@ -1264,7 +1276,7 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'people_in_coaching';
+            case 'people_in_coaching':
                 $label = 'People in Coaching';
                 $description = 'Number of people in coaching';
                 $value = 0;
@@ -1272,7 +1284,7 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'coaching_engagements';
+            case 'coaching_engagements':
                 $label = 'Coaching Engagements';
                 $description = 'Number of coaching engagements';
                 $value = 0;
@@ -1290,6 +1302,135 @@ class Zume_Charts_API
                     'value_idle' => zume_format_int( 0 ),
                     'value_out' => zume_format_int( 0 ),
                 ];
+            case 'all_time_stats':
+                global $wpdb;
+                $list = [];
+
+                $thirty_days_ago = strtotime( date( 'Y-m-d H:i:s', time() ) . ' -30 days' );
+                $sql_30_days_ago = date( 'Y-m-d H:i:s', $thirty_days_ago );
+                $year_to_date = strtotime( 'first day of january this year' );
+                $year_ago = strtotime( '365 days ago' );
+                $world_sql = Zume_Queries::world_grid_sql();
+
+//                dt_write_log( $thirty_days_ago );
+//                dt_write_log( $year_to_date );
+//                dt_write_log( $year_ago );
+
+                # individual visitors last 30 days
+                $number = $wpdb->get_var("
+                    SELECT COUNT( DISTINCT(user_id) )
+                    FROM zume_dt_reports
+                    WHERE timestamp > $thirty_days_ago;
+                ");
+                $list[] = 'Logged in users engaging training in the last 30 days: '.zume_format_int( $number );
+
+                # (probably) individual views of Pieces pages this month
+                $number = $wpdb->get_var("
+                    SELECT COUNT(*)
+                    FROM (
+                    SELECT subtype, lng, count(*)
+                        FROM zume_dt_reports_anonymous
+                        WHERE timestamp > $thirty_days_ago AND type = 'studying'
+                    GROUP BY subtype, lng
+                    ) as tb
+                ");
+                $list[] = 'Pieces pages being studied in the last 30 days: '.zume_format_int( $number );
+
+                # (individual) registrations this month
+
+                $number = $wpdb->get_var("
+                    SELECT COUNT( DISTINCT(user_id) )
+                    FROM zume_dt_reports
+                    WHERE timestamp > $thirty_days_ago AND subtype = 'registered';
+                ");
+                $list[] = 'Registrations in the last 30 days: '.zume_format_int( $number );
+
+                # (usually probably group) sessions completed this month
+                $number = $wpdb->get_var("
+                    SELECT COUNT( DISTINCT(user_id) )
+                    FROM zume_dt_reports
+                    WHERE timestamp > $thirty_days_ago AND ( subtype LIKE 'set_a_%' OR subtype LIKE 'set_b_%' OR subtype LIKE 'set_c_%' );
+                ");
+                $list[] = 'Individual session checkins in the last 30 days: '.zume_format_int( $number );
+
+                # (usually probably group) session 10 completions this month
+                $number = $wpdb->get_var("
+                    SELECT COUNT( DISTINCT(user_id) )
+                    FROM zume_dt_reports
+                    WHERE timestamp > $thirty_days_ago AND subtype = 'training_completed';
+                ");
+                $list[] = 'Individuals completing the training in the last 30 days: '.zume_format_int( $number );
+
+                # (indiviudals in) countries this month
+                $number = $wpdb->get_var("
+                   SELECT COUNT( DISTINCT( admin0_grid_id) )
+                    FROM (
+                    SELECT lg.admin0_grid_id
+                    FROM zume_dt_reports r
+                    LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=r.grid_id
+                    WHERE r.timestamp > $thirty_days_ago
+                    GROUP BY lg.admin0_grid_id
+                    UNION ALL
+                    SELECT lg.admin0_grid_id
+                    FROM zume_dt_reports_anonymous ra
+                    LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=ra.grid_id
+                    WHERE ra.timestamp > $thirty_days_ago
+                    GROUP BY lg.admin0_grid_id
+                    ) as tb
+                ");
+                $list[] = 'Countries and territories engaged in the last 30 days: '.zume_format_int( $number ). ' out of 248';
+
+                // unique training locations
+                $number = $wpdb->get_var("
+                   SELECT COUNT( DISTINCT( r.grid_id ) )
+                    FROM zume_dt_reports r
+                    JOIN ( $world_sql ) as list ON list.grid_id=r.grid_id
+                ");
+                $list[] = 'Targeted training locations engaged: '.zume_format_int( $number ).' out of 44,395';
+
+                //unique church locations
+                $number = $wpdb->get_var("
+                   SELECT COUNT( DISTINCT( r.grid_id ) )
+                    FROM zume_dt_location_grid_meta r
+                    JOIN ( $world_sql ) as list ON list.grid_id=r.grid_id
+                    WHERE r.post_type = 'groups'");
+                $list[] = 'Targeted church locations engaged: '.zume_format_int( $number ).' out of 44,395';
+
+                //active contacts (YTD)
+                $number = $wpdb->get_var("
+                   SELECT COUNT( DISTINCT( r.user_id) )
+                    FROM zume_dt_reports r
+                    WHERE timestamp > $year_to_date
+                ");
+                $list[] = 'Active trainees since Jan 1 this year: '.zume_format_int( $number );
+
+                $number = $wpdb->get_var("
+                   SELECT COUNT( DISTINCT( r.user_id) )
+                    FROM zume_dt_reports r
+                    WHERE timestamp > $year_ago
+                ");
+                $list[] = 'Active trainees since 1 year ago: '.zume_format_int( $number );
+
+                //coaching requests
+                $number = $wpdb->get_var("
+                    SELECT COUNT( DISTINCT(user_id) )
+                    FROM zume_dt_reports
+                    WHERE timestamp > $year_to_date AND subtype = 'requested_a_coach';
+                ");
+                $list[] = 'Coaching requests in since Jan 1 this year: '.zume_format_int( $number );
+
+                //coaching requests
+                $number = $wpdb->get_var("
+                    SELECT COUNT( DISTINCT(user_id) )
+                    FROM zume_dt_reports
+                    WHERE timestamp > $year_ago AND subtype = 'requested_a_coach';
+                ");
+                $list[] = 'Coaching requests since 1 year ago: '.zume_format_int( $number );
+
+                return [
+                    'key' => 'all_time_stats',
+                    'list' => $list,
+                ];
             default:
                 $value = 0;
                 $goal = 0;
@@ -1313,7 +1454,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
     public function total_practitioners( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
@@ -1324,16 +1464,17 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
+        $valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
 
             case 'churches_total':
                 $label = 'Total Registrations';
                 $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
                 $value = Zume_Queries::query_total_churches();
                 $goal = 0;
-                $trend = 0;;
+                $trend = 0;
+                ;
                 $valence = 'valence-grey';
                 break;
             case 'practitioners_total':
@@ -1368,7 +1509,6 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
 
     public function total_churches( $params ) {
@@ -1380,16 +1520,17 @@ class Zume_Charts_API
         $value = 0;
         $goal = 0;
         $trend = 0;
-        $valence = NULL;
+        $valence = null;
 
-        switch( $params['key'] ) {
+        switch ( $params['key'] ) {
 
             case 'churches_total':
                 $label = 'Total Registrations';
                 $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
                 $value = Zume_Queries::query_total_churches();
                 $goal = 0;
-                $trend = 0;;
+                $trend = 0;
+                ;
                 $valence = 'valence-grey';
                 break;
             case 'practitioners_total':
@@ -1424,19 +1565,18 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
-
     }
 
-    public function location_funnel( ) {
+    public function location_funnel() {
         $data = DT_Mapping_Module::instance()->data();
         $funnel = zume_funnel_stages();
 
-        $data = $this->add_column(  $data, $funnel['1']['key'], $funnel['1']['label'], ['1'] );
-        $data = $this->add_column(  $data, $funnel['2']['key'], $funnel['2']['label'], ['2'] );
-        $data = $this->add_column(  $data, $funnel['3']['key'], $funnel['3']['label'], ['3'] );
-        $data = $this->add_column(  $data, $funnel['4']['key'], $funnel['4']['label'], ['4'] );
-        $data = $this->add_column(  $data, $funnel['5']['key'], $funnel['5']['label'], ['5'] );
-        $data = $this->add_column(  $data, $funnel['6']['key'], $funnel['6']['label'], ['6'] );
+        $data = $this->add_column( $data, $funnel['1']['key'], $funnel['1']['label'], [ '1' ] );
+        $data = $this->add_column( $data, $funnel['2']['key'], $funnel['2']['label'], [ '2' ] );
+        $data = $this->add_column( $data, $funnel['3']['key'], $funnel['3']['label'], [ '3' ] );
+        $data = $this->add_column( $data, $funnel['4']['key'], $funnel['4']['label'], [ '4' ] );
+        $data = $this->add_column( $data, $funnel['5']['key'], $funnel['5']['label'], [ '5' ] );
+        $data = $this->add_column( $data, $funnel['6']['key'], $funnel['6']['label'], [ '6' ] );
 
         return $data;
     }
@@ -1447,30 +1587,30 @@ class Zume_Charts_API
 
 
     public function map_switcher( WP_REST_Request $request ) {
-        $params =  dt_recursive_sanitize_array( $request->get_params() );
+        $params = dt_recursive_sanitize_array( $request->get_params() );
         if ( ! isset( $params['stage'] ) ) {
             return new WP_Error( 'no_stage', __( 'No stage key provided.', 'zume' ), array( 'status' => 400 ) );
         }
 
-        switch( $params['stage'] ) {
+        switch ( $params['stage'] ) {
             case 'anonymous':
                 return $this->map_geojson( [ 0 ] );
             case 'registrant':
-                return $this->map_geojson( [1] );
+                return $this->map_geojson( [ 1 ] );
             case 'active_training_trainee':
-                return $this->map_geojson( [2] );
+                return $this->map_geojson( [ 2 ] );
             case 'post_training_trainee':
-                return $this->map_geojson( [3] );
+                return $this->map_geojson( [ 3 ] );
             case 'partial_practitioner':
-                return $this->map_geojson( [4] );
+                return $this->map_geojson( [ 4 ] );
             case 'full_practitioner':
-                return $this->map_geojson( [5] );
+                return $this->map_geojson( [ 5 ] );
             case 'multiplying_practitioner':
-                return $this->map_geojson( [6] );
+                return $this->map_geojson( [ 6 ] );
             case 'trainees':
-                return $this->map_geojson( [1,2,3] );
+                return $this->map_geojson( [ 1,2,3 ] );
             case 'practitioners':
-                return $this->map_geojson( [4,5,6] );
+                return $this->map_geojson( [ 4,5,6 ] );
             case 'churches':
                 return $this->map_churches_geojson( 6 );
 //            case 'facilitator':
@@ -1498,14 +1638,14 @@ class Zume_Charts_API
                 'properties' => [
                     'name' => $result['name'],
                     'post_id' => $result['post_id'],
-                    'post_type' => 'contacts'
+                    'post_type' => 'contacts',
                 ],
                 'geometry' => array(
                     'type' => 'Point',
                     'coordinates' => array(
                         (float) $lng,
                         (float) $lat,
-                        1
+                        1,
                     ),
                 ),
             );
@@ -1520,7 +1660,7 @@ class Zume_Charts_API
         return $new_data;
     }
 
-    public function map_churches_geojson( ) {
+    public function map_churches_geojson() {
         global $wpdb;
         $results = Zume_Queries::churches_with_location();
 
@@ -1535,14 +1675,14 @@ class Zume_Charts_API
                 'properties' => [
                     'name' => $result['name'],
                     'post_id' => $result['post_id'],
-                    'post_type' => 'groups'
+                    'post_type' => 'groups',
                 ],
                 'geometry' => array(
                     'type' => 'Point',
                     'coordinates' => array(
                         (float) $lng,
                         (float) $lat,
-                        1
+                        1,
                     ),
                 ),
             );
@@ -1557,7 +1697,7 @@ class Zume_Charts_API
     }
 
     public function map_list_switcher( WP_REST_Request $request ) {
-        $params =  dt_recursive_sanitize_array( $request->get_params() );
+        $params = dt_recursive_sanitize_array( $request->get_params() );
         if ( ! isset( $params['stage'], $params['north'], $params['south'], $params['east'], $params['west'] ) ) {
             return new WP_Error( 'no_stage', __( 'No stage key or complete boundaries provided.', 'zume' ), array( 'status' => 400 ) );
         }
@@ -1566,23 +1706,23 @@ class Zume_Charts_API
         $params['east'] = (float) $params['east'];
         $params['west'] = (float) $params['west'];
 
-        switch( $params['stage'] ) {
+        switch ( $params['stage'] ) {
             case 'anonymous':
-                return Zume_Queries::stage_by_boundary( [0], $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [ 0 ], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'registrant':
-                return Zume_Queries::stage_by_boundary( [1], $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [ 1 ], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'active_training_trainee':
-                return Zume_Queries::stage_by_boundary( [2], $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [ 2 ], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'post_training_trainee':
-                return Zume_Queries::stage_by_boundary( [3], $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [ 3 ], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'partial_practitioner':
-                return Zume_Queries::stage_by_boundary( [4], $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [ 4 ], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'full_practitioner':
-                return Zume_Queries::stage_by_boundary( [5], $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [ 5 ], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'multiplying_practitioner':
-                return Zume_Queries::stage_by_boundary( [6], $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [ 6 ], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'practitioners':
-                return Zume_Queries::stage_by_boundary( [4,5,6], $params['north'], $params['south'], $params['east'], $params['west'] );
+                return Zume_Queries::stage_by_boundary( [ 4,5,6 ], $params['north'], $params['south'], $params['east'], $params['west'] );
             case 'churches':
                 return Zume_Queries::churches_by_boundary( $params['north'], $params['south'], $params['east'], $params['west'] );
 //            case 'facilitator':
@@ -1598,7 +1738,7 @@ class Zume_Charts_API
 
     public function query_location_funnel( array $range ) {
         global $wpdb;
-        if( count( $range ) > 1 ) {
+        if ( count( $range ) > 1 ) {
             $range = '(' . implode( ',', $range ) . ')';
         } else {
             $range = '(' . $range[0] . ')';
@@ -1614,7 +1754,7 @@ class Zume_Charts_API
                    SELECT r.user_id, MAX(r.value) as stage, (
 						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
 					) as grid_id FROM zume_dt_reports r
-                   WHERE r.type = 'stage' AND r.subtype = 'current_level'
+                   WHERE r.type = 'system' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
@@ -1630,7 +1770,7 @@ class Zume_Charts_API
                    SELECT r.user_id, MAX(r.value) as stage, (
 						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
 					) as grid_id FROM zume_dt_reports r
-                   WHERE r.type = 'stage' AND r.subtype = 'current_level'
+                   WHERE r.type = 'system' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
@@ -1646,7 +1786,7 @@ class Zume_Charts_API
                    SELECT r.user_id, MAX(r.value) as stage, (
 						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
 					) as grid_id FROM zume_dt_reports r
-                   WHERE r.type = 'stage' AND r.subtype = 'current_level'
+                   WHERE r.type = 'system' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
@@ -1662,7 +1802,7 @@ class Zume_Charts_API
                    SELECT r.user_id, MAX(r.value) as stage, (
 						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
 					) as grid_id FROM zume_dt_reports r
-                   WHERE r.type = 'stage' AND r.subtype = 'current_level'
+                   WHERE r.type = 'system' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
@@ -1684,44 +1824,44 @@ class Zume_Charts_API
 
         return $list;
     }
-    public function add_column(  $data, $key, $label, $stage )
+    public function add_column( $data, $key, $label, $stage )
     {
         $column_labels = $data['custom_column_labels'] ?? [];
         $column_data = $data['custom_column_data'] ?? [];
-        if (empty($column_labels)) {
+        if ( empty( $column_labels ) ) {
             $next_column_number = 0;
-        } else if (count($column_labels) === 1) {
+        } else if ( count( $column_labels ) === 1 ) {
             $next_column_number = 1;
         } else {
-            $next_column_number = count($column_labels);
+            $next_column_number = count( $column_labels );
         }
         $column_labels[$next_column_number] = [
             'key' => $key,
-            'label' => $label
+            'label' => $label,
         ];
-        if (!empty($column_data)) {
-            foreach ($column_data as $key => $value) {
+        if ( !empty( $column_data ) ) {
+            foreach ( $column_data as $key => $value ) {
                 $column_data[$key][$next_column_number] = 0;
             }
         }
-        $results = $this->query_location_funnel( $stage);
-        if (!empty($results)) {
-            foreach ($results as $result) {
-                if ($result['count'] > 0) { // filter for only contact and positive counts
+        $results = $this->query_location_funnel( $stage );
+        if ( !empty( $results ) ) {
+            foreach ( $results as $result ) {
+                if ( $result['count'] > 0 ) { // filter for only contact and positive counts
                     $grid_id = $result['grid_id'];
 
                     // test if grid_id exists, else prepare it with 0 values
-                    if (!isset($column_data[$grid_id])) {
+                    if ( !isset( $column_data[$grid_id] ) ) {
                         $column_data[$grid_id] = [];
                         $i = 0;
-                        while ($i <= $next_column_number) {
+                        while ( $i <= $next_column_number ) {
                             $column_data[$grid_id][$i] = 0;
                             $i++;
                         }
                     }
 
                     // add new record to column
-                    $column_data[$grid_id][$next_column_number] = (int)$result['count'] ?? 0; // must be string
+                    $column_data[$grid_id][$next_column_number] = (int) $result['count'] ?? 0; // must be string
                 }
             }
         }
@@ -1745,19 +1885,19 @@ class Zume_Charts_API
     public function location_goals() {
         $data = DT_Mapping_Module::instance()->data();
 
-        $practitioners = $this->query_practitioner_funnel( ['4','5','6'] );
-        $data = $this->add_goals_column(  $data, 'practitioners', 'Practitioners', $practitioners );
+        $practitioners = $this->query_practitioner_funnel( [ '3','4','5','6' ] );
+        $data = $this->add_goals_column( $data, 'trainees', 'Trainees', $practitioners );
         $data = $this->add_practitioners_goal_column( $data );
 
         $churches = $this->query_churches_funnel();
-        $data = $this->add_goals_column(  $data, 'churches', 'Churches', $churches );
+        $data = $this->add_goals_column( $data, 'churches', 'Churches', $churches );
         $data = $this->add_church_goal_column( $data );
 
         return $data;
     }
     public function query_practitioner_funnel( array $range ) {
         global $wpdb;
-        if( count( $range ) > 1 ) {
+        if ( count( $range ) > 1 ) {
             $range = '(' . implode( ',', $range ) . ')';
         } else {
             $range = '(' . $range[0] . ')';
@@ -1773,7 +1913,7 @@ class Zume_Charts_API
                    SELECT r.user_id, MAX(r.value) as stage, (
 						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
 					) as grid_id FROM zume_dt_reports r
-                   WHERE r.type = 'stage' AND r.subtype = 'current_level'
+                   WHERE r.type = 'system' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
@@ -1789,7 +1929,7 @@ class Zume_Charts_API
                    SELECT r.user_id, MAX(r.value) as stage, (
 						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
 					) as grid_id FROM zume_dt_reports r
-                   WHERE r.type = 'stage' AND r.subtype = 'current_level'
+                   WHERE r.type = 'system' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
@@ -1805,7 +1945,7 @@ class Zume_Charts_API
                    SELECT r.user_id, MAX(r.value) as stage, (
 						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
 					) as grid_id FROM zume_dt_reports r
-                   WHERE r.type = 'stage' AND r.subtype = 'current_level'
+                   WHERE r.type = 'system' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
@@ -1821,7 +1961,7 @@ class Zume_Charts_API
                    SELECT r.user_id, MAX(r.value) as stage, (
 						SELECT grid_id FROM zume_dt_reports WHERE user_id = r.user_id AND grid_id IS NOT NULL ORDER BY id DESC LIMIT 1
 					) as grid_id FROM zume_dt_reports r
-                   WHERE r.type = 'stage' AND r.subtype = 'current_level'
+                   WHERE r.type = 'system' AND r.subtype = 'current_level'
                    GROUP BY r.user_id
                 ) as tb
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=tb.grid_id
@@ -1852,7 +1992,7 @@ class Zume_Charts_API
             FROM (
                 SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id
                 FROM zume_dt_location_grid_meta lgm
-                LEFT JOIN wp_postmeta pm ON pm.post_id=lgm.post_id AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
+                LEFT JOIN zume_postmeta pm ON pm.post_id=lgm.post_id AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=lgm.grid_id
                 WHERE lgm.post_type = 'groups'
             ) as t0
@@ -1862,7 +2002,7 @@ class Zume_Charts_API
             FROM (
                 SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id
                 FROM zume_dt_location_grid_meta lgm
-                LEFT JOIN wp_postmeta pm ON pm.post_id=lgm.post_id AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
+                LEFT JOIN zume_postmeta pm ON pm.post_id=lgm.post_id AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=lgm.grid_id
                 WHERE lgm.post_type = 'groups'
             ) as t1
@@ -1872,7 +2012,7 @@ class Zume_Charts_API
             FROM (
                 SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id
                 FROM zume_dt_location_grid_meta lgm
-                LEFT JOIN wp_postmeta pm ON pm.post_id=lgm.post_id AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
+                LEFT JOIN zume_postmeta pm ON pm.post_id=lgm.post_id AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=lgm.grid_id
                 WHERE lgm.post_type = 'groups'
             ) as t2
@@ -1882,7 +2022,7 @@ class Zume_Charts_API
             FROM (
                 SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id
                 FROM zume_dt_location_grid_meta lgm
-                LEFT JOIN wp_postmeta pm ON pm.post_id=lgm.post_id AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
+                LEFT JOIN zume_postmeta pm ON pm.post_id=lgm.post_id AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
                 LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=lgm.grid_id
                 WHERE lgm.post_type = 'groups'
             ) as t3
@@ -1902,44 +2042,44 @@ class Zume_Charts_API
 
         return $list;
     }
-    public function add_goals_column(  $data, $key, $label, $results = [] )
+    public function add_goals_column( $data, $key, $label, $results = [] )
     {
         $column_labels = $data['custom_column_labels'] ?? [];
         $column_data = $data['custom_column_data'] ?? [];
-        if (empty($column_labels)) {
+        if ( empty( $column_labels ) ) {
             $next_column_number = 0;
-        } else if (count($column_labels) === 1) {
+        } else if ( count( $column_labels ) === 1 ) {
             $next_column_number = 1;
         } else {
-            $next_column_number = count($column_labels);
+            $next_column_number = count( $column_labels );
         }
         $column_labels[$next_column_number] = [
             'key' => $key,
-            'label' => $label
+            'label' => $label,
         ];
-        if (!empty($column_data)) {
-            foreach ($column_data as $key => $value) {
+        if ( !empty( $column_data ) ) {
+            foreach ( $column_data as $key => $value ) {
                 $column_data[$key][$next_column_number] = 0;
             }
         }
 
-        if ( !empty($results) ) {
-            foreach ($results as $result) {
-                if ($result['count'] > 0) { // filter for only contact and positive counts
+        if ( !empty( $results ) ) {
+            foreach ( $results as $result ) {
+                if ( $result['count'] > 0 ) { // filter for only contact and positive counts
                     $grid_id = $result['grid_id'];
 
                     // test if grid_id exists, else prepare it with 0 values
-                    if (!isset($column_data[$grid_id])) {
+                    if ( !isset( $column_data[$grid_id] ) ) {
                         $column_data[$grid_id] = [];
                         $i = 0;
-                        while ($i <= $next_column_number) {
+                        while ( $i <= $next_column_number ) {
                             $column_data[$grid_id][$i] = 0;
                             $i++;
                         }
                     }
 
                     // add new record to column
-                    $column_data[$grid_id][$next_column_number] = (int)$result['count'] ?? 0; // must be string
+                    $column_data[$grid_id][$next_column_number] = number_format( $result['count'] ); // must be string
                 }
             }
         }
@@ -1960,8 +2100,8 @@ class Zume_Charts_API
             $next_column_number = count( $column_labels );
         }
         $column_labels[ $next_column_number ] = [
-            'key'   => 'practitioner_goal',
-            'label' => __( 'Practitioner Goal', 'zume_funnels' )
+            'key'   => 'trainee_goal',
+            'label' => __( 'Trainee Goal', 'zume_funnels' ),
         ];
         if ( ! empty( $column_data ) ) {
             foreach ( $column_data as $key => $value ) {
@@ -1972,8 +2112,8 @@ class Zume_Charts_API
             "SELECT grid_id, population, country_code, 1 as count
                     FROM {$wpdb->prefix}dt_location_grid
                     WHERE population != '0'
-                      AND population IS NOT NULL"
-            , ARRAY_A );
+                      AND population IS NOT NULL",
+        ARRAY_A );
         if ( ! empty( $results ) ) {
             foreach ( $results as $result ) {
                 $grid_id = $result['grid_id'];
@@ -1988,7 +2128,7 @@ class Zume_Charts_API
                     $i = 0;
                     while ( $i <= $next_column_number ) {
                         $column_data[$grid_id][$i] = 0;
-                        $i ++;
+                        $i++;
                     }
                 }
 
@@ -2016,7 +2156,7 @@ class Zume_Charts_API
         }
         $column_labels[ $next_column_number ] = [
             'key'   => 'church_goal',
-            'label' => __( 'Church Goal', 'zume_funnels' )
+            'label' => __( 'Church Goal', 'zume_funnels' ),
         ];
         if ( ! empty( $column_data ) ) {
             foreach ( $column_data as $key => $value ) {
@@ -2027,8 +2167,8 @@ class Zume_Charts_API
             "SELECT grid_id, population, country_code, 1 as count
                     FROM {$wpdb->prefix}dt_location_grid
                     WHERE population != '0'
-                      AND population IS NOT NULL"
-            , ARRAY_A );
+                      AND population IS NOT NULL",
+        ARRAY_A );
         if ( ! empty( $results ) ) {
             foreach ( $results as $result ) {
                 $grid_id = $result['grid_id'];
@@ -2043,7 +2183,7 @@ class Zume_Charts_API
                     $i = 0;
                     while ( $i <= $next_column_number ) {
                         $column_data[$grid_id][$i] = 0;
-                        $i ++;
+                        $i++;
                     }
                 }
 
@@ -2103,7 +2243,7 @@ class Zume_Charts_API
     }
 
     public function authorize_url( $authorized ){
-        if ( isset( $_SERVER['REQUEST_URI'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), $this->namespace  ) !== false ) {
+        if ( isset( $_SERVER['REQUEST_URI'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), $this->namespace ) !== false ) {
             $authorized = true;
         }
         return $authorized;
