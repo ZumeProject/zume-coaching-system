@@ -44,7 +44,40 @@ class Zume_Coaching_Tile
     }
     public function dt_custom_fields_settings( array $fields, string $post_type = '' ) {
         if ( $post_type === 'contacts' ) {
-            // process fields
+            $fields['communication_preferences'] = [
+                'name'        => 'Communication Preferences',
+                'description' => 'Choose which communication channels you prefer',
+                'type'        => 'multi_select',
+                'default'     => [
+                    'phone' => [
+                        'label' => 'Phone',
+                    ],
+                    'email' => [
+                        'label' => 'Email',
+                    ],
+                    'signal' => [
+                        'label' => 'Signal',
+                    ],
+                    'whatsapp'   => [
+                        'label' => 'Whatsapp',
+                    ],
+                    'messenger'   => [
+                        'label' => 'Facebook Messenger',
+                    ],
+                    'telegram'   => [
+                        'label' => 'Telegram',
+                    ],
+                ],
+                'tile'     => 'details',
+                'icon' => get_template_directory_uri() . '/dt-assets/images/email.svg',
+                'show_in_table' => 10,
+            ];
+            $fields['connected_plans'] = [
+                'name' => __( 'Connected Plans', 'zume-coaching' ),
+                'type' => 'tags',
+                'tile' => 'status',
+            ];
+
         }
         return $fields;
     }
