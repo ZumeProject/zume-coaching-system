@@ -72,6 +72,12 @@ class Zume_Coaching_Tile
                 'icon' => get_template_directory_uri() . '/dt-assets/images/email.svg',
                 'show_in_table' => 10,
             ];
+            $fields['connected_plans'] = [
+                'name' => __( 'Connected Plans', 'zume-coaching' ),
+                'type' => 'tags',
+                'tile' => 'status',
+            ];
+
         }
         return $fields;
     }
