@@ -251,9 +251,10 @@ class Zume_Tile_System {
             <hr>
             <?php
                 if ( ! empty( $plans ) ) {
+                    dt_write_log($plans);
                     echo '<div class="grid-x grid-padding-x">';
                     foreach ( $plans as $plan ) {
-                        echo '<div class="cell"><h2>Plan Title: <a href="https://zume.training/dashboard/my-training/'.$plan['join_key'].'" target="_blank">' . $plan['title']  . '</a></h2></div>';
+                        echo '<div class="cell"><h2>' . $plan['title']  . '</a></div>';
                         echo '<div class="cell">Members:</div><div class="cell"><ul>';
                         foreach ( $plan['participants'] as $participant ) {
                             $coaching_contact_id = zume_get_user_coaching_contact_id( $participant['user_id'] );
@@ -265,15 +266,15 @@ class Zume_Tile_System {
                         }
                         echo '</ul></div>';
 
-                        echo '<div class="cell">Completion:</div><div class="cell"><ul>';
-                        foreach ( $plan as $index => $item ) {
+                        echo '<div class="cell">Schedule and Completion:</div><div class="cell"><ul>';
+                        foreach ( $plan['sessions'] as $index => $item ) {
                             if ( str_contains( $index, 'set_' ) ) {
-//                                $index_array = explode('_', $index );
-//                                if ( isset( $index_array[2] ) && ! isset( $index_array[3] ) ) {
-//                                    echo '<li>Session '. $index_array[2] . ': ' . $item['date'] . ' ';
-//                                    echo $item['completed'] ? '<span class="green"></span>' : '<span class="red"></span>';
-//                                    echo '</li>';
-//                                }
+                                $index_array = explode('_', $index );
+                                if ( isset( $index_array[2] ) && ! isset( $index_array[3] ) ) {
+                                    echo '<li>Session '. $index_array[2] . ': ' . $item['date'] . ' ';
+                                    echo $item['completed'] ? '<span class="green"></span>' : '<span class="red"></span>';
+                                    echo '</li>';
+                                }
                             }
                         }
                         echo '</ul></div>';
