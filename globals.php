@@ -707,8 +707,8 @@ if ( ! function_exists( 'zume_get_user_plans' ) ) {
 
         }
 
-        dt_write_log( __METHOD__);
-        dt_write_log( $plans );
+//        dt_write_log( __METHOD__);
+//        dt_write_log( $plans );
         return $plans;
     }
 }
