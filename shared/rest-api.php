@@ -331,9 +331,9 @@ class Zume_Charts_API
                 $label = 'Has No Plan';
                 $description = 'Total number of registrants who have no plan.';
 
-                $value = $wpdb->get_var("
+                $value = $wpdb->get_var('
 
-                ");
+                ');
 
 
 
@@ -368,7 +368,7 @@ class Zume_Charts_API
                 $description = 'People who have registered but have not progressed into training.';
                 $link = 'registrants';
 
-                if( $params['range'] < 0 ) {
+                if ( $params['range'] < 0 ) {
                     $value = Zume_Views::stage_totals( 1 );
                 } else {
                     $value = Zume_Views::stage_totals( 1, $params['range'] );
@@ -487,7 +487,7 @@ class Zume_Charts_API
                 $label = 'Active Training Trainees';
                 $description = 'People who are actively working a training plan or have only partially completed the training.';
 
-                if( $params['range'] < 0 ) {
+                if ( $params['range'] < 0 ) {
                     $value = Zume_Views::stage_totals( 2 );
                 } else {
                     $value = Zume_Views::stage_totals( 2, $params['range'] );
@@ -577,7 +577,7 @@ class Zume_Charts_API
                 $description = 'People who have completed the training and are working on a post training plan.';
                 $link = 'post';
 
-                if( $params['range'] < 0 ) {
+                if ( $params['range'] < 0 ) {
                     $value = Zume_Views::stage_totals( 3 );
                 } else {
                     $value = Zume_Views::stage_totals( 3, $params['range'] );
@@ -707,7 +707,7 @@ class Zume_Charts_API
                 $description = 'Learning through doing. Implementing partial checklist / 4-fields';
                 $link = 'partial_practitioner_practitioners';
 
-                if( $params['range'] < 0 ) {
+                if ( $params['range'] < 0 ) {
                     $value = Zume_Views::stage_totals( 4 );
                 } else {
                     $value = Zume_Views::stage_totals( 4, $params['range'] );
@@ -835,7 +835,7 @@ class Zume_Charts_API
                 $description = 'People who are seeking multiplicative movement and are completely skilled with the coaching checklist.';
                 $link = 'full_practitioner_practitioners';
 
-                if( $params['range'] < 0 ) {
+                if ( $params['range'] < 0 ) {
                     $value = Zume_Views::stage_totals( 5 );
                 } else {
                     $value = Zume_Views::stage_totals( 5, $params['range'] );
@@ -962,7 +962,7 @@ class Zume_Charts_API
                 $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
                 $link = 'multiplying_practitioner_practitioners';
 
-                if( $params['range'] < 0 ) {
+                if ( $params['range'] < 0 ) {
                     $value = Zume_Views::stage_totals( 6 );
                 } else {
                     $value = Zume_Views::stage_totals( 6, $params['range'] );
@@ -1307,9 +1307,9 @@ class Zume_Charts_API
                 $list = [];
 
                 $thirty_days_ago = strtotime( date( 'Y-m-d H:i:s', time() ) . ' -30 days' );
-                $sql_30_days_ago = date('Y-m-d H:i:s', $thirty_days_ago );
-                $year_to_date = strtotime('first day of january this year');
-                $year_ago = strtotime('365 days ago');
+                $sql_30_days_ago = date( 'Y-m-d H:i:s', $thirty_days_ago );
+                $year_to_date = strtotime( 'first day of january this year' );
+                $year_ago = strtotime( '365 days ago' );
                 $world_sql = Zume_Queries::world_grid_sql();
 
 //                dt_write_log( $thirty_days_ago );
@@ -1322,7 +1322,7 @@ class Zume_Charts_API
                     FROM zume_dt_reports
                     WHERE timestamp > $thirty_days_ago;
                 ");
-                $list[] = 'Logged in users engaging training in the last 30 days: '.zume_format_int($number);
+                $list[] = 'Logged in users engaging training in the last 30 days: '.zume_format_int( $number );
 
                 # (probably) individual views of Pieces pages this month
                 $number = $wpdb->get_var("
@@ -1334,7 +1334,7 @@ class Zume_Charts_API
                     GROUP BY subtype, lng
                     ) as tb
                 ");
-                $list[] = 'Pieces pages being studied in the last 30 days: '.zume_format_int($number);
+                $list[] = 'Pieces pages being studied in the last 30 days: '.zume_format_int( $number );
 
                 # (individual) registrations this month
 
@@ -1343,7 +1343,7 @@ class Zume_Charts_API
                     FROM zume_dt_reports
                     WHERE timestamp > $thirty_days_ago AND subtype = 'registered';
                 ");
-                $list[] = 'Registrations in the last 30 days: '.zume_format_int($number);
+                $list[] = 'Registrations in the last 30 days: '.zume_format_int( $number );
 
                 # (usually probably group) sessions completed this month
                 $number = $wpdb->get_var("
@@ -1351,7 +1351,7 @@ class Zume_Charts_API
                     FROM zume_dt_reports
                     WHERE timestamp > $thirty_days_ago AND ( subtype LIKE 'set_a_%' OR subtype LIKE 'set_b_%' OR subtype LIKE 'set_c_%' );
                 ");
-                $list[] = 'Individual session checkins in the last 30 days: '.zume_format_int($number);
+                $list[] = 'Individual session checkins in the last 30 days: '.zume_format_int( $number );
 
                 # (usually probably group) session 10 completions this month
                 $number = $wpdb->get_var("
@@ -1359,7 +1359,7 @@ class Zume_Charts_API
                     FROM zume_dt_reports
                     WHERE timestamp > $thirty_days_ago AND subtype = 'training_completed';
                 ");
-                $list[] = 'Individuals completing the training in the last 30 days: '.zume_format_int($number);
+                $list[] = 'Individuals completing the training in the last 30 days: '.zume_format_int( $number );
 
                 # (indiviudals in) countries this month
                 $number = $wpdb->get_var("
@@ -1378,7 +1378,7 @@ class Zume_Charts_API
                     GROUP BY lg.admin0_grid_id
                     ) as tb
                 ");
-                $list[] = 'Countries and territories engaged in the last 30 days: '.zume_format_int($number). ' out of 248';
+                $list[] = 'Countries and territories engaged in the last 30 days: '.zume_format_int( $number ). ' out of 248';
 
                 // unique training locations
                 $number = $wpdb->get_var("
@@ -1386,7 +1386,7 @@ class Zume_Charts_API
                     FROM zume_dt_reports r
                     JOIN ( $world_sql ) as list ON list.grid_id=r.grid_id
                 ");
-                $list[] = 'Targeted training locations engaged: '.zume_format_int($number).' out of 44,395';
+                $list[] = 'Targeted training locations engaged: '.zume_format_int( $number ).' out of 44,395';
 
                 //unique church locations
                 $number = $wpdb->get_var("
@@ -1394,7 +1394,7 @@ class Zume_Charts_API
                     FROM zume_dt_location_grid_meta r
                     JOIN ( $world_sql ) as list ON list.grid_id=r.grid_id
                     WHERE r.post_type = 'groups'");
-                $list[] = 'Targeted church locations engaged: '.zume_format_int($number).' out of 44,395';
+                $list[] = 'Targeted church locations engaged: '.zume_format_int( $number ).' out of 44,395';
 
                 //active contacts (YTD)
                 $number = $wpdb->get_var("
@@ -1402,14 +1402,14 @@ class Zume_Charts_API
                     FROM zume_dt_reports r
                     WHERE timestamp > $year_to_date
                 ");
-                $list[] = 'Active trainees since Jan 1 this year: '.zume_format_int($number);
+                $list[] = 'Active trainees since Jan 1 this year: '.zume_format_int( $number );
 
                 $number = $wpdb->get_var("
                    SELECT COUNT( DISTINCT( r.user_id) )
                     FROM zume_dt_reports r
                     WHERE timestamp > $year_ago
                 ");
-                $list[] = 'Active trainees since 1 year ago: '.zume_format_int($number);
+                $list[] = 'Active trainees since 1 year ago: '.zume_format_int( $number );
 
                 //coaching requests
                 $number = $wpdb->get_var("
@@ -1417,7 +1417,7 @@ class Zume_Charts_API
                     FROM zume_dt_reports
                     WHERE timestamp > $year_to_date AND subtype = 'requested_a_coach';
                 ");
-                $list[] = 'Coaching requests in since Jan 1 this year: '.zume_format_int($number);
+                $list[] = 'Coaching requests in since Jan 1 this year: '.zume_format_int( $number );
 
                 //coaching requests
                 $number = $wpdb->get_var("
@@ -1425,7 +1425,7 @@ class Zume_Charts_API
                     FROM zume_dt_reports
                     WHERE timestamp > $year_ago AND subtype = 'requested_a_coach';
                 ");
-                $list[] = 'Coaching requests since 1 year ago: '.zume_format_int($number);
+                $list[] = 'Coaching requests since 1 year ago: '.zume_format_int( $number );
 
                 return [
                     'key' => 'all_time_stats',
@@ -2079,7 +2079,7 @@ class Zume_Charts_API
                     }
 
                     // add new record to column
-                    $column_data[$grid_id][$next_column_number] = number_format(  $result['count'] ); // must be string
+                    $column_data[$grid_id][$next_column_number] = number_format( $result['count'] ); // must be string
                 }
             }
         }

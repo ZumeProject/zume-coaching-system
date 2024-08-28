@@ -36,30 +36,30 @@ class Zume_Funnel_Trainee extends Zume_Funnel_Chart_Base
             $stages = zume_funnel_stages();
             $html = '';
 
-            foreach ( $stages as $stage ) {
-                if ( 'anonymous' === $stage['key'] ) {
-                    continue;
-                }
-                $html .= '<div class="cell medium-9 zume-funnel">
+        foreach ( $stages as $stage ) {
+            if ( 'anonymous' === $stage['key'] ) {
+                continue;
+            }
+            $html .= '<div class="cell medium-9 zume-funnel">
                                  <div class="'.$stage['key'].'"><span class="loading-spinner active"></span></div>
                             </div>
                             <div class="cell medium-3 padding-top">
                                 <h3>Characteristics</h3>';
 
-                $html .='<ul>';
-                foreach ( $stage['characteristics'] as $item ) {
-                    $html .='<li>'.$item.'</li>';
-                }
-                $html .= '</ul>';
-
-                $html .= '<h3>Next Steps</h3>';
-
-                $html .= '<ul>';
-                foreach ( $stage['next_steps'] as $item ) {
-                    $html .= '<li>'.$item.'</li>';
-                }
-                $html .= '</ul></div>';
+            $html .='<ul>';
+            foreach ( $stage['characteristics'] as $item ) {
+                $html .='<li>'.$item.'</li>';
             }
+            $html .= '</ul>';
+
+            $html .= '<h3>Next Steps</h3>';
+
+            $html .= '<ul>';
+            foreach ( $stage['next_steps'] as $item ) {
+                $html .= '<li>'.$item.'</li>';
+            }
+            $html .= '</ul></div>';
+        }
 
 
         ?>
@@ -80,7 +80,7 @@ class Zume_Funnel_Trainee extends Zume_Funnel_Chart_Base
                                             <option value="7">Last 7 days</option>
                                             <option value="90">Last 90 days</option>
                                             <option value="365">Last 1 Year</option>
-                                            <option value="<?php echo date('z'); ?>">Since year start</option>
+                                            <option value="<?php echo date( 'z' ); ?>">Since year start</option>
                                         </select>
                                     </span>
                                     <span class="loading-spinner active right" style="margin:.5em 1em;"></span>

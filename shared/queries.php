@@ -49,7 +49,7 @@ class Zume_Queries {
                 ) as tb
                 WHERE tb.timestamp > $timestamp
                 GROUP BY tb.stage;",
-            ARRAY_A );
+        ARRAY_A );
 
         $stages = [];
 
@@ -230,7 +230,7 @@ class Zume_Queries {
         }
     }
 
-    public static function world_grid_sql() : string {
+    public static function world_grid_sql(): string {
         return "SELECT
                 lg1.grid_id, lg1.population, lg1.country_code, lg1.longitude, lg1.latitude,
                 CONCAT_WS(', ',
@@ -365,5 +365,4 @@ class Zume_Queries {
               AND lg5.admin0_grid_id NOT IN (100314737,100083318,100041128,100133112,100341242,100132648,100222839,100379914,100055707,100379993,100130389,100255271,100363975,100248845,100001527,100342458,100024289,100132795,100054605,100253456,100342975,100074571)
         ";
     }
-
 }

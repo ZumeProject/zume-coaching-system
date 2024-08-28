@@ -65,7 +65,7 @@ class Zume_Goals_Public_Facts extends Zume_Goals_Chart_Base
                                                         <option value="30">In the last 30 days</option>
                                                         <option value="90">In the last 90 days</option>
                                                         <option value="365">In the last year (365 days)</option>
-                                                        <option value="<?php echo date('z'); ?>">Beginning of the year</option>
+                                                        <option value="<?php echo date( 'z' ); ?>">Beginning of the year</option>
                                                     </select>
                                                 </div>
                                                 <div class="cell small-2" >
