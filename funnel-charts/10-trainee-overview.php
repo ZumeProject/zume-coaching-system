@@ -75,12 +75,12 @@ class Zume_Funnel_Trainee extends Zume_Funnel_Chart_Base
                                 <div class="cell small-6">
                                     <span style="float: right;">
                                         <select id="range-filter">
-                                            <option value="-1">All Time</option>
+                                            <option value="90">Last 90 days</option>
                                             <option value="30">Last 30 days</option>
                                             <option value="7">Last 7 days</option>
-                                            <option value="90">Last 90 days</option>
                                             <option value="365">Last 1 Year</option>
                                             <option value="<?php echo date( 'z' ); ?>">Since year start</option>
+                                            <option value="-1">All Time</option>
                                         </select>
                                     </span>
                                     <span class="loading-spinner active right" style="margin:.5em 1em;"></span>

@@ -50,18 +50,6 @@ class Zume_Funnel_Active extends Zume_Funnel_Chart_Base
                                 </div>
                             </div>
                             <hr>
-                            <div class="grid-x grid-margin-x grid-margin-y">
-                                 <div class="cell"><h2>Cumulative</h2></div>
-                            </div>
-                            <div class="grid-x">
-                                <div class="cell total_active_training_trainee"><span class="loading-spinner active"></span></div>
-                            </div>
-                            <div class="grid-x grid-margin-x grid-margin-y">
-                                 <div class="cell medium-6 has_no_coach"><span class="loading-spinner active"></span></div>
-                                 <div class="cell medium-6 no_friends"><span class="loading-spinner active"></span></div>
-                                 <div class="cell medium-6 no_updated_profiles"><span class="loading-spinner active"></span></div>
-                            </div>
-                            <hr>
                             <div class="grid-x">
                                 <div class="cell center"><h1 id="range-title">Last 30 Days</h1></div>
                                 <div class="cell small-6">
@@ -70,15 +58,24 @@ class Zume_Funnel_Active extends Zume_Funnel_Chart_Base
                                 <div class="cell small-6" style="float: right;">
                                      <span>
                                         <select id="range-filter" class="z-range-filter">
+                                            <option value="90">Last 90 days</option>
                                             <option value="30">Last 30 days</option>
                                             <option value="7">Last 7 days</option>
-                                            <option value="90">Last 90 days</option>
                                             <option value="365">Last 1 Year</option>
                                             <option value="<?php echo date( 'z' ); ?>">Since year start</option>
+                                            <option value="-1">All Time</option>
                                         </select>
                                     </span>
                                     <span class="loading-spinner active float-spinner"></span>
                                 </div>
+                            </div>
+                            <div class="grid-x">
+                                <div class="cell total_active_training_trainee"><span class="loading-spinner active"></span></div>
+                            </div>
+                            <div class="grid-x grid-margin-x grid-margin-y">
+                                 <div class="cell medium-6 has_no_coach"><span class="loading-spinner active"></span></div>
+                                 <div class="cell medium-6 no_friends"><span class="loading-spinner active"></span></div>
+                                 <div class="cell medium-6 no_updated_profiles"><span class="loading-spinner active"></span></div>
                             </div>
                             <div class="grid-x grid-margin-x grid-margin-y">
                                  <div class="cell medium-12 in_and_out"><span class="loading-spinner active"></span></div>
@@ -93,45 +90,46 @@ class Zume_Funnel_Active extends Zume_Funnel_Chart_Base
                             <div id="chartdiv"></div>
                         </div>
                     `)
-                // totals
-                window.spin_add()
-                makeRequest('GET', 'total', { stage: "active_training_trainee", key: "total_active_training_trainee" }, window.site_info.rest_root ).done( function( data ) {
-                    data.link = ''
-                    data.label = 'Active Training Trainees'
-                    data.description = 'People who are actively working a training plan or have only partially completed the training.'
-                    jQuery('.'+data.key).html(window.template_hero_map_only(data))
-                    window.click_listener( data )
-                    window.spin_remove()
-                })
-                window.spin_add()
-                makeRequest('GET', 'total', { stage: "active_training_trainee", key: "has_no_coach" }, window.site_info.rest_root ).done( function( data ) {
-                    jQuery('.'+data.key).html(window.template_single_list(data))
-                    window.click_listener( data )
-                    window.spin_remove()
-                })
-                window.spin_add()
-                makeRequest('GET', 'total', { stage: "active_training_trainee", key: "no_friends" }, window.site_info.rest_root ).done( function( data ) {
-                    data.valence = 'valence-grey'
-                    data.label = 'Has No Friends'
-                    data.description = 'Description'
-                    jQuery('.'+data.key).html(window.template_single_list(data))
-                    window.click_listener( data )
-                    window.spin_remove()
-                })
-                window.spin_add()
-                makeRequest('GET', 'total', { stage: "active_training_trainee", key: "no_updated_profiles" }, window.site_info.rest_root ).done( function( data ) {
-                    data.valence = 'valence-grey'
-                    data.label = 'Has Not Updated Profile'
-                    data.description = 'Description'
-                    jQuery('.'+data.key).html(window.template_single_list(data))
-                    window.click_listener( data )
-                    window.spin_remove()
-                })
+
 
                 // range
                 window.path_load = ( range ) => {
                     jQuery('.loading-spinner').addClass('active')
 
+                    // totals
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "active_training_trainee", key: "total_active_training_trainee", range: range  }, window.site_info.rest_root ).done( function( data ) {
+                        data.link = ''
+                        data.label = 'Active Training Trainees'
+                        data.description = 'People who are actively working a training plan or have only partially completed the training.'
+                        jQuery('.'+data.key).html(window.template_hero_map_only(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "active_training_trainee", key: "has_no_coach", range: range  }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.key).html(window.template_single_list(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "active_training_trainee", key: "no_friends", range: range  }, window.site_info.rest_root ).done( function( data ) {
+                        data.valence = 'valence-grey'
+                        data.label = 'Has No Friends'
+                        data.description = 'Description'
+                        jQuery('.'+data.key).html(window.template_single_list(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "active_training_trainee", key: "no_updated_profiles", range: range  }, window.site_info.rest_root ).done( function( data ) {
+                        data.valence = 'valence-grey'
+                        data.label = 'Has Not Updated Profile'
+                        data.description = 'Description'
+                        jQuery('.'+data.key).html(window.template_single_list(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
                     window.spin_add()
                     makeRequest('GET', 'total', { stage: "active_training_trainee", key: "in_and_out", range: range }, window.site_info.rest_root ).done( function( data ) {
                         data.label = 'Active Training Flow'

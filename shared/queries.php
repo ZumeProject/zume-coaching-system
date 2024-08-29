@@ -4,7 +4,7 @@ if ( !defined( 'ABSPATH' ) ) { exit; } // Exit if accessed directly.
 class Zume_Queries {
 
     // this is a reusable query that gets the user_id, post_id (contact_id), stage, and report id (rid) from the reports table.
-    public static $query_for_user_stage = "SELECT r.user_id, r.post_id, r.post_id as contact_id, MAX(r.value) as stage, MAX(r.id) as rid, r.timestamp FROM zume_dt_reports r
+    public static $query_for_user_stage = "SELECT r.user_id, r.post_id, r.post_id as contact_id, MAX(r.value) as stage, MAX(r.id) as rid, MAX(r.timestamp) as timestamp FROM zume_dt_reports r
                                                   WHERE r.type = 'system' and r.subtype = 'current_level'
                                                   GROUP BY r.user_id, r.post_id";
 
@@ -387,5 +387,81 @@ class Zume_Queries {
         $count = $wpdb->get_var( $sql );
 
         return $count;
+    }
+
+    public static function has_coach( $stages = [], $range = -1, $negative = false ) {
+        global $wpdb;
+        $query_for_user_stage = self::$query_for_user_stage;
+        $stages_string = implode(',', $stages );
+        if ( $negative ) {
+            $where = "AND pm.meta_value = ''";
+        } else {
+            $where = "AND pm.meta_value = ''";
+        }
+        if ( $range < 1 ) {
+            $timestamp = 0;
+        } else {
+            $timestamp = strtotime( '-'. $range . ' days' );
+        }
+        $sql = "
+            SELECT COUNT(*)
+            FROM
+               (
+                  $query_for_user_stage
+                ) as tb
+            JOIN zume_postmeta pm ON pm.post_id=tb.post_id AND pm.meta_key = 'coaching_contact_id' $where
+            WHERE tb.stage IN ( $stages_string ) AND tb.timestamp > $timestamp;
+            ";
+        $count = $wpdb->get_var( $sql );
+
+        return $count;
+    }
+
+    public static function flow( $stage, $flow, $range = -1 ) {
+        // flow = in, idle, out
+        global $wpdb;
+        $query_for_user_stage = self::$query_for_user_stage;
+
+        if ( $range < 1 ) {
+            $timestamp = 0;
+        } else {
+            $timestamp = strtotime( '-'. $range . ' days' );
+        }
+
+        if ( $flow === 'idle') {
+            $sql = "
+            SELECT COUNT(*)
+            FROM
+               (
+                  $query_for_user_stage
+                ) as tb
+            WHERE tb.stage = $stage AND tb.timestamp < $timestamp;
+            ";
+        }
+        else if ( $flow === 'in') {
+            $sql = "
+            SELECT COUNT(*)
+            FROM
+               (
+                  $query_for_user_stage
+                ) as tb
+            WHERE tb.stage = $stage AND tb.timestamp > $timestamp;
+            ";
+        }
+        else if ( $flow === 'out') {
+            $next_stage = $stage++;
+            $sql = "
+            SELECT COUNT(*)
+            FROM
+               (
+                  $query_for_user_stage
+                ) as tb
+            WHERE tb.stage = $next_stage AND tb.timestamp < $timestamp;
+            ";
+        }
+
+        $count = $wpdb->get_var( $sql );
+
+        return (int) $count;
     }
 }

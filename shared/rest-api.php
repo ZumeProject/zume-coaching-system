@@ -286,6 +286,13 @@ class Zume_Charts_API
         $trend_valence = null;
 
         switch ( $params['key'] ) {
+            case 'has_no_coach':
+                $label = 'Has No Coach';
+                $description = 'People who have no coach.';
+                $value = Zume_Queries::has_coach( [ 1 ], $params['range'], true );
+                $goal = 0;
+                $trend = 0;
+                break;
             case 'locations':
                 $label = 'Locations';
                 $description = 'Cumulative number of locations in this stage.';
@@ -330,13 +337,7 @@ class Zume_Charts_API
                 // lookup the query
                 $label = 'Has No Plan';
                 $description = 'Total number of registrants who have no plan.';
-
-                $value = $wpdb->get_var('
-
-                ');
-
-
-
+                $value = 0;
                 $goal = 4;
                 $trend = 4;
                 $valence = null;
@@ -348,13 +349,7 @@ class Zume_Charts_API
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'no_coach':
-                $label = 'Has Not Requested a Coach';
-                $description = 'Total number of registrants who have not requested a coach.';
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
-                break;
+
             case 'no_updated_profile':
                 $label = 'Has Not Updated Profile';
                 $description = 'Total number of registrants who have not updated their profile.';
@@ -382,11 +377,11 @@ class Zume_Charts_API
                     'key' => $params['key'],
                     'stage' => $params['stage'],
                     'label' => 'Flow',
-                    'description' => 'People moving in and out of thise stage.',
+                    'description' => 'People moving in and out of this stage.',
                     'link' => '',
-                    'value_in' => zume_format_int( 0 ),
-                    'value_idle' => zume_format_int( 0 ),
-                    'value_out' => zume_format_int( 0 ),
+                    'value_in' => zume_format_int( Zume_Queries::flow( 1, 'in', $params['range'] )  ),
+                    'value_idle' => zume_format_int( Zume_Queries::flow( 1, 'idle', $params['range'] ) ),
+                    'value_out' => zume_format_int( Zume_Queries::flow( 2, 'in', $params['range'] )  ),
                 ];
 
             default:
@@ -427,6 +422,14 @@ class Zume_Charts_API
         $trend_valence = null;
 
         switch ( $params['key'] ) {
+
+            case 'has_no_coach':
+                $label = 'Has No Coach';
+                $description = 'People who have no coach.';
+                $value = Zume_Queries::has_coach( [2], $params['range'], true );
+                $goal = 0;
+                $trend = 0;
+                break;
             case 'has_coach':
                 $label = 'Has Coach';
                 $description = 'Active trainees who have a coach.';
@@ -458,13 +461,7 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'has_no_coach':
-                $label = 'Has No Coach';
-                $description = 'People who have no coach.';
-                $value = Zume_Queries::has_plan( [2], true );
-                $goal = 0;
-                $trend = 0;
-                break;
+
             case 'has_no_updated_profile':
                 $label = 'No Updated Profile';
                 $description = 'People who have not updated their profile.';
@@ -478,11 +475,11 @@ class Zume_Charts_API
                     'key' => $params['key'],
                     'stage' => $params['stage'],
                     'label' => 'Flow',
-                    'description' => 'People moving in and out of thise stage.',
+                    'description' => 'People moving in and out of this stage.',
                     'link' => '',
-                    'value_in' => zume_format_int( 0 ),
-                    'value_idle' => zume_format_int( 0 ),
-                    'value_out' => zume_format_int( 0 ),
+                    'value_in' => zume_format_int( Zume_Queries::flow( 2, 'in', $params['range'] )  ),
+                    'value_idle' => zume_format_int( Zume_Queries::flow( 2, 'idle', $params['range'] ) ),
+                    'value_out' => zume_format_int( Zume_Queries::flow( 3, 'in', $params['range'] )  ),
                 ];
             case 'total_active_training_trainee':
                 $label = 'Active Training Trainees';
@@ -536,6 +533,13 @@ class Zume_Charts_API
 
         switch ( $params['key'] ) {
 
+            case 'has_no_coach':
+                $label = 'Has No Coach';
+                $description = 'People who have no coach.';
+                $value = Zume_Queries::has_coach( [ 3 ], $params['range'], true );
+                $goal = 0;
+                $trend = 0;
+                break;
             case 'needs_3_month_plan':
                 $label = 'Needs 3 Month Plan';
                 $description = 'Needs a 3 month plan.';
@@ -544,14 +548,7 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-            case 'needs_coach':
-                $label = 'Needs Coach';
-                $description = 'Needs a coach';
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
-                $valence = 'valence-grey';
-                break;
+
             case 'new_trainees':
                 $label = 'New Trainees';
                 $description = 'New trainees entering stage in time period.';
@@ -592,11 +589,11 @@ class Zume_Charts_API
                     'key' => $params['key'],
                     'stage' => $params['stage'],
                     'label' => 'Flow',
-                    'description' => 'People moving in and out of thise stage.',
+                    'description' => 'People moving in and out of this stage.',
                     'link' => '',
-                    'value_in' => zume_format_int( 0 ),
-                    'value_idle' => zume_format_int( 0 ),
-                    'value_out' => zume_format_int( 0 ),
+                    'value_in' => zume_format_int( Zume_Queries::flow( 3, 'in', $params['range'] )  ),
+                    'value_idle' => zume_format_int( Zume_Queries::flow( 3, 'idle', $params['range'] ) ),
+                    'value_out' => zume_format_int( Zume_Queries::flow( 4, 'in', $params['range'] )  ),
                 ];
             default:
                 $value = 0;
@@ -636,7 +633,13 @@ class Zume_Charts_API
         $trend_valence = null;
 
         switch ( $params['key'] ) {
-
+            case 'has_no_coach':
+                $label = 'Has No Coach';
+                $description = 'People who have no coach.';
+                $value = Zume_Queries::has_coach( [ 4 ], $params['range'], true );
+                $goal = 0;
+                $trend = 0;
+                break;
             case 'total_churches':
                 $label = 'Churches';
                 $description = 'Total number of churches reported by S1 Practitioners.';
@@ -689,13 +692,7 @@ class Zume_Charts_API
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'has_no_coach':
-                $label = 'Has No Coach';
-                $description = 'Total number of S1 Practitioners who have not yet been assigned a coach.';
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
-                break;
+
             case 'has_not_reported':
                 $label = 'Has Not Reported';
                 $description = 'Total number of S1 Practitioners who have not yet reported.';
@@ -722,11 +719,11 @@ class Zume_Charts_API
                     'key' => $params['key'],
                     'stage' => $params['stage'],
                     'label' => 'Flow',
-                    'description' => 'People moving in and out of thise stage.',
+                    'description' => 'People moving in and out of this stage.',
                     'link' => '',
-                    'value_in' => zume_format_int( 0 ),
-                    'value_idle' => zume_format_int( 0 ),
-                    'value_out' => zume_format_int( 0 ),
+                    'value_in' => zume_format_int( Zume_Queries::flow( 4, 'in', $params['range'] )  ),
+                    'value_idle' => zume_format_int( Zume_Queries::flow( 4, 'idle', $params['range'] ) ),
+                    'value_out' => zume_format_int( Zume_Queries::flow( 5, 'in', $params['range'] )  ),
                 ];
             default:
                 $value = 0;
@@ -766,7 +763,13 @@ class Zume_Charts_API
         $trend_valence = null;
 
         switch ( $params['key'] ) {
-
+            case 'has_no_coach':
+                $label = 'Has No Coach';
+                $description = 'People who have no coach.';
+                $value = Zume_Queries::has_coach( [ 5 ], $params['range'], true );
+                $goal = 0;
+                $trend = 0;
+                break;
             case 'total_churches':
                 $label = 'Churches';
                 $description = 'Total number of churches reported by S2 Practitioners.';
@@ -817,13 +820,7 @@ class Zume_Charts_API
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'has_no_coach':
-                $label = 'Has No Coach';
-                $description = 'Total number of S2 Practitioners who have not yet been assigned a coach.';
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
-                break;
+
             case 'has_not_reported':
                 $label = 'Has Not Reported';
                 $description = 'Total number of S2 Practitioners who have not yet reported.';
@@ -850,11 +847,11 @@ class Zume_Charts_API
                     'key' => $params['key'],
                     'stage' => $params['stage'],
                     'label' => 'Flow',
-                    'description' => 'People moving in and out of thise stage.',
+                    'description' => 'People moving in and out of this stage.',
                     'link' => '',
-                    'value_in' => zume_format_int( 0 ),
-                    'value_idle' => zume_format_int( 0 ),
-                    'value_out' => zume_format_int( 0 ),
+                    'value_in' => zume_format_int( Zume_Queries::flow( 5, 'in', $params['range'] )  ),
+                    'value_idle' => zume_format_int( Zume_Queries::flow( 5, 'idle', $params['range'] ) ),
+                    'value_out' => zume_format_int( Zume_Queries::flow( 6, 'in', $params['range'] )  ),
                 ];
             default:
                 $value = 0;
@@ -894,6 +891,13 @@ class Zume_Charts_API
         $trend_valence = null;
 
         switch ( $params['key'] ) {
+            case 'has_no_coach':
+                $label = 'Has No Coach';
+                $description = 'People who have no coach.';
+                $value = Zume_Queries::has_coach( [ 6 ], $params['range'], true );
+                $goal = 0;
+                $trend = 0;
+                break;
             case 'total_churches':
                 $label = 'Churches';
                 $description = 'Total number of churches reported by S2 Practitioners.';
@@ -944,13 +948,7 @@ class Zume_Charts_API
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'has_no_coach':
-                $label = 'Has No Coach';
-                $description = 'Total number of S2 Practitioners who have not yet been assigned a coach.';
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
-                break;
+
             case 'has_not_reported':
                 $label = 'Has Not Reported';
                 $description = 'Total number of S2 Practitioners who have not yet reported.';
@@ -977,11 +975,11 @@ class Zume_Charts_API
                     'key' => $params['key'],
                     'stage' => $params['stage'],
                     'label' => 'Flow',
-                    'description' => 'People moving in and out of thise stage.',
+                    'description' => 'People moving in and out of this stage.',
                     'link' => '',
-                    'value_in' => zume_format_int( 0 ),
-                    'value_idle' => zume_format_int( 0 ),
-                    'value_out' => zume_format_int( 0 ),
+                    'value_in' => zume_format_int( Zume_Queries::flow( 6, 'in', $params['range'] )  ),
+                    'value_idle' => zume_format_int( Zume_Queries::flow( 6, 'idle', $params['range'] ) ),
+                    'value_out' => '',
                 ];
             default:
                 $value = 0;

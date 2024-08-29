@@ -41,20 +41,7 @@ class Zume_Funnel_L3 extends Zume_Funnel_Chart_Base
                                 <div class="cell small-6 right">Coaching downstream 2,3,4 generations</div>
                             </div>
                             <hr>
-                            <div class="grid-x">
-                                <div class="cell small-12">
-                                    <h2>Cumulative</h2>
-                                </div>
-                            </div>
-                            <div class="grid-x">
-                                <div class="cell total_multiplying_practitioner"><span class="loading-spinner active"></span></div>
-                            </div>
-                            <div class="grid-x grid-margin-x grid-margin-y">
-                                 <div class="cell medium-6 no_coach"><span class="loading-spinner active"></span></div>
-                                 <div class="cell medium-6 has_not_reported"><span class="loading-spinner active"></span></div>
-                            </div>
-                            <hr>
-                            <div class="grid-x">
+                             <div class="grid-x">
                                 <div class="cell center"><h1 id="range-title">Last 30 Days</h1></div>
                                 <div class="cell small-6">
                                     <h2>Time Range</h2>
@@ -62,14 +49,23 @@ class Zume_Funnel_L3 extends Zume_Funnel_Chart_Base
                                 <div class="cell small-6">
                                     <span style="float: right;">
                                         <select id="range-filter">
+                                            <option value="90">Last 90 days</option>
                                             <option value="30">Last 30 days</option>
                                             <option value="7">Last 7 days</option>
-                                            <option value="90">Last 90 days</option>
                                             <option value="365">Last 1 Year</option>
+                                            <option value="<?php echo date( 'z' ); ?>">Since year start</option>
+                                            <option value="-1">All Time</option>
                                         </select>
                                     </span>
                                     <span class="loading-spinner active" style="float: right; margin:0 10px;"></span>
                                 </div>
+                            </div>
+                            <div class="grid-x">
+                                <div class="cell total_multiplying_practitioner"><span class="loading-spinner active"></span></div>
+                            </div>
+                            <div class="grid-x grid-margin-x grid-margin-y">
+                                 <div class="cell medium-6 has_no_coach"><span class="loading-spinner active"></span></div>
+                                 <div class="cell medium-6 has_not_reported"><span class="loading-spinner active"></span></div>
                             </div>
                             <div class="grid-x grid-margin-x grid-margin-y">
                                  <div class="cell medium-12 in_and_out"><span class="loading-spinner active"></span></div>
@@ -80,39 +76,34 @@ class Zume_Funnel_L3 extends Zume_Funnel_Chart_Base
                         </div>
                     `)
 
-                // totals
-                window.spin_add()
-                makeRequest('GET', 'total', { stage: "multiplying_practitioner", key: "total_multiplying_practitioner"}, window.site_info.rest_root ).done( function( data ) {
-                    data.link = ''
-                    jQuery('.'+data.key).html(window.template_hero_map_only(data))
-                    window.click_listener( data )
-                    window.spin_remove()
-                })
-                window.spin_add()
-                makeRequest('GET', 'total', { stage: "multiplying_practitioner", key: "no_coach" }, window.site_info.rest_root ).done( function( data ) {
-                    data.valence = 'valence-grey'
-                    data.label = 'Has No Coach'
-                    data.description = 'Description'
-                    jQuery('.'+data.key).html(window.template_single_list(data))
-                    window.click_listener( data )
-                    window.spin_remove()
-                })
-                window.spin_add()
-                makeRequest('GET', 'total', { stage: "multiplying_practitioner", key: "has_not_reported" }, window.site_info.rest_root ).done( function( data ) {
-                    data.valence = 'valence-grey'
-                    data.label = 'Has Not Reported'
-                    data.description = 'Description'
-                    jQuery('.'+data.key).html(window.template_single_list(data))
-                    window.click_listener( data )
-                    window.spin_remove()
-                })
-
                 window.path_load = ( range ) => {
 
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "multiplying_practitioner", key: "in_and_out", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        data.label = 'Stage 3 Flow'
+                    makeRequest('GET', 'total', { stage: "multiplying_practitioner", key: "total_multiplying_practitioner", range: range }, window.site_info.rest_root ).done( function( data ) {
+                        data.link = ''
+                        jQuery('.'+data.key).html(window.template_hero_map_only(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "multiplying_practitioner", key: "has_no_coach", range: range  }, window.site_info.rest_root ).done( function( data ) {
+                        data.valence = 'valence-grey'
+                        jQuery('.'+data.key).html(window.template_single_list(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "multiplying_practitioner", key: "has_not_reported", range: range  }, window.site_info.rest_root ).done( function( data ) {
+                        data.valence = 'valence-grey'
+                        data.label = 'Has Not Reported'
                         data.description = 'Description'
+                        jQuery('.'+data.key).html(window.template_single_list(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "multiplying_practitioner", key: "in_and_out", range: range }, window.site_info.rest_root ).done( function( data ) {
+                        data.label = 'Flow'
                         jQuery('.'+data.key).html( window.template_in_out( data ) )
                         window.click_listener( data )
                         window.spin_remove()
