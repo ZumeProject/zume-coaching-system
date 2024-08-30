@@ -438,6 +438,13 @@ class Zume_Charts_API
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
+            case 'new_coaching_requests':
+                $label = 'New Coaching Requests';
+                $description = 'New coaching requests from post training trainees.';
+                $value = Zume_Queries::coaching_request( 2, $params['range'] );
+                $goal = 0;
+                $trend = 0;
+                break;
             case 'inactive_trainees':
                 $label = 'Inactive Trainees';
                 $description = 'People who have been inactive more than 6 months.';
@@ -455,20 +462,33 @@ class Zume_Charts_API
                 break;
             case 'total_checkins':
                 $label = 'Total Checkins';
-                $description = 'Total number of checkins registered for training.';
-                $value = 0;
+                $description = 'Total number of checkins by trainees.';
+                $value = Zume_Queries::checkins( 2, $params['range'] );
                 $goal = 0;
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
-
             case 'has_no_updated_profile':
                 $label = 'No Updated Profile';
                 $description = 'People who have not updated their profile.';
-                $value = 0;
+                $value = Zume_Queries::checkins( 2, $params['range'], true );
                 $goal = 0;
                 $trend = 0;
                 $valence = null;
+                break;
+            case 'plans':
+                $label = 'New Plans Created';
+                $description = 'New training plans created by active training trainees.';
+                $value = Zume_Queries::training_plans( 2, $params['range'] );
+                $goal = 0;
+                $trend = 0;
+                break;
+            case 'post_training_plans':
+                $label = 'New Post Training Plans';
+                $description = 'New training plans created by active training trainees.';
+                $value = Zume_Queries::post_training_plan( 2, $params['range'] );
+                $goal = 0;
+                $trend = 0;
                 break;
             case 'in_and_out':
                 return [
@@ -484,13 +504,8 @@ class Zume_Charts_API
             case 'total_active_training_trainee':
                 $label = 'Active Training Trainees';
                 $description = 'People who are actively working a training plan or have only partially completed the training.';
-
-                if ( $params['range'] < 0 ) {
-                    $value = Zume_Views::stage_totals( 2 );
-                } else {
-                    $value = Zume_Views::stage_totals( 2, $params['range'] );
-                }
-
+                $link = 'active';
+                $value = Zume_Views::stage_totals( 2, $params['range'] );
                 $goal = 0;
                 $trend = 0;
                 break;
@@ -565,8 +580,8 @@ class Zume_Charts_API
                 break;
             case 'new_coaching_requests':
                 $label = 'New Coaching Requests';
-                $description = 'New coaching requests during the time period.';
-                $value = 0;
+                $description = 'New coaching requests from post training trainees.';
+                $value = Zume_Queries::coaching_request( 3, $params['range'] );
                 $goal = 0;
                 $trend = 0;
                 break;

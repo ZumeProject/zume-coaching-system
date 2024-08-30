@@ -18,12 +18,7 @@ class Zume_Views {
     }
 
     public static function stage_totals( $stage = null, $range = null ) {
-        if ( $range ) {
-            $results = Zume_Queries::stage_totals_by_range( $range );
-        } else {
-            $results = Zume_Queries::stage_totals();
-        }
-
+        $results = Zume_Queries::stage_totals_by_range( $range );
 
         $totals = [
             '1' => 0,

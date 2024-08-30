@@ -50,6 +50,11 @@ class Zume_Funnel_Concept extends Zume_Funnel_Chart_Base
                             </div>
                             <hr>
                             <span class="loading-spinner active"></span>
+                            <div class="cell small-12">
+                                    <h1 style="background-color: lightgrey; padding: 1em;"><strong>DIFFICULTY OVER TIME</strong></h1>
+                                    <img src="<?php echo plugin_dir_url( __FILE__ ) . 'images/difficulty-vs-time.png' ?>" />
+                            </div>
+                            <div class="cell"><hr></div>
                             <div class="grid-x">
                                 <div class="cell small-12">
                                     <h1 style="background-color: lightgrey; padding: 1em;"><strong>FUNNEL RELATIONSHIPS</strong></h1>
@@ -84,11 +89,7 @@ class Zume_Funnel_Concept extends Zume_Funnel_Chart_Base
                                     <style>.cell.tile { border: 1px solid grey; border-radius: 10px; padding: 1em; }</style>
                                 </div>
                                 <div class="cell"><hr></div>
-                                <div class="cell small-12">
-                                    <h1 style="background-color: lightgrey; padding: 1em;"><strong>DIFFICULTY OVER TIME</strong></h1>
-                                    <img src="<?php echo plugin_dir_url( __FILE__ ) . 'images/difficulty-vs-time.png' ?>" />
-                                </div>
-                                <div class="cell"><hr></div>
+
                                 <div class="cell">
                                     <h1 style="background-color: lightgrey; padding: 1em;"><strong>VALENCE</strong></h1>
                                     <div class="grid-x" style="color:white;text-align:center;font-size:2.5em;">

@@ -45,7 +45,6 @@ class Zume_Funnel_Trainee extends Zume_Funnel_Chart_Base
                             </div>
                             <div class="cell medium-3 padding-top">
                                 <h3>Characteristics</h3>';
-
             $html .='<ul>';
             foreach ( $stage['characteristics'] as $item ) {
                 $html .='<li>'.$item.'</li>';

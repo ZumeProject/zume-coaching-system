@@ -39,7 +39,11 @@ class Zume_Queries {
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
 
-        $timestamp = strtotime( $range . ' days ago' );
+        if ( $range < 1 ) {
+            $timestamp = 0;
+        } else {
+            $timestamp = strtotime( $range . ' days ago' );
+        }
 
         $results = $wpdb->get_results(
             "SELECT tb.stage, COUNT(tb.user_id) as total
@@ -415,6 +419,102 @@ class Zume_Queries {
         $count = $wpdb->get_var( $sql );
 
         return $count;
+    }
+
+    public static function checkins( $stage, $range = -1, $negative = false ) {
+        global $wpdb;
+        $query_for_user_stage = self::$query_for_user_stage;
+
+        if ( $range < 1 ) {
+            $timestamp = 0;
+        } else {
+            $timestamp = strtotime( '-'. $range . ' days' );
+        }
+        $sql = "
+            SELECT COUNT(*)
+            FROM
+               (
+                  $query_for_user_stage
+                ) as tb
+            JOIN zume_dt_reports r ON r.user_id=tb.user_id AND r.type = 'training' AND r.subtype LIKE 'set_%'
+            WHERE tb.stage = $stage
+              AND tb.timestamp > $timestamp;
+            ";
+        $count = $wpdb->get_var( $sql );
+
+        return $count;
+    }
+
+    public static function training_plans( $stage, $range = -1, $negative = false ) {
+        global $wpdb;
+        $query_for_user_stage = self::$query_for_user_stage;
+
+        if ( $range < 1 ) {
+            $timestamp = 0;
+        } else {
+            $timestamp = strtotime( '-'. $range . ' days' );
+        }
+        $sql = "
+            SELECT COUNT(*)
+            FROM
+               (
+                  $query_for_user_stage
+                ) as tb
+            JOIN zume_dt_reports r ON r.user_id=tb.user_id AND r.type = 'training' AND r.subtype LIKE 'plan_created'
+            WHERE tb.stage = $stage
+              AND tb.timestamp > $timestamp;
+            ";
+        $count = $wpdb->get_var( $sql );
+
+        return (int) $count;
+    }
+
+    public static function coaching_request( $stage, $range = -1, $negative = false ) {
+        global $wpdb;
+        $query_for_user_stage = self::$query_for_user_stage;
+
+        if ( $range < 1 ) {
+            $timestamp = 0;
+        } else {
+            $timestamp = strtotime( '-'. $range . ' days' );
+        }
+        $sql = "
+            SELECT COUNT(*)
+            FROM
+               (
+                  $query_for_user_stage
+                ) as tb
+            JOIN zume_dt_reports r ON r.user_id=tb.user_id AND r.type = 'coaching' AND r.subtype LIKE 'requested_a_coach'
+            WHERE tb.stage = $stage
+              AND tb.timestamp > $timestamp;
+            ";
+        $count = $wpdb->get_var( $sql );
+
+        return (int) $count;
+    }
+
+    public static function post_training_plan( $stage, $range = -1, $negative = false ) {
+        global $wpdb;
+        $query_for_user_stage = self::$query_for_user_stage;
+
+        if ( $range < 1 ) {
+            $timestamp = 0;
+        } else {
+            $timestamp = strtotime( '-'. $range . ' days' );
+        }
+        $sql = "
+            SELECT COUNT(*)
+            FROM
+               (
+                  $query_for_user_stage
+                ) as tb
+            JOIN zume_dt_reports r ON r.user_id=tb.user_id AND r.type = 'training' AND r.subtype = 'made_post_training_plan'
+            WHERE tb.stage = $stage
+              AND tb.timestamp > $timestamp;
+            ";
+        $count = $wpdb->get_var( $sql );
+
+        return (int) $count;
     }
 
     public static function flow( $stage, $flow, $range = -1 ) {
