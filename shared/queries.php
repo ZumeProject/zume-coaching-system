@@ -466,7 +466,7 @@ class Zume_Queries {
             ";
         $count = $wpdb->get_var( $sql );
 
-        return (int) $count;
+        return $count;
     }
 
     public static function coaching_request( $stage, $range = -1, $negative = false ) {
@@ -490,7 +490,31 @@ class Zume_Queries {
             ";
         $count = $wpdb->get_var( $sql );
 
-        return (int) $count;
+        return $count;
+    }
+
+    public static function query_stage_by_type_and_subtype( $stage, $range, $type, $subtype ) {
+        global $wpdb;
+        $query_for_user_stage = self::$query_for_user_stage;
+
+        if ( $range < 1 ) {
+            $timestamp = 0;
+        } else {
+            $timestamp = strtotime( '-'. $range . ' days' );
+        }
+        $sql = "
+            SELECT COUNT(*)
+            FROM
+               (
+                  $query_for_user_stage
+                ) as tb
+            JOIN zume_dt_reports r ON r.user_id=tb.user_id AND r.type = '$type' AND r.subtype LIKE '$subtype'
+            WHERE tb.stage = $stage
+              AND tb.timestamp > $timestamp;
+            ";
+        $count = $wpdb->get_var( $sql );
+
+        return $count;
     }
 
     public static function post_training_plan( $stage, $range = -1, $negative = false ) {
@@ -514,7 +538,7 @@ class Zume_Queries {
             ";
         $count = $wpdb->get_var( $sql );
 
-        return (int) $count;
+        return $count;
     }
 
     public static function flow( $stage, $flow, $range = -1 ) {
@@ -562,6 +586,6 @@ class Zume_Queries {
 
         $count = $wpdb->get_var( $sql );
 
-        return (int) $count;
+        return $count;
     }
 }
