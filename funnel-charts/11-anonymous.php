@@ -47,15 +47,7 @@ class Zume_Funnel_Anonymous extends Zume_Funnel_Chart_Base
                                 <div class="cell small-6"><h1>Anonymous Candidates</h1></div>
                                 <div class="cell small-6 right">Open to: group training, a change in obedience, & multiplicative practices</div>
                             </div>
-                            <hr>
-                            <div class="grid-x">
-                                <div class="cell">
-                                    <h2>Cumulative</h2>
-                                </div>
-                            </div>
-                            <div class="grid-x">
-                                <div class="cell medium-3 hero"><span class="loading-spinner active"></span></div>
-                            </div>
+
                             <hr>
                             <div class="grid-x">
                                 <div class="cell center"><h1 id="range-title">Last 30 Days</h1></div>
@@ -85,23 +77,9 @@ class Zume_Funnel_Anonymous extends Zume_Funnel_Chart_Base
                             <div class="grid-x grid-margin-x grid-margin-y">
                                  <div class="cell medium-12 registrations"><span class="loading-spinner active"></span></div>
                             </div>
-                            <div class="grid-x grid-margin-x grid-margin-y">
-                                 <div class="cell medium-6 coach_requests"><span class="loading-spinner active"></span></div>
-                                 <div class="cell medium-6 joined_online_training"><span class="loading-spinner active"></span></div>
-                            </div>
-                            <div class="grid-x grid-margin-x grid-margin-y">
-                                 <div class="cell medium-6 visitors"><span class="loading-spinner active"></span></div>
-                            </div>
+
                         </div>
                     `)
-
-
-                window.spin_add()
-                makeRequest('GET', 'total', { stage: "anonymous", key: "total_registrations" }, window.site_info.rest_root ).done( function( data ) {
-                    jQuery('.hero').html( window.template_single( data ) )
-                    window.click_listener( data )
-                    window.spin_remove()
-                })
 
                 window.path_load = ( range ) => {
 
@@ -111,27 +89,7 @@ class Zume_Funnel_Anonymous extends Zume_Funnel_Chart_Base
                         window.click_listener( data )
                         window.spin_remove()
                     })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "anonymous", key: "coach_requests", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        data.valence = "valence-grey"
-                        jQuery('.coach_requests').html( window.template_single( data ) )
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "anonymous", key: "joined_online_training", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        data.valence = "valence-grey"
-                        jQuery('.joined_online_training').html( window.template_single( data ) )
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "anonymous", key: "visitors", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        data.valence = "valence-grey"
-                        jQuery('.visitors').html( window.template_single( data ) )
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
+
                 }
                 window.setup_filter()
 

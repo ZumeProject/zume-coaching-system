@@ -221,9 +221,13 @@ class Zume_Charts_API
             case 'registrations':
                 $label = 'Registrations';
                 $description = 'Total registrations to the system.';
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
+                $value = Zume_Queries::registrations( $params['range'] );
+                $days = 0;
+                if ( $params['range'] > 0 ) {
+                    $days = (int) $params['range'];
+                }
+                $goal = $days * 3;
+                $trend = Zume_Queries::registrations( $params['range'], true );
                 break;
             case 'coach_requests':
                 $label = 'Coach Requests';
@@ -496,7 +500,7 @@ class Zume_Charts_API
                     'stage' => $params['stage'],
                     'label' => 'Flow',
                     'description' => 'People moving in and out of this stage.',
-                    'link' => '',
+                    'link' => 'active',
                     'value_in' => zume_format_int( Zume_Queries::flow( 2, 'in', $params['range'] )  ),
                     'value_idle' => zume_format_int( Zume_Queries::flow( 2, 'idle', $params['range'] ) ),
                     'value_out' => zume_format_int( Zume_Queries::flow( 3, 'in', $params['range'] )  ),

@@ -541,6 +541,37 @@ class Zume_Queries {
         return $count;
     }
 
+    public static function registrations( $range = -1, $trend = false ) {
+        global $wpdb;
+        $query_for_user_stage = self::$query_for_user_stage;
+
+        $end = time();
+        if ( $range < 1 ) {
+            $begin = 0;
+        } else {
+            $begin = strtotime( '-'. $range . ' days' );
+            if ( $trend ) {
+                $end = $begin;
+                $begin = strtotime( '-'. ( $range * 2 ) . ' days' );
+            }
+        }
+
+
+
+        $sql = "
+            SELECT COUNT(*)
+            FROM
+               (
+                  $query_for_user_stage
+                ) as tb
+            JOIN zume_dt_reports r ON r.user_id=tb.user_id AND r.type = 'training' AND r.subtype = 'registered'
+            WHERE tb.timestamp > $begin AND tb.timestamp < $end;
+            ";
+        $count = $wpdb->get_var( $sql );
+
+        return $count;
+    }
+
     public static function flow( $stage, $flow, $range = -1 ) {
         // flow = in, idle, out
         global $wpdb;
