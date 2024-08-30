@@ -2704,9 +2704,8 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
                 'description_full' => 'Practitioner still coaching through MAWL checklist.',
                 'characteristics' => [
                     'Has made first practitioner report',
-                    'Working on HOST/MAWL checklist, but not complete',
+                    'Working on HOST/MAWL checklist',
                     'Consistent effort, inconsistent fruit',
-                    'Not multiplying',
                 ],
                 'priority_next_step' => '',
                 'next_steps' => [
@@ -2726,7 +2725,6 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
                     'Has completed HOST/MAWL checklist',
                     'Consistent effort, inconsistent fruit',
                     'Inconsistent 1st generation fruit',
-                    'Not multiplying',
                 ],
                 'priority_next_step' => 'Consistent 2,3,4 generation fruit',
                 'next_steps' => [
