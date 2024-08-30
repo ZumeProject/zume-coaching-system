@@ -10,7 +10,7 @@ class Zume_Funnel_Registrant extends Zume_Funnel_Chart_Base
     public $base_title;
     public $js_object_name = 'wp_js_object'; // This object will be loaded into the metrics.js file by the wp_localize_script.
     public $js_file_name = '/dt-metrics/groups/overview.js'; // should be full file name plus extension
-    public $permissions = [ 'dt_all_access_contacts', 'view_project_metrics' ];
+    public $permissions = [ 'access_contacts' ];
 
     public function __construct() {
         parent::__construct();
@@ -49,6 +49,12 @@ class Zume_Funnel_Registrant extends Zume_Funnel_Chart_Base
                                 <div class="cell small-6" style="float: right;">
                                      <span>
                                         <select id="range-filter" class="z-range-filter">
+                                            <?php
+                                            if ( isset( $_GET['range'] ) ) {
+                                            $range = sanitize_text_field( $_GET['range'] );
+                                            ?><option value="<?php echo $range ?>"><?php echo $range ?> days</option><?php
+                                            }
+                                            ?>
                                             <option value="90">Last 90 days</option>
                                             <option value="30">Last 30 days</option>
                                             <option value="7">Last 7 days</option>
@@ -135,8 +141,6 @@ class Zume_Funnel_Registrant extends Zume_Funnel_Chart_Base
                     })
                     window.spin_add()
                     makeRequest('GET', 'total', { stage: "registrant", key: "coach_requests", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        data.label = 'Coaching Requests'
-                        data.description = 'Description'
                         jQuery('.'+data.key).html(window.template_single_map(data))
                         window.click_listener( data )
                         window.spin_remove()

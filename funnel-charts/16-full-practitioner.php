@@ -10,7 +10,7 @@ class Zume_Funnel_L2 extends Zume_Funnel_Chart_Base
     public $base_title;
     public $js_object_name = 'wp_js_object'; // This object will be loaded into the metrics.js file by the wp_localize_script.
     public $js_file_name = '/dt-metrics/groups/overview.js'; // should be full file name plus extension
-    public $permissions = [ 'dt_all_access_contacts', 'view_project_metrics' ];
+    public $permissions = [ 'access_contacts' ];
 
     public function __construct() {
         parent::__construct();
@@ -49,6 +49,12 @@ class Zume_Funnel_L2 extends Zume_Funnel_Chart_Base
                                 <div class="cell small-6">
                                     <span style="float: right;">
                                         <select id="range-filter">
+                                            <?php
+                                            if ( isset( $_GET['range'] ) ) {
+                                            $range = sanitize_text_field( $_GET['range'] );
+                                            ?><option value="<?php echo $range ?>"><?php echo $range ?> days</option><?php
+                                            }
+                                            ?>
                                             <option value="90">Last 90 days</option>
                                             <option value="30">Last 30 days</option>
                                             <option value="7">Last 7 days</option>

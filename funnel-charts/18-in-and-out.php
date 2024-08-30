@@ -10,7 +10,7 @@ class Zume_Funnel_In_And_Out extends Zume_Funnel_Chart_Base
     public $base_title;
     public $js_object_name = 'wp_js_object'; // This object will be loaded into the metrics.js file by the wp_localize_script.
     public $js_file_name = '/dt-metrics/groups/overview.js'; // should be full file name plus extension
-    public $permissions = [ 'dt_all_access_contacts', 'view_project_metrics' ];
+    public $permissions = [ 'access_contacts' ];
 
     public function __construct() {
         parent::__construct();
@@ -31,42 +31,13 @@ class Zume_Funnel_In_And_Out extends Zume_Funnel_Chart_Base
         return $content;
     }
     public function wp_head() {
-        $this->styles();
         $this->js_api();
-        $stages = zume_funnel_stages();
-        $html = '';
-
-        foreach ( $stages as $stage ) {
-            if ( 'anonymous' === $stage['key'] ) {
-                continue;
-            }
-            $html .= '<div class="cell medium-9 zume-funnel">
-                                 <div class="'.$stage['key'].'"><span class="loading-spinner active"></span></div>
-                            </div>
-                            <div class="cell medium-3 padding-top">
-                                <h3>Characteristics</h3>';
-            $html .='<ul>';
-            foreach ( $stage['characteristics'] as $item ) {
-                $html .='<li>'.$item.'</li>';
-            }
-            $html .= '</ul>';
-
-            $html .= '<h3>Next Steps</h3>';
-
-            $html .= '<ul>';
-            foreach ( $stage['next_steps'] as $item ) {
-                $html .= '<li>'.$item.'</li>';
-            }
-            $html .= '</ul></div>';
-        }
-
 
         ?>
         <script>
             jQuery(document).ready(function(){
                 "use strict";
                 let chart = jQuery('#chart')
-                let list = `<?php echo $html; ?>`;
                 chart.empty().html(`
                         <div id="zume-funnel">
                             <div class="grid-x">
@@ -93,13 +64,14 @@ class Zume_Funnel_In_And_Out extends Zume_Funnel_Chart_Base
                                     <span class="loading-spinner active right" style="margin:.5em 1em;"></span>
                                 </div>
                             </div>
-                            <div class="grid-x grid-margin-x grid-margin-y">
-                                 <div class="cell medium-12 registrant in_and_out"><span class="loading-spinner active"></span></div>
-                                 <div class="cell medium-12 active_training_trainee in_and_out"><span class="loading-spinner active"></span></div>
-                                 <div class="cell medium-12 post_training_trainee in_and_out"><span class="loading-spinner active"></span></div>
-                                 <div class="cell medium-12 partial_practitioner in_and_out"><span class="loading-spinner active"></span></div>
-                                 <div class="cell medium-12 full_practitioner in_and_out"><span class="loading-spinner active"></span></div>
-                                 <div class="cell medium-12 multiplying_practitioner in_and_out"><span class="loading-spinner active"></span></div>
+                            <div class="grid-x grid-padding-x"><div class="cell"><hr></div></div>
+                            <div class="grid-x grid-padding-x">
+                                <div class="cell medium-12 registrant in_and_out"><span class="loading-spinner active"></span></div>
+                                <div class="cell medium-12 active_training_trainee in_and_out"><span class="loading-spinner active"></span></div>
+                                <div class="cell medium-12 post_training_trainee in_and_out"><span class="loading-spinner active"></span></div>
+                                <div class="cell medium-12 partial_practitioner in_and_out"><span class="loading-spinner active"></span></div>
+                                <div class="cell medium-12 full_practitioner in_and_out"><span class="loading-spinner active"></span></div>
+                                <div class="cell medium-12 multiplying_practitioner in_and_out"><span class="loading-spinner active"></span></div>
                             </div>
                         </div>
                     `)

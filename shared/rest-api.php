@@ -322,8 +322,8 @@ class Zume_Charts_API
 
                 $label = 'Coach Requests';
                 $description = 'Coach requests in this period of time';
-                $value = 40;
-                $goal = 30;
+                $value = Zume_Queries::query_stage_by_type_and_subtype( 1, $params['range'], 'coaching', 'requested_a_coach' );
+                $goal = 0;
                 $trend = 0;
                 break;
             case 'has_plan':

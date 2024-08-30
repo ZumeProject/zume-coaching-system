@@ -37,10 +37,12 @@ class Zume_Funnel_Base {
             require_once( '16-full-practitioner.php' );
             require_once( '17-multiplying-practitioner.php' );
 
-            require_once( '20-overview.php' );
-            require_once( '21-facilitator.php' );
-            require_once( '22-early.php' );
-            require_once( '23-advanced.php' );
+            if ( user_can( get_current_user_id(), 'manage_options' ) ) :
+                require_once( '20-overview.php' );
+                require_once( '21-facilitator.php' );
+                require_once( '22-early.php' );
+                require_once( '23-advanced.php' );
+            endif;
 
             require_once( '50-concepts.php' );
 
