@@ -94,7 +94,6 @@ class Zume_Tile_Funnel {
                 <?php
             }
             ?>
-
         </div>
         <script>
             jQuery(document).ready(function(){
@@ -102,7 +101,7 @@ class Zume_Tile_Funnel {
                     let stage = event.target.dataset.stage
                     console.log(stage)
 
-                    makeRequest('POST', 'log', { type: 'coaching', subtype: 'manual_upgrade_to_'+stage, 'payload':  { 'user_id': <?php echo $user->ID ?>, 'name': '<?php echo $user->data->display_name ?>' }, user_id: <?php echo $this_post['trainee_user_id'] ?>, post_id:  <?php echo $this_post['trainee_contact_id'] ?> }, 'zume_system/v1' ).done( function( data ) {
+                    makeRequest('POST', 'log', { type: 'coaching', subtype: 'manual_upgrade_to_'+stage, user_id: <?php echo $this_post['trainee_user_id'] ?>, 'payload': { 'user_id': <?php echo $user->ID ?>, 'name': '<?php echo $user->data->display_name ?>' } }, 'zume_system/v1' ).done( function( data ) {
                         console.log(data)
                         window.location.reload()
                     })
