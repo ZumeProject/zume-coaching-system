@@ -74,7 +74,7 @@ class Zume_Tile_Funnel {
                         </div>
 
                         <?php
-                        if ( $stage['value'] > $funnel_number ) {
+                        if ( $stage['value'] > $funnel_number  ) {
                            ?>
                             <div class="cell">
                                 <hr>
