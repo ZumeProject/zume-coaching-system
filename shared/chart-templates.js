@@ -197,13 +197,13 @@ jQuery(document).ready(function($) {
                         <div class="grid-x">
                             <div class="cell small-6 z-card-sub-left sub ${goal_valence} ${key}">
                                 <div class="z-card-title ${key}">
-                                      GOAL
+                                      PACE
                                   </div>
                                   <div class="z-card-value ${key}">
                                       ${goal_percent}%
                                   </div>
                                   <div class="z-card-description ${key}">
-                                       goal for this period (${goal})
+                                       target for this period (${goal})
                                    </div>
                             </div>
                             <div class="cell small-6 z-card-sub-right sub ${trend_valence} ${key}">

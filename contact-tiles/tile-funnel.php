@@ -22,6 +22,7 @@ class Zume_Tile_Funnel {
         }
         $funnel_stages = zume_funnel_stages();
         $funnel_number = zume_get_user_stage( $this_post['trainee_user_id'], null, true );
+        $user = wp_get_current_user();
         ?>
         <div class="cell small-12 medium-4">
             <?php
@@ -71,6 +72,20 @@ class Zume_Tile_Funnel {
                             }
                             ?>
                         </div>
+
+                        <?php
+                        if ( $stage['value'] > $funnel_number ) {
+                           ?>
+                            <div class="cell">
+                                <hr>
+                                <h3>Manual Advance</h3>
+                                <p>Manually upgrade user to this stage. We accept your coaching evaluation to help edit the system tracking. Warning: this action is irreversible. </p>
+                                <button class="button manual-upgrade-user" data-stage="<?php echo $stage['value'] ?>">Manually Upgrade User to this Stage</button>
+                            </div>
+                            <?php
+                        }
+                        ?>
+
                     </div>
                     <button class="close-button" data-close aria-label="Close modal" type="button">
                         <span aria-hidden="true">&times;</span>
@@ -79,7 +94,21 @@ class Zume_Tile_Funnel {
                 <?php
             }
             ?>
+
         </div>
+        <script>
+            jQuery(document).ready(function(){
+                jQuery('.button.manual-upgrade-user').on('click', function( event ){
+                    let stage = event.target.dataset.stage
+                    console.log(stage)
+
+                    makeRequest('POST', 'log', { type: 'coaching', subtype: 'manual_upgrade_to_'+stage, 'payload':  { 'user_id': <?php echo $user->ID ?>, 'name': '<?php echo $user->data->display_name ?>' }, user_id: <?php echo $this_post['trainee_user_id'] ?>, post_id:  <?php echo $this_post['trainee_contact_id'] ?> }, 'zume_system/v1' ).done( function( data ) {
+                        console.log(data)
+                        window.location.reload()
+                    })
+                })
+            })
+        </script>
 
         <?php
     }

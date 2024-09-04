@@ -225,6 +225,22 @@ if ( ! function_exists( 'zume_get_user_stage' ) ) {
                     $funnel_steps[6] = true;
                 }
 
+                // manual stage
+                if ( 'manual_upgrade_to_2' == $value['subtype'] ) {
+                    $funnel_steps[2] = true;
+                }
+                if ( 'manual_upgrade_to_3' == $value['subtype'] ) {
+                    $funnel_steps[3] = true;
+                }
+                if ( 'manual_upgrade_to_4' == $value['subtype'] ) {
+                    $funnel_steps[4] = true;
+                }
+                if ( 'manual_upgrade_to_5' == $value['subtype'] ) {
+                    $funnel_steps[5] = true;
+                }
+                if ( 'manual_upgrade_to_6' == $value['subtype'] ) {
+                    $funnel_steps[6] = true;
+                }
 
                 // user state
                 if ( 'plan_created' == $value['subtype'] ) {
@@ -2645,6 +2661,9 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
                     'Join an online training',
                     'Get a coach',
                 ],
+                'pace' => [
+                    '2024: 200 visits a day'
+                ]
             ],
             1 => [
                 'key' => 'registrant',
@@ -2661,6 +2680,9 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
                     'Make a training plan',
                     'Invite friends',
                 ],
+                'pace' => [
+                    '4 registrations per day', // shared/rest-api.php:310
+                ]
             ],
             2 => [
                 'key' => 'active_training_trainee',
@@ -2677,6 +2699,9 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
                     'Complete training',
                     'Create post training plan',
                 ],
+                'pace' => [
+                    '2 trainees engaging training per day', // shared/rest-api.php:418
+                ]
             ],
             3 => [
                 'key' => 'post_training_trainee',
@@ -2694,6 +2719,9 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
                     'Complete post training plan',
                     'Establish ongoing coaching relationship',
                 ],
+                'pace' => [
+                    '1 trainee completing training every 4 days', // shared/rest-api.php:546
+                ]
             ],
             4 => [
                 'key' => 'partial_practitioner',
@@ -2713,6 +2741,9 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
                     'Continued reporting',
                     'Connect with S1 and S2 practitioners',
                 ],
+                'pace' => [
+                    '1 trainee becoming practitioner every 10 days', // shared/rest-api.php:714
+                ]
             ],
             5 => [
                 'key' => 'full_practitioner',
@@ -2732,6 +2763,9 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
                     'Consistent 2,3,4 group generation fruit',
                     'Peer coaching with S2 and S3 practitioners',
                 ],
+                'pace' => [
+                    '1 practitioner completing HOST/MAWL every 20 days', // shared/rest-api.php:714
+                ]
             ],
             6 => [
                 'key' => 'multiplying_practitioner',
@@ -2748,6 +2782,9 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
                 'next_steps' => [
                     'Downstream coaching for consistent generations',
                 ],
+                'pace' => [
+                    '1 practitioner breaking through with multiplication every 30 days', // shared/rest-api.php:714
+                ]
             ],
         ];
     }

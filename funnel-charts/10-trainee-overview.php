@@ -57,6 +57,14 @@ class Zume_Funnel_Trainee extends Zume_Funnel_Chart_Base
             foreach ( $stage['next_steps'] as $item ) {
                 $html .= '<li>'.$item.'</li>';
             }
+            $html .= '</ul>';
+
+            $html .= '<h3>Pace</h3>';
+
+            $html .= '<ul>';
+            foreach ( $stage['pace'] as $item ) {
+                $html .= '<li>'.$item.'</li>';
+            }
             $html .= '</ul></div>';
         }
 

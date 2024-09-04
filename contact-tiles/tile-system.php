@@ -251,7 +251,6 @@ class Zume_Tile_System {
             <hr>
             <?php
                 if ( ! empty( $plans ) ) {
-                    dt_write_log($plans);
                     echo '<div class="grid-x grid-padding-x">';
                     foreach ( $plans as $plan ) {
                         echo '<div class="cell"><h2>' . $plan['title']  . '</a></div>';
