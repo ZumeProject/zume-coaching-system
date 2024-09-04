@@ -2907,9 +2907,6 @@ if ( ! function_exists( 'zume_get_percent' ) ) {
         else if ( $value < 1 && $compare > 0 ) {
             return $compare * 100 * -1;
         }
-        else if ( $value > 0 && $compare < 1 ) {
-            return $value * 100;
-        }
         else {
             return 0;
         }
