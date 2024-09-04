@@ -160,6 +160,7 @@ class Zume_Charts_API
             $params['range'] = false;
         }
 
+
         switch ( $params['stage'] ) {
             case 'anonymous':
                 return $this->total_anonymous( $params );
@@ -190,6 +191,7 @@ class Zume_Charts_API
         }
     }
     public function total_anonymous( $params ) {
+        $range = sanitize_text_field( $params['range'] );
         $negative_stat = $params['negative_stat'] ?? false;
 
         $label = '';
@@ -221,13 +223,13 @@ class Zume_Charts_API
             case 'registrations':
                 $label = 'Registrations';
                 $description = 'Total registrations to the system.';
-                $value = Zume_Queries::registrations( $params['range'] );
+                $value = Zume_Queries::registrations( $range );
                 $days = 0;
-                if ( $params['range'] > 0 ) {
-                    $days = (int) $params['range'];
+                if ( $range > 0 ) {
+                    $days = (int) $range;
                 }
                 $goal = $days * 3;
-                $trend = Zume_Queries::registrations( $params['range'], true );
+                $trend = Zume_Queries::registrations( $range, true );
                 break;
             case 'coach_requests':
                 $label = 'Coach Requests';
@@ -276,8 +278,12 @@ class Zume_Charts_API
         ];
     }
     public function total_registrants( $params ) {
-        global $wpdb;
+        $range = sanitize_text_field( $params['range'] );
+        $stage = 1;
         $negative_stat = $params['negative_stat'] ?? false;
+
+        $all_stages_totols = Zume_Queries::stage_totals_by_range( $range );
+        $stage_total = $all_stages_totols[$stage]['total'];
 
         $label = '';
         $description = '';
@@ -290,91 +296,67 @@ class Zume_Charts_API
         $trend_valence = null;
 
         switch ( $params['key'] ) {
-            case 'has_no_coach':
-                $label = 'Has No Coach';
-                $description = 'People who have no coach.';
-                $value = Zume_Queries::has_coach( [ 1 ], $params['range'], true );
-                $goal = 0;
-                $trend = 0;
-                break;
-            case 'locations':
-                $label = 'Locations';
-                $description = 'Cumulative number of locations in this stage.';
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
-                $valence = 'valence-grey';
-                break;
-            case 'countries':
-                $label = 'Countries';
-                $description = 'Cumulative number of countries in this stage.';
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
-                $valence = 'valence-grey';
-                break;
-            case 'new_registrations':
-                $label = 'New Registrations';
-                $description = 'Total number of registrants in this stage.';
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
-                break;
-            case 'coach_requests':
 
-                // missing query by date range
-
-                $label = 'Coach Requests';
-                $description = 'Coach requests in this period of time';
-                $value = Zume_Queries::query_stage_by_type_and_subtype( 1, $params['range'], 'coaching', 'requested_a_coach' );
-                $goal = 0;
-                $trend = 0;
-                break;
-            case 'has_plan':
-                $label = 'Has Plan';
-                $description = 'Total number of registrants who have a plan.';
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
-                break;
-            case 'no_plan':
-                // lookup the query
-                $label = 'Has No Plan';
-                $description = 'Total number of registrants who have no plan.';
-                $value = 0;
-                $goal = 4;
-                $trend = 4;
-                $valence = null;
-                break;
-            case 'no_friends':
-                $label = 'Has No Friends';
-                $description = 'Total number of registrants who have not invited any friends.';
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
-                break;
-
-            case 'no_updated_profile':
-                $label = 'Has Not Updated Profile';
-                $description = 'Total number of registrants who have not updated their profile.';
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
-                break;
 
             case 'total_registrants':
                 $label = 'Registrants';
                 $description = 'People who have registered but have not progressed into training.';
                 $link = 'registrants';
-
-                if ( $params['range'] < 0 ) {
-                    $value = Zume_Views::stage_totals( 1 );
-                } else {
-                    $value = Zume_Views::stage_totals( 1, $params['range'] );
+                $value = Zume_Queries::stage_total( $stage, $range );
+                $days = 0;
+                if ( $range > 0 ) {
+                    $days = (int) $range;
                 }
-
-                $goal = 0;
-                $trend = 0;
+                $goal = $days * 3; // three events per day
+                $trend = Zume_Queries::stage_total( $stage, $range, true );
+                break;
+            case 'has_no_coach':
+                $negative_stat = true;
+                $percent_expected = .75;
+                $goal = $stage_total * $percent_expected;
+                $label = 'Has No Coach';
+                $description = 'People who have no coach. (Expected '.($percent_expected*100).'% | '.$goal.')';
+                $value = Zume_Queries::has_coach( $stage, $range, true );
+                break;
+            case 'coach_requests':
+                $negative_stat = false;
+                $percent_expected = .33;
+                $goal = $stage_total * $percent_expected;
+                $label = 'Coach Requests';
+                $description = 'Coach requests in this period of time. (Expected '.($percent_expected*100).'% | '.$goal.')';
+                $value = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'coaching', 'requested_a_coach' );
+                break;
+            case 'not_completed_profiles':
+                $negative_stat = true;
+                $percent_expected = .9;
+                $goal = $stage_total * $percent_expected;
+                $label = 'Has Not Completed Profile';
+                $description = 'Total number of registrants who have not completed their profile. Expected: '.$goal;
+                $value = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'system', 'set_profile', true );
+                break;
+            case 'not_set_phone':
+                $negative_stat = true;
+                $percent_expected = .9;
+                $goal = $stage_total * $percent_expected;
+                $label = 'Has No Phone';
+                $description = 'Total number of registrants who have not completed their profile. Expected: '.$goal;
+                $value = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'system', 'set_profile_phone', true );
+                break;
+            case 'not_set_name':
+                $negative_stat = true;
+                $percent_expected = .15;
+                $goal = $stage_total * $percent_expected;
+                $label = 'Has Not Set Name';
+                $description = 'Total number of registrants who have not set their profile name. Expected:  '.$goal;
+                $value = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'system', 'set_profile_name', true );
+                break;
+            case 'not_set_location':
+                $negative_stat = true;
+                $percent_expected = .2;
+                $goal = $stage_total * $percent_expected;
+                $label = 'Has Not Set Location';
+                $description = 'Total number of registrants who have not set their profile location. Expected: '.$goal;
+                $value = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'system', 'set_profile_location', true );
                 break;
             case 'in_and_out':
                 return [
@@ -383,15 +365,11 @@ class Zume_Charts_API
                     'label' => 'Flow',
                     'description' => 'People moving in and out of this stage.',
                     'link' => '',
-                    'value_in' => zume_format_int( Zume_Queries::flow( 1, 'in', $params['range'] )  ),
-                    'value_idle' => zume_format_int( Zume_Queries::flow( 1, 'idle', $params['range'] ) ),
-                    'value_out' => zume_format_int( Zume_Queries::flow( 2, 'in', $params['range'] )  ),
+                    'value_in' => zume_format_int( Zume_Queries::flow( $stage, 'in', $range )  ),
+                    'value_idle' => zume_format_int( Zume_Queries::flow( $stage, 'idle', $range ) ),
+                    'value_out' => zume_format_int( Zume_Queries::flow( 2, 'in', $range )  ),
                 ];
-
             default:
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
                 break;
         }
 
@@ -413,7 +391,9 @@ class Zume_Charts_API
         ];
     }
     public function total_active_training_trainee( $params ) {
+        $range = sanitize_text_field( $params['range'] );
         $negative_stat = $params['negative_stat'] ?? false;
+        $stage = 2;
 
         $label = '';
         $description = '';
@@ -430,7 +410,7 @@ class Zume_Charts_API
             case 'has_no_coach':
                 $label = 'Has No Coach';
                 $description = 'People who have no coach.';
-                $value = Zume_Queries::has_coach( [2], $params['range'], true );
+                $value = Zume_Queries::has_coach( $stage, $range, true );
                 $goal = 0;
                 $trend = 0;
                 break;
@@ -445,7 +425,7 @@ class Zume_Charts_API
             case 'new_coaching_requests':
                 $label = 'New Coaching Requests';
                 $description = 'New coaching requests from post training trainees.';
-                $value = Zume_Queries::coaching_request( 2, $params['range'] );
+                $value = Zume_Queries::coaching_request( $stage, $range );
                 $goal = 0;
                 $trend = 0;
                 break;
@@ -467,7 +447,7 @@ class Zume_Charts_API
             case 'total_checkins':
                 $label = 'Total Checkins';
                 $description = 'Total number of checkins by trainees.';
-                $value = Zume_Queries::checkins( 2, $params['range'] );
+                $value = Zume_Queries::checkins( $stage, $range );
                 $goal = 0;
                 $trend = 0;
                 $valence = 'valence-grey';
@@ -475,7 +455,7 @@ class Zume_Charts_API
             case 'has_no_updated_profile':
                 $label = 'No Updated Profile';
                 $description = 'People who have not updated their profile.';
-                $value = Zume_Queries::checkins( 2, $params['range'], true );
+                $value = Zume_Queries::checkins( $stage, $range, true );
                 $goal = 0;
                 $trend = 0;
                 $valence = null;
@@ -483,14 +463,14 @@ class Zume_Charts_API
             case 'plans':
                 $label = 'New Plans Created';
                 $description = 'New training plans created by active training trainees.';
-                $value = Zume_Queries::training_plans( 2, $params['range'] );
+                $value = Zume_Queries::training_plans( $stage, $range );
                 $goal = 0;
                 $trend = 0;
                 break;
             case 'post_training_plans':
                 $label = 'New Post Training Plans';
                 $description = 'New training plans created by active training trainees.';
-                $value = Zume_Queries::post_training_plan( 2, $params['range'] );
+                $value = Zume_Queries::post_training_plan( $stage, $range );
                 $goal = 0;
                 $trend = 0;
                 break;
@@ -501,17 +481,21 @@ class Zume_Charts_API
                     'label' => 'Flow',
                     'description' => 'People moving in and out of this stage.',
                     'link' => 'active',
-                    'value_in' => zume_format_int( Zume_Queries::flow( 2, 'in', $params['range'] )  ),
-                    'value_idle' => zume_format_int( Zume_Queries::flow( 2, 'idle', $params['range'] ) ),
-                    'value_out' => zume_format_int( Zume_Queries::flow( 3, 'in', $params['range'] )  ),
+                    'value_in' => zume_format_int( Zume_Queries::flow( $stage, 'in', $range )  ),
+                    'value_idle' => zume_format_int( Zume_Queries::flow( $stage, 'idle', $range ) ),
+                    'value_out' => zume_format_int( Zume_Queries::flow( 3, 'in', $range )  ),
                 ];
             case 'total_active_training_trainee':
                 $label = 'Active Training Trainees';
                 $description = 'People who are actively working a training plan or have only partially completed the training.';
                 $link = 'active';
-                $value = Zume_Views::stage_totals( 2, $params['range'] );
-                $goal = 0;
-                $trend = 0;
+                $value = Zume_Queries::stage_total( $stage, $range );
+                $days = 0;
+                if ( $range > 0 ) {
+                    $days = (int) $range;
+                }
+                $goal = $days * 2; // three events per day
+                $trend = Zume_Queries::stage_total( $stage, $range, true );
                 break;
             default:
                 $value = 0;
@@ -538,7 +522,9 @@ class Zume_Charts_API
         ];
     }
     public function total_post_training_trainee( $params ) {
+        $range = sanitize_text_field( $params['range'] );
         $negative_stat = $params['negative_stat'] ?? false;
+        $stage = 3;
 
         $label = '';
         $description = '';
@@ -555,7 +541,7 @@ class Zume_Charts_API
             case 'has_no_coach':
                 $label = 'Has No Coach';
                 $description = 'People who have no coach.';
-                $value = Zume_Queries::has_coach( [ 3 ], $params['range'], true );
+                $value = Zume_Queries::has_coach( $stage, $range, true );
                 $goal = 0;
                 $trend = 0;
                 break;
@@ -585,7 +571,7 @@ class Zume_Charts_API
             case 'new_coaching_requests':
                 $label = 'New Coaching Requests';
                 $description = 'New coaching requests from post training trainees.';
-                $value = Zume_Queries::coaching_request( 3, $params['range'] );
+                $value = Zume_Queries::coaching_request( $stage, $range );
                 $goal = 0;
                 $trend = 0;
                 break;
@@ -593,15 +579,13 @@ class Zume_Charts_API
                 $label = 'Post-Training Trainees';
                 $description = 'People who have completed the training and are working on a post training plan.';
                 $link = 'post';
-
-                if ( $params['range'] < 0 ) {
-                    $value = Zume_Views::stage_totals( 3 );
-                } else {
-                    $value = Zume_Views::stage_totals( 3, $params['range'] );
+                $value = Zume_Queries::stage_total( $stage, $range );
+                $days = 0;
+                if ( $range > 0 ) {
+                    $days = (int) $range;
                 }
-
-                $goal = 0;
-                $trend = 0;
+                $goal = intval( $days / 4 ); // events every 4 days
+                $trend = Zume_Queries::stage_total( $stage, $range, true );
                 break;
             case 'in_and_out':
                 return [
@@ -610,9 +594,9 @@ class Zume_Charts_API
                     'label' => 'Flow',
                     'description' => 'People moving in and out of this stage.',
                     'link' => '',
-                    'value_in' => zume_format_int( Zume_Queries::flow( 3, 'in', $params['range'] )  ),
-                    'value_idle' => zume_format_int( Zume_Queries::flow( 3, 'idle', $params['range'] ) ),
-                    'value_out' => zume_format_int( Zume_Queries::flow( 4, 'in', $params['range'] )  ),
+                    'value_in' => zume_format_int( Zume_Queries::flow( $stage, 'in', $range )  ),
+                    'value_idle' => zume_format_int( Zume_Queries::flow( $stage, 'idle', $range ) ),
+                    'value_out' => zume_format_int( Zume_Queries::flow( 4, 'in', $range )  ),
                 ];
             default:
                 $value = 0;
@@ -639,7 +623,9 @@ class Zume_Charts_API
         ];
     }
     public function total_partial_practitioner( $params ) {
+        $range = sanitize_text_field( $params['range'] );
         $negative_stat = $params['negative_stat'] ?? false;
+        $stage = 4;
 
         $label = '';
         $description = '';
@@ -655,7 +641,7 @@ class Zume_Charts_API
             case 'has_no_coach':
                 $label = 'Has No Coach';
                 $description = 'People who have no coach.';
-                $value = Zume_Queries::has_coach( [ 4 ], $params['range'], true );
+                $value = Zume_Queries::has_coach( $stage, $range, true );
                 $goal = 0;
                 $trend = 0;
                 break;
@@ -723,15 +709,13 @@ class Zume_Charts_API
                 $label = '(S1) Partial Practitioners';
                 $description = 'Learning through doing. Implementing partial checklist / 4-fields';
                 $link = 'partial_practitioner_practitioners';
-
-                if ( $params['range'] < 0 ) {
-                    $value = Zume_Views::stage_totals( 4 );
-                } else {
-                    $value = Zume_Views::stage_totals( 4, $params['range'] );
+                $value = Zume_Queries::stage_total( $stage, $range );
+                $days = 0;
+                if ( $range > 0 ) {
+                    $days = (int) $range;
                 }
-
-                $goal = 0;
-                $trend = 0;
+                $goal = intval( $days / 10 ); // events every 10 days
+                $trend = Zume_Queries::stage_total( $stage, $range, true );
                 break;
             case 'in_and_out':
                 return [
@@ -740,9 +724,9 @@ class Zume_Charts_API
                     'label' => 'Flow',
                     'description' => 'People moving in and out of this stage.',
                     'link' => '',
-                    'value_in' => zume_format_int( Zume_Queries::flow( 4, 'in', $params['range'] )  ),
-                    'value_idle' => zume_format_int( Zume_Queries::flow( 4, 'idle', $params['range'] ) ),
-                    'value_out' => zume_format_int( Zume_Queries::flow( 5, 'in', $params['range'] )  ),
+                    'value_in' => zume_format_int( Zume_Queries::flow( $stage, 'in', $range )  ),
+                    'value_idle' => zume_format_int( Zume_Queries::flow( $stage, 'idle', $range ) ),
+                    'value_out' => zume_format_int( Zume_Queries::flow( 5, 'in', $range )  ),
                 ];
             default:
                 $value = 0;
@@ -769,7 +753,9 @@ class Zume_Charts_API
         ];
     }
     public function total_full_practitioner( $params ) {
+        $range = sanitize_text_field( $params['range'] );
         $negative_stat = $params['negative_stat'] ?? false;
+        $stage = 5;
 
         $label = '';
         $description = '';
@@ -785,7 +771,7 @@ class Zume_Charts_API
             case 'has_no_coach':
                 $label = 'Has No Coach';
                 $description = 'People who have no coach.';
-                $value = Zume_Queries::has_coach( [ 5 ], $params['range'], true );
+                $value = Zume_Queries::has_coach( $stage, $range, true );
                 $goal = 0;
                 $trend = 0;
                 break;
@@ -851,15 +837,13 @@ class Zume_Charts_API
                 $label = 'Full Practitioners';
                 $description = 'People who are seeking multiplicative movement and are completely skilled with the coaching checklist.';
                 $link = 'full_practitioner_practitioners';
-
-                if ( $params['range'] < 0 ) {
-                    $value = Zume_Views::stage_totals( 5 );
-                } else {
-                    $value = Zume_Views::stage_totals( 5, $params['range'] );
+                $value = Zume_Queries::stage_total( $stage, $range );
+                $days = 0;
+                if ( $range > 0 ) {
+                    $days = (int) $range;
                 }
-
-                $goal = 5;
-                $trend = rand( 1, 10 );
+                $goal = intval( $days / 20 ); // events every 30 days
+                $trend = Zume_Queries::stage_total( $stage, $range, true );
                 break;
             case 'in_and_out':
                 return [
@@ -868,9 +852,9 @@ class Zume_Charts_API
                     'label' => 'Flow',
                     'description' => 'People moving in and out of this stage.',
                     'link' => '',
-                    'value_in' => zume_format_int( Zume_Queries::flow( 5, 'in', $params['range'] )  ),
-                    'value_idle' => zume_format_int( Zume_Queries::flow( 5, 'idle', $params['range'] ) ),
-                    'value_out' => zume_format_int( Zume_Queries::flow( 6, 'in', $params['range'] )  ),
+                    'value_in' => zume_format_int( Zume_Queries::flow( $stage, 'in', $range )  ),
+                    'value_idle' => zume_format_int( Zume_Queries::flow( $stage, 'idle', $range ) ),
+                    'value_out' => zume_format_int( Zume_Queries::flow( 6, 'in', $range )  ),
                 ];
             default:
                 $value = 0;
@@ -897,7 +881,9 @@ class Zume_Charts_API
         ];
     }
     public function total_multiplying_practitioner( $params ) {
+        $range = sanitize_text_field( $params['range'] );
         $negative_stat = $params['negative_stat'] ?? false;
+        $stage = 6;
 
         $label = '';
         $description = '';
@@ -910,10 +896,22 @@ class Zume_Charts_API
         $trend_valence = null;
 
         switch ( $params['key'] ) {
+            case 'total_multiplying_practitioner':
+                $label = 'Multiplying Practitioners';
+                $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
+                $link = 'multiplying_practitioner_practitioners';
+                $value = Zume_Queries::stage_total( $stage, $range );
+                $days = 0;
+                if ( $range > 0 ) {
+                    $days = (int) $range;
+                }
+                $goal = intval( $days / 30 ); // events every 30 days
+                $trend = Zume_Queries::stage_total( $stage, $range, true );
+                break;
             case 'has_no_coach':
                 $label = 'Has No Coach';
                 $description = 'People who have no coach.';
-                $value = Zume_Queries::has_coach( [ 6 ], $params['range'], true );
+                $value = Zume_Queries::has_coach( $stage, $range, true );
                 $goal = 0;
                 $trend = 0;
                 break;
@@ -975,20 +973,6 @@ class Zume_Charts_API
                 $goal = 0;
                 $trend = 0;
                 break;
-            case 'total_multiplying_practitioner':
-                $label = 'Multiplying Practitioners';
-                $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
-                $link = 'multiplying_practitioner_practitioners';
-
-                if ( $params['range'] < 0 ) {
-                    $value = Zume_Views::stage_totals( 6 );
-                } else {
-                    $value = Zume_Views::stage_totals( 6, $params['range'] );
-                }
-
-                $goal = 0;
-                $trend = 0;
-                break;
             case 'in_and_out':
                 return [
                     'key' => $params['key'],
@@ -996,14 +980,11 @@ class Zume_Charts_API
                     'label' => 'Flow',
                     'description' => 'People moving in and out of this stage.',
                     'link' => '',
-                    'value_in' => zume_format_int( Zume_Queries::flow( 6, 'in', $params['range'] )  ),
-                    'value_idle' => zume_format_int( Zume_Queries::flow( 6, 'idle', $params['range'] ) ),
+                    'value_in' => zume_format_int( Zume_Queries::flow( $stage, 'in', $range )  ),
+                    'value_idle' => zume_format_int( Zume_Queries::flow( $stage, 'idle', $range ) ),
                     'value_out' => '',
                 ];
             default:
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
                 break;
         }
 

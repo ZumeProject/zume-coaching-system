@@ -182,8 +182,8 @@ jQuery(document).ready(function($) {
       return `
             <div class="grid-x">
                 <div class="cell z-card  ${key}">
-                    <div class="z-card-main zume-list ${hover} ${key}" >
-                        <div class="z-card-title ${key}">
+                    <div class="z-card-main ${hover} ${key}" >
+                        <div class="z-card-title hero ${key}">
                             ${label}
                         </div>
                         <div class="z-card-value ${key}">

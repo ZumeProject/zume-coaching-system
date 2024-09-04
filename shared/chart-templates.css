@@ -165,14 +165,17 @@ Card Base
     color: var(--white);
     font-size: var(--medium);
     font-weight: var(--medium-weight);
+    filter: drop-shadow(var(--grey) 3px 3px 5px );
 }
 .z-card-value {
     font-size: var(--xlarge);
     font-weight: var(--heavy-weight);
+    filter: drop-shadow(var(--grey) 3px 3px 5px );
 }
 .sub .z-card-value {
     font-size: var(--large);
     font-weight: var(--heavy-weight);
+    filter: drop-shadow(var(--grey) 3px 3px 5px );
 }
 .z-card-description {
     color: var(--white);
@@ -180,6 +183,7 @@ Card Base
     font-weight: var(--medium-weight);
     padding-left: var(--small);
     padding-right: var(--small);
+    filter: drop-shadow(var(--grey) 3px 3px 5px );
 }
 
 

@@ -9,40 +9,50 @@ class Zume_Queries {
                                                   GROUP BY r.user_id, r.post_id";
 
 
-    public static function stage_totals() {
+    public static function stage_total( $stage, $range, $trend = false ) {
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
 
-        $results = $wpdb->get_results(
-            "SELECT tb.stage, count(tb.user_id) as total
+        $end = time();
+        if ( $range < 1 ) {
+            $begin = 0;
+        } else {
+            $begin = strtotime( '-'. $range . ' days' );
+            if ( $trend ) {
+                $end = $begin;
+                $begin = strtotime( '-'. ( $range * 2 ) . ' days' );
+            }
+        }
+
+        $result = $wpdb->get_var(
+            "SELECT COUNT(tb.user_id)
                 FROM
                 (
                    $query_for_user_stage
                 ) as tb
-                GROUP BY tb.stage;",
-        ARRAY_A );
+                WHERE tb.timestamp > $begin AND tb.timestamp < $end AND tb.stage = $stage
+                ;" );
 
-        $stages = [];
-
-        if ( empty( $results ) ) {
-            return $stages;
+        if ( empty( $result ) ) {
+            return 0;
         }
 
-        foreach ( $results as $result ) {
-            $stages[ $result['stage'] ] = $result;
-        }
-
-        return $stages;
+        return $result;
     }
 
-    public static function stage_totals_by_range( $range ) {
+    public static function stage_totals_by_range( $range, $trend = false ) {
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
 
+        $end = time();
         if ( $range < 1 ) {
-            $timestamp = 0;
+            $begin = 0;
         } else {
-            $timestamp = strtotime( $range . ' days ago' );
+            $begin = strtotime( '-'. $range . ' days' );
+            if ( $trend ) {
+                $end = $begin;
+                $begin = strtotime( '-'. ( $range * 2 ) . ' days' );
+            }
         }
 
         $results = $wpdb->get_results(
@@ -51,7 +61,7 @@ class Zume_Queries {
                 (
                    $query_for_user_stage
                 ) as tb
-                WHERE tb.timestamp > $timestamp
+                WHERE tb.timestamp > $begin AND tb.timestamp < $end
                 GROUP BY tb.stage;",
         ARRAY_A );
 
@@ -370,37 +380,49 @@ class Zume_Queries {
         ";
     }
 
-    public static function has_plan( $stages = [], $negative = false ) {
+//    public static function has_plan( $stage, $range = -1, $negative = false ) {
+//        global $wpdb;
+//        $query_for_user_stage = self::$query_for_user_stage;
+//
+//        $range = (float) $range;
+//        if ( $range < 1 ) {
+//            $timestamp = 0;
+//        } else {
+//            $timestamp = strtotime( '-'. $range . ' days' );
+//        }
+//
+//        if ( $negative ) {
+//            $where = "AND pm.meta_value = ''";
+//        } else {
+//            $where = "AND pm.meta_value = ''";
+//        }
+//        $sql = "
+//            SELECT COUNT(*)
+//            FROM
+//               (
+//                  $query_for_user_stage
+//                ) as tb
+//            LEFT JOIN zume_postmeta pm ON pm.post_id=tb.post_id AND r.type = 'training' AND r.subtype = 'plan_created'
+//            WHERE tb.stage = $stage
+//              AND tb.timestamp > $timestamp;
+//            ";
+//        $count = $wpdb->get_var( $sql );
+//
+//        if ( $negative ) {
+//
+//        }
+//
+//        return $count;
+//    }
+
+    public static function has_coach( $stage, $range = -1, $negative = false ) {
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
-        $stages_string = implode(',', $stages );
+
         if ( $negative ) {
             $where = "AND pm.meta_value = ''";
         } else {
-            $where = "AND pm.meta_value = ''";
-        }
-        $sql = "
-            SELECT COUNT(*)
-            FROM
-               (
-                  $query_for_user_stage
-                ) as tb
-            JOIN zume_postmeta pm ON pm.post_id=tb.post_id AND pm.meta_key = 'coaching_contact_id' $where
-            WHERE tb.stage IN ( $stages_string );
-            ";
-        $count = $wpdb->get_var( $sql );
-
-        return $count;
-    }
-
-    public static function has_coach( $stages = [], $range = -1, $negative = false ) {
-        global $wpdb;
-        $query_for_user_stage = self::$query_for_user_stage;
-        $stages_string = implode(',', $stages );
-        if ( $negative ) {
-            $where = "AND pm.meta_value = ''";
-        } else {
-            $where = "AND pm.meta_value = ''";
+            $where = "AND pm.meta_value != ''";
         }
         if ( $range < 1 ) {
             $timestamp = 0;
@@ -414,7 +436,7 @@ class Zume_Queries {
                   $query_for_user_stage
                 ) as tb
             JOIN zume_postmeta pm ON pm.post_id=tb.post_id AND pm.meta_key = 'coaching_contact_id' $where
-            WHERE tb.stage IN ( $stages_string ) AND tb.timestamp > $timestamp;
+            WHERE tb.stage = $stage AND tb.timestamp > $timestamp;
             ";
         $count = $wpdb->get_var( $sql );
 
@@ -493,7 +515,7 @@ class Zume_Queries {
         return $count;
     }
 
-    public static function query_stage_by_type_and_subtype( $stage, $range, $type, $subtype ) {
+    public static function query_stage_by_type_and_subtype( $stage, $range, $type, $subtype, $negative = false ) {
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
 
@@ -513,6 +535,16 @@ class Zume_Queries {
               AND tb.timestamp > $timestamp;
             ";
         $count = $wpdb->get_var( $sql );
+
+        if ( $count < 1 ) {
+            return 0;
+        }
+
+        if ( $negative ) {
+            $all_stages_totols = self::stage_totals_by_range( $range );
+            $stage_total = $all_stages_totols[$stage]['total'];
+            $count = (int) $stage_total - (int) $count;
+        }
 
         return $count;
     }
@@ -555,8 +587,6 @@ class Zume_Queries {
                 $begin = strtotime( '-'. ( $range * 2 ) . ' days' );
             }
         }
-
-
 
         $sql = "
             SELECT COUNT(*)
