@@ -306,6 +306,19 @@ class Zume_Charts_API
                 $goal = $days * 3; // three events per day
                 $trend = Zume_Queries::stage_total( $stage, $range, true );
                 break;
+            case 'locations':
+                $label = 'Locations';
+                $value = Zume_Queries::locations( [ $stage ], $range );
+                $goal = Zume_Queries::locations( [ $stage ], $range, true );
+                $description = 'Grid locations. (Previous period '.$goal.')';
+                break;
+            case 'languages':
+                $negative_stat = true;
+                $label = 'Languages';
+                $value = Zume_Queries::languages( [ $stage ], $range );
+                $goal = Zume_Queries::languages( [ $stage ], $range, true );
+                $description = 'Languages used. (Previous period '.$goal.')';
+                break;
             case 'has_no_coach':
                 $negative_stat = true;
                 $percent_expected = .75;
