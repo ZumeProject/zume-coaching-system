@@ -79,7 +79,7 @@ class Zume_Funnel_Registrant extends Zume_Funnel_Chart_Base
                                  <div class="cell medium-6 not_set_name"><span class="loading-spinner active"></span></div>
                                  <div class="cell medium-6 not_set_location"><span class="loading-spinner active"></span></div>
                                  <div class="cell medium-6 not_set_phone"><span class="loading-spinner active"></span></div>
-                                 <div class="cell medium-6 not_completed_profiles"><span class="loading-spinner active"></span></div>
+                                 <div class="cell medium-6 has_not_completed_profile"><span class="loading-spinner active"></span></div>
                                  <div class="cell medium-6 coach_requests"><span class="loading-spinner active"></span></div>
                             </div>
                             <div class="grid-x grid-margin-x grid-margin-y">
@@ -119,7 +119,7 @@ class Zume_Funnel_Registrant extends Zume_Funnel_Chart_Base
                         window.spin_remove()
                     })
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "registrant", key: "not_completed_profiles", range: range  }, window.site_info.rest_root ).done( function( data ) {
+                    makeRequest('GET', 'total', { stage: "registrant", key: "has_not_completed_profile", range: range  }, window.site_info.rest_root ).done( function( data ) {
                         jQuery('.'+data.key).html(window.template_single_list(data))
                         window.click_listener( data )
                         window.spin_remove()

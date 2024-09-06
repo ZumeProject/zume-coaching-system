@@ -85,7 +85,7 @@ class Zume_Funnel_Active extends Zume_Funnel_Chart_Base
                             <hr>
                             <div class="grid-x grid-margin-x grid-margin-y">
                                  <div class="cell medium-6 has_no_coach"><span class="loading-spinner active"></span></div>
-                                 <div class="cell medium-6 not_completed_profiles"><span class="loading-spinner active"></span></div>
+                                 <div class="cell medium-6 has_not_completed_profile"><span class="loading-spinner active"></span></div>
                                  <div class="cell medium-6 plans"><span class="loading-spinner active"></span></div>
                                  <div class="cell medium-6 total_checkins"><span class="loading-spinner active"></span></div>
                                  <div class="cell medium-6 new_coaching_requests"><span class="loading-spinner active"></span></div>
@@ -131,7 +131,7 @@ class Zume_Funnel_Active extends Zume_Funnel_Chart_Base
                         window.spin_remove()
                     })
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "active_training_trainee", key: "not_completed_profiles", range: range  }, window.site_info.rest_root ).done( function( data ) {
+                    makeRequest('GET', 'total', { stage: "active_training_trainee", key: "has_not_completed_profile", range: range  }, window.site_info.rest_root ).done( function( data ) {
                         jQuery('.'+data.key).html(window.template_single_list(data))
                         window.click_listener( data )
                         window.spin_remove()

@@ -70,33 +70,42 @@ class Zume_Funnel_Post extends Zume_Funnel_Chart_Base
                                 <div class="cell total_post_training_trainee"><span class="loading-spinner active"></span></div>
                             </div>
                             <div class="grid-x grid-margin-x grid-margin-y">
+                                 <div class="cell medium-6 locations"><span class="loading-spinner active"></span></div>
+                                <div class="cell medium-6 languages"><span class="loading-spinner active"></span></div>
+                            </div>
+                            <hr>
+                            <div class="grid-x grid-margin-x grid-margin-y">
                                  <div class="cell medium-6 has_no_coach"><span class="loading-spinner active"></span></div>
-                                 <div class="cell medium-6 no_updated_profiles"><span class="loading-spinner active"></span></div>
+                                 <div class="cell medium-6 has_not_completed_profile"><span class="loading-spinner active"></span></div>
                                  <div class="cell medium-6 needs_3_month_plan"><span class="loading-spinner active"></span></div>
+                                 <div class="cell medium-6 new_coaching_requests"><span class="loading-spinner active"></span></div>
+                                 <div class="cell medium-6 new_3_month_plans"><span class="loading-spinner active"></span></div>
                             </div>
                             <div class="grid-x grid-margin-x grid-margin-y">
                                  <div class="cell medium-12 in_and_out"><span class="loading-spinner active"></span></div>
                             </div>
-                            <div class="grid-x grid-margin-x grid-margin-y">
-                                 <div class="cell medium-6 new_coaching_requests"><span class="loading-spinner active"></span></div>
-                                 <div class="cell medium-6 set_profile"><span class="loading-spinner active"></span></div>
-                                 <div class="cell medium-6 completed_3_month_plans"><span class="loading-spinner active"></span></div>
-                            </div>
                         </div>
                     `)
-
-                // totals
-
 
                 // ranges
                 window.path_load = ( range ) => {
                     jQuery('.loading-spinner').addClass('active')
 
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "post_training_trainee", key: "total_post_training_trainee", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        data.link = ''
-                        data.label = 'Post-Training Trainees'
-                        jQuery('.'+data.key).html(window.template_hero_map_only(data))
+                    makeRequest('GET', 'total', { stage: "post_training_trainee", key: "total_post_training_trainee", range: range  }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.key).html(window.template_trio(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "post_training_trainee", key: "locations", range: range  }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.key).html(window.template_single_map(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "post_training_trainee", key: "languages", range: range  }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.key).html(window.template_single_list(data))
                         window.click_listener( data )
                         window.spin_remove()
                     })
@@ -108,19 +117,25 @@ class Zume_Funnel_Post extends Zume_Funnel_Chart_Base
                         window.spin_remove()
                     })
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "post_training_trainee", key: "no_updated_profiles", range: range  }, window.site_info.rest_root ).done( function( data ) {
-                        data.valence = 'valence-grey'
-                        data.label = 'Has Not Updated Profile'
-                        data.description = 'Description'
+                    makeRequest('GET', 'total', { stage: "post_training_trainee", key: "has_not_completed_profile", range: range  }, window.site_info.rest_root ).done( function( data ) {
                         jQuery('.'+data.key).html(window.template_single_list(data))
                         window.click_listener( data )
                         window.spin_remove()
                     })
                     window.spin_add()
                     makeRequest('GET', 'total', { stage: "post_training_trainee", key: "needs_3_month_plan", range: range  }, window.site_info.rest_root ).done( function( data ) {
-                        data.valence = 'valence-grey'
-                        data.label = 'Needs Post Training Plan'
-                        data.description = 'Description'
+                        jQuery('.'+data.key).html(window.template_single_list(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "post_training_trainee", key: "new_coaching_requests", range: range }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.key).html(window.template_single_list(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "post_training_trainee", key: "new_3_month_plans", range: range }, window.site_info.rest_root ).done( function( data ) {
                         jQuery('.'+data.key).html(window.template_single_list(data))
                         window.click_listener( data )
                         window.spin_remove()
@@ -129,28 +144,6 @@ class Zume_Funnel_Post extends Zume_Funnel_Chart_Base
                     makeRequest('GET', 'total', { stage: "post_training_trainee", key: "in_and_out", range: range }, window.site_info.rest_root ).done( function( data ) {
                         data.label = 'Post-Training Flow'
                         jQuery('.'+data.key).html( window.template_in_out( data ) )
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "post_training_trainee", key: "new_coaching_requests", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single_map(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "post_training_trainee", key: "set_profile", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        data.label = 'Set Profile'
-                        data.description = 'Description'
-                        jQuery('.'+data.key).html(window.template_single_map(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "post_training_trainee", key: "completed_3_month_plans", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        data.label = 'Completed Post Training Plans'
-                        data.description = 'Description'
-                        jQuery('.'+data.key).html(window.template_single_map(data))
                         window.click_listener( data )
                         window.spin_remove()
                     })

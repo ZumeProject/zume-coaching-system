@@ -70,14 +70,13 @@ class Zume_Funnel_L3 extends Zume_Funnel_Chart_Base
                                 <div class="cell total_multiplying_practitioner"><span class="loading-spinner active"></span></div>
                             </div>
                             <div class="grid-x grid-margin-x grid-margin-y">
-                                 <div class="cell medium-6 has_no_coach"><span class="loading-spinner active"></span></div>
-                                 <div class="cell medium-6 has_not_reported"><span class="loading-spinner active"></span></div>
+                                <div class="cell medium-6 locations"><span class="loading-spinner active"></span></div>
+                                <div class="cell medium-6 languages"><span class="loading-spinner active"></span></div>
                             </div>
                             <div class="grid-x grid-margin-x grid-margin-y">
-                                 <div class="cell medium-12 in_and_out"><span class="loading-spinner active"></span></div>
-                                 <div class="cell medium-6 coaching_request"><span class="loading-spinner active"></span></div>
+                                 <div class="cell medium-6 has_not_reported"><span class="loading-spinner active"></span></div>
                                  <div class="cell medium-6 reporting_churches"><span class="loading-spinner active"></span></div>
-                                 <div class="cell medium-6 joined_affinity_hub"><span class="loading-spinner active"></span></div>
+                                 <div class="cell medium-12 in_and_out"><span class="loading-spinner active"></span></div>
                             </div>
                         </div>
                     `)
@@ -87,51 +86,25 @@ class Zume_Funnel_L3 extends Zume_Funnel_Chart_Base
                     window.spin_add()
                     makeRequest('GET', 'total', { stage: "multiplying_practitioner", key: "total_multiplying_practitioner", range: range }, window.site_info.rest_root ).done( function( data ) {
                         data.link = ''
-                        jQuery('.'+data.key).html(window.template_hero_map_only(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "multiplying_practitioner", key: "has_no_coach", range: range  }, window.site_info.rest_root ).done( function( data ) {
-                        data.valence = 'valence-grey'
-                        jQuery('.'+data.key).html(window.template_single_list(data))
+                        jQuery('.'+data.key).html(window.template_trio(data))
                         window.click_listener( data )
                         window.spin_remove()
                     })
                     window.spin_add()
                     makeRequest('GET', 'total', { stage: "multiplying_practitioner", key: "has_not_reported", range: range  }, window.site_info.rest_root ).done( function( data ) {
-                        data.valence = 'valence-grey'
-                        data.label = 'Has Not Reported'
-                        data.description = 'Description'
-                        jQuery('.'+data.key).html(window.template_single_list(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "multiplying_practitioner", key: "in_and_out", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        data.label = 'Flow'
-                        jQuery('.'+data.key).html( window.template_in_out( data ) )
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "multiplying_practitioner", key: "coaching_request", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        data.label = 'Coaching Requests'
                         jQuery('.'+data.key).html(window.template_single_list(data))
                         window.click_listener( data )
                         window.spin_remove()
                     })
                     window.spin_add()
                     makeRequest('GET', 'total', { stage: "multiplying_practitioner", key: "reporting_churches", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        data.label = 'Reporting Churches'
                         jQuery('.'+data.key).html(window.template_single_list(data))
                         window.click_listener( data )
                         window.spin_remove()
                     })
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "multiplying_practitioner", key: "joined_affinity_hub", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        data.label = 'Joined Affinity Hub'
-                        jQuery('.'+data.key).html(window.template_single_map(data))
+                    makeRequest('GET', 'total', { stage: "multiplying_practitioner", key: "in_and_out", range: range }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.key).html( window.template_in_out( data ) )
                         window.click_listener( data )
                         window.spin_remove()
                     })
