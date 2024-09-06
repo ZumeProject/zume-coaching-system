@@ -300,72 +300,73 @@ class Zume_Charts_API
 
             case 'total_registrants':
                 $label = 'Registrants';
-                $description = 'People who have registered but have not progressed into training.';
                 $link = 'registrants';
                 $value = Zume_Queries::stage_total( $stage, $range );
-                $goal = $days * 3; // three events per day
                 $trend = Zume_Queries::stage_total( $stage, $range, true );
+                $description = 'People who have registered but have not progressed into training.';
+                $goal = $days * 3; // three events per day
                 break;
             case 'locations':
                 $label = 'Locations';
                 $value = Zume_Queries::locations( [ $stage ], $range );
-                $goal = Zume_Queries::locations( [ $stage ], $range, true );
-                $description = 'Grid locations. (Previous period '.$goal.')';
+                $trend = Zume_Queries::locations( [ $stage ], $range, true );
+                $description = 'Grid locations. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
                 break;
             case 'languages':
-                $negative_stat = true;
                 $label = 'Languages';
                 $value = Zume_Queries::languages( [ $stage ], $range );
-                $goal = Zume_Queries::languages( [ $stage ], $range, true );
-                $description = 'Languages used. (Previous period '.$goal.')';
+                $trend = Zume_Queries::languages( [ $stage ], $range, true );
+                $description = 'Languages used. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
                 break;
             case 'has_no_coach':
                 $negative_stat = true;
-                $percent_expected = .75;
-                $goal = $stage_total * $percent_expected;
                 $label = 'Has No Coach';
-                $description = 'People who have no coach. (Expected '.($percent_expected*100).'% | '.$goal.')';
-                $value = Zume_Queries::has_coach( $stage, $range, true );
+                $value = Zume_Queries::has_coach( $stage, $range, false, true );
+                $trend = Zume_Queries::has_coach( $stage, $range, true, true );
+                $description = 'People who have no coach. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
                 break;
             case 'coach_requests':
                 $negative_stat = false;
-                $percent_expected = .33;
-                $goal = $stage_total * $percent_expected;
                 $label = 'Coach Requests';
-                $description = 'Coach requests in this period of time. (Expected '.($percent_expected*100).'% | '.$goal.')';
                 $value = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'coaching', 'requested_a_coach' );
+                $trend = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'coaching', 'requested_a_coach', true );
+                $description = 'Coach requests in this period of time. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
                 break;
             case 'not_completed_profiles':
                 $negative_stat = true;
-                $percent_expected = .9;
-                $goal = $stage_total * $percent_expected;
                 $label = 'Has Not Completed Profile';
-                $description = 'Total number of registrants who have not completed their profile. Expected: '.$goal;
-                $value = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'system', 'set_profile', true );
+                $value = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'system', 'set_profile', false, true );
+                $trend = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'system', 'set_profile', true, true );
+                $description = 'Total number of registrants who have not completed their profile. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
                 break;
             case 'not_set_phone':
                 $negative_stat = true;
-                $percent_expected = .9;
-                $goal = $stage_total * $percent_expected;
                 $label = 'Has No Phone';
-                $description = 'Total number of registrants who have not completed their profile. Expected: '.$goal;
-                $value = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'system', 'set_profile_phone', true );
+                $value = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'system', 'set_profile_phone', false, true );
+                $trend = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'system', 'set_profile_phone', true, true );
+                $description = 'Total number of registrants who have not completed their profile. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
                 break;
             case 'not_set_name':
                 $negative_stat = true;
-                $percent_expected = .15;
-                $goal = $stage_total * $percent_expected;
                 $label = 'Has Not Set Name';
-                $description = 'Total number of registrants who have not set their profile name. Expected:  '.$goal;
-                $value = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'system', 'set_profile_name', true );
+                $value = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'system', 'set_profile_name', false, true );
+                $trend = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'system', 'set_profile_name', true, true );
+                $description = 'Total number of registrants who have not set their profile name. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
                 break;
             case 'not_set_location':
                 $negative_stat = true;
-                $percent_expected = .2;
-                $goal = $stage_total * $percent_expected;
                 $label = 'Has Not Set Location';
-                $description = 'Total number of registrants who have not set their profile location. Expected: '.$goal;
-                $value = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'system', 'set_profile_location', true );
+                $value = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'system', 'set_profile_location', false, true );
+                $trend = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'system', 'set_profile_location', true, true );
+                $description = 'Total number of registrants who have not set their profile location. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
                 break;
             case 'in_and_out':
                 return [
@@ -419,80 +420,72 @@ class Zume_Charts_API
         }
 
         switch ( $params['key'] ) {
+
             case 'total_active_training_trainee':
                 $label = 'Active Training Trainees';
-                $description = 'People who are actively working a training plan or have only partially completed the training.';
                 $link = 'active';
                 $value = Zume_Queries::stage_total( $stage, $range );
-                $goal = $days * 2; // 2 trainees per day
                 $trend = Zume_Queries::stage_total( $stage, $range, true );
+                $description = 'People who are actively working a training plan or have only partially completed the training.';
+                $goal = $days * 2; // 2 trainees per day
+                break;
+            case 'locations':
+                $label = 'Locations';
+                $value = Zume_Queries::locations( [ $stage ], $range );
+                $trend = Zume_Queries::locations( [ $stage ], $range, true );
+                $description = 'Grid locations. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
+                break;
+            case 'languages':
+                $label = 'Languages';
+                $value = Zume_Queries::languages( [ $stage ], $range );
+                $trend = Zume_Queries::languages( [ $stage ], $range, true );
+                $description = 'Languages used. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
                 break;
             case 'has_no_coach':
+                $negative_stat = true;
                 $label = 'Has No Coach';
-                $description = 'People who have no coach.';
-                $value = Zume_Queries::has_coach( $stage, $range, true );
-                $goal = 0;
-                $trend = 0;
+                $value = Zume_Queries::has_coach( $stage, $range, false, true );
+                $trend = Zume_Queries::has_coach( $stage, $range, true, true );
+                $description = 'People who have no coach. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
                 break;
-            case 'has_coach':
-                $label = 'Has Coach';
-                $description = 'Active trainees who have a coach.';
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
-                $valence = 'valence-grey';
-                break;
-            case 'new_coaching_requests':
-                $label = 'New Coaching Requests';
-                $description = 'New coaching requests from post training trainees.';
-                $value = Zume_Queries::coaching_request( $stage, $range );
-                $goal = 0;
-                $trend = 0;
-                break;
-            case 'inactive_trainees':
-                $label = 'Inactive Trainees';
-                $description = 'People who have been inactive more than 6 months.';
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
-                $valence = 'valence-grey';
-                break;
-            case 'new_active_trainees':
-                $label = 'New Active Trainees';
-                $description = 'New people who entered stage during time period.';
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
-                break;
-            case 'total_checkins':
-                $label = 'Total Checkins';
-                $description = 'Total number of checkins by trainees.';
-                $value = Zume_Queries::checkins( $stage, $range );
-                $goal = 0;
-                $trend = 0;
-                $valence = 'valence-grey';
-                break;
-            case 'has_no_updated_profile':
-                $label = 'No Updated Profile';
-                $description = 'People who have not updated their profile.';
-                $value = Zume_Queries::checkins( $stage, $range, true );
-                $goal = 0;
-                $trend = 0;
-                $valence = null;
+            case 'not_completed_profiles':
+                $negative_stat = true;
+                $label = 'Has Not Completed Profile';
+                $value = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'system', 'set_profile', false, true );
+                $trend = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'system', 'set_profile', true, true );
+                $description = 'Total number of trainees who have not completed their profile. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
                 break;
             case 'plans':
                 $label = 'New Plans Created';
-                $description = 'New training plans created by active training trainees.';
-                $value = Zume_Queries::training_plans( $stage, $range );
-                $goal = 0;
-                $trend = 0;
+                $value = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'training', 'plan_created' );
+                $trend = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'training', 'plan_created', true );
+                $description = 'New training plans created by active training trainees. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
+                break;
+            case 'total_checkins':
+                $label = 'Checkins';
+                $value = Zume_Queries::checkins( $stage, $range );
+                $trend = Zume_Queries::checkins( $stage, $range, true );
+                $description = 'Checkins. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
+                break;
+            case 'new_coaching_requests':
+                $label = 'New Coaching Requests';
+                $value = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'coaching', 'requested_a_coach' );
+                $trend = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'coaching', 'requested_a_coach', true );
+                $description = 'New coaching requests from post training trainees. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
                 break;
             case 'post_training_plans':
-                $label = 'New Post Training Plans';
-                $description = 'New training plans created by active training trainees.';
-                $value = Zume_Queries::post_training_plan( $stage, $range );
-                $goal = 0;
-                $trend = 0;
+                $label = '3-Month Plans';
+                $value = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'training', 'made_post_training_plan' );
+                $trend = Zume_Queries::query_stage_by_type_and_subtype( $stage, $range, 'training', 'made_post_training_plan', true );
+                $description = '3 month plans. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
                 break;
             case 'in_and_out':
                 return [
