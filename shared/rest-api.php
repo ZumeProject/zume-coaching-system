@@ -173,42 +173,42 @@ class Zume_Charts_API
             case 'registrant':
             case '1';
                 $value = 5;
-                $data['value'] = intval( $days * $value ); // three events per day
+                $data['value'] = intval( $days * $value ); // events per day
                 $data['description'] = 'People who have registered but have not progressed into training.';
                 $data['pace'] = $value .' registrations per day';
                 break;
             case 'active_training_trainee':
             case '2';
                 $value = 2;
-                $data['value'] = intval( $days * $value ); // 2 trainees per day
+                $data['value'] = intval( $days * $value ); // events per day
                 $data['description'] = 'People who are actively working a training plan or have only partially completed the training.';
                 $data['pace'] = $value .' trainees launching training groups per day';
                 break;
             case 'post_training_trainee':
             case '3';
                 $value = 4;
-                $data['value'] = intval( $days / $value ); // events every 4 days // update also globals.php zume_funnel_stages()
+                $data['value'] = intval( $days / $value ); // events per days
                 $data['description'] = 'People who have completed the training and are working on a post training plan.';
                 $data['pace'] = '1 trainee completing training every '.$value.' days';
                 break;
             case 'partial_practitioner':
             case '4';
-                $value = 10;
-                $data['value'] = intval( $days / $value ); // events every 10 days
+                $value = 6;
+                $data['value'] = intval( $days / $value ); // events per days
                 $data['description'] = 'Learning through doing. Implementing partial checklist';
                 $data['pace'] = '1 trainee becoming practitioner every '.$value.' days';
                 break;
             case 'full_practitioner':
             case '5';
                 $value = 20;
-                $data['value'] = intval( $days / $value ); // events every 10 days
+                $data['value'] = intval( $days / $value ); // events per days
                 $data['description'] = 'People who are seeking multiplicative movement and are completely skilled with the coaching checklist.';
                 $data['pace'] = '1 practitioner completing HOST/MAWL every '.$value.' days';
                 break;
             case 'multiplying_practitioner':
             case '6';
                 $value = 30;
-                $data['value'] = intval( $days / $value ); // events every 30 days
+                $data['value'] = intval( $days / $value ); // events per days
                 $data['description'] = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
                 $data['pace'] = '1 multiplying practitioner every '.$value.' days';
                 break;
