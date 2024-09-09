@@ -148,7 +148,7 @@ class Zume_Charts_API
      * @param $type  value, description
      * @return void
      */
-    public function _pace_calculator( $stage, $days, $type = 'value', $value = 0, $trend = 0 ) {
+    public static function _pace_calculator( $stage, $days, $type = 'value', $value = 0, $trend = 0 ) {
         $data =  [
             'value' => 0,
             'description' => '',
@@ -163,39 +163,45 @@ class Zume_Charts_API
                 break;
             case 'registrant':
             case '1';
-                $data['value'] = intval( $days * 3 ); // three events per day
+                $value = 5;
+                $data['value'] = intval( $days * $value ); // three events per day
                 $data['description'] = 'People who have registered but have not progressed into training.';
-                $data['pace'] = '4 registrations per day';
+                $data['pace'] = $value .' registrations per day';
                 break;
             case 'active_training_trainee':
             case '2';
-                $data['value'] = intval( $days * 2 ); // 2 trainees per day
+                $value = 2;
+                $data['value'] = intval( $days * $value ); // 2 trainees per day
                 $data['description'] = 'People who are actively working a training plan or have only partially completed the training.';
-                $data['pace'] = '2 trainees engaging training per day';
+                $data['pace'] = $value .' trainees launching training groups per day';
                 break;
             case 'post_training_trainee':
             case '3';
-                $data['value'] = intval( $days / 4 ); // events every 4 days // update also globals.php zume_funnel_stages()
+                $value = 4;
+                $data['value'] = intval( $days / $value ); // events every 4 days // update also globals.php zume_funnel_stages()
                 $data['description'] = 'People who have completed the training and are working on a post training plan.';
-                $data['pace'] = '1 trainee completing training every 4 days';
+                $data['pace'] = '1 trainee completing training every '.$value.' days';
                 break;
             case 'partial_practitioner':
             case '4';
-                $data['value'] = intval( $days / 10 ); // events every 10 days
+                $value = 10;
+                $data['value'] = intval( $days / $value ); // events every 10 days
                 $data['description'] = 'Learning through doing. Implementing partial checklist';
-                $data['pace'] = '1 trainee becoming practitioner every 10 days';
+                $data['pace'] = '1 trainee becoming practitioner every '.$value.' days';
                 break;
             case 'full_practitioner':
             case '5';
-                $data['value'] = intval( $days / 10 ); // events every 10 days
+                $value = 20;
+                $data['value'] = intval( $days / $value ); // events every 10 days
                 $data['description'] = 'People who are seeking multiplicative movement and are completely skilled with the coaching checklist.';
-                $data['pace'] = '1 practitioner completing HOST/MAWL every 20 days';
+                $data['pace'] = '1 practitioner completing HOST/MAWL every '.$value.' days';
                 break;
             case 'multiplying_practitioner':
             case '6';
-                $data['value'] = intval( $days / 30 ); // events every 30 days
+                $value = 30;
+                $data['value'] = intval( $days / $value ); // events every 30 days
                 $data['description'] = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
-                $data['pace'] = '';
+                $data['pace'] = '1 multiplying practitioner every '.$value.' days';
                 break;
             default:
                 break;
@@ -203,8 +209,15 @@ class Zume_Charts_API
 
         if ( $type === 'value' ) {
             return $data['value'];
-        } else {
+        }
+        else if ( $type === 'pace' ) {
+            return $data['pace'];
+        }
+        else if ( $type === 'description' ) {
             return $data['description'];
+        }
+        else {
+            return $data;
         }
 
     }
@@ -309,7 +322,7 @@ class Zume_Charts_API
         $negative_stat = $params['negative_stat'] ?? false;
 
         $all_stages_totols = Zume_Queries::stage_totals_by_range( $range );
-        $stage_total = $all_stages_totols[$stage]['total'];
+//        $stage_total = $all_stages_totols[$stage]['total'];
 
         $label = '';
         $description = '';

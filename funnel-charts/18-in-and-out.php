@@ -17,7 +17,7 @@ class Zume_Funnel_In_And_Out extends Zume_Funnel_Chart_Base
         if ( !$this->has_permission() ){
             return;
         }
-        $this->base_title = __( 'In and Out', 'zume_funnels' );
+        $this->base_title = __( 'Flow In and Out', 'zume_funnels' );
 
         $url_path = dt_get_url_path( true );
         if ( "zume-funnel/$this->base_slug" === $url_path ) {

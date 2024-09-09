@@ -34,6 +34,12 @@ class Zume_Funnel_Trainee extends Zume_Funnel_Chart_Base
             $this->styles();
             $this->js_api();
             $stages = zume_funnel_stages();
+
+            $pace = [];
+            foreach([1,2,3,4,5,6] as $stage ) {
+                $stages[$stage]['pace'] = Zume_Charts_API::_pace_calculator( $stage, 10, 'pace' );
+            }
+
             $html = '';
 
         foreach ( $stages as $stage ) {
@@ -51,6 +57,9 @@ class Zume_Funnel_Trainee extends Zume_Funnel_Chart_Base
             }
             $html .= '</ul>';
 
+            $html .= '<h3>Pace Goal</h3>';
+            $html .= '<ul><li>'.$stage['pace'].'</li></ul>';
+
             $html .= '<h3>Next Steps</h3>';
 
             $html .= '<ul>';
@@ -59,13 +68,9 @@ class Zume_Funnel_Trainee extends Zume_Funnel_Chart_Base
             }
             $html .= '</ul>';
 
-            $html .= '<h3>Pace</h3>';
 
-            $html .= '<ul>';
-            foreach ( $stage['pace'] as $item ) {
-                $html .= '<li>'.$item.'</li>';
-            }
-            $html .= '</ul></div>';
+
+            $html .= '</div>';
         }
 
 
