@@ -30,8 +30,8 @@ class Zume_Goals_Metrics_Base {
 
             require_once( '20-maps.php' );
 
-            require_once( '40-public-facts.php' );
             require_once( '41-public-stats.php' );
+//            require_once( '40-public-facts.php' );
         }
     }
 

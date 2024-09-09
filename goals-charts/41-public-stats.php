@@ -27,6 +27,13 @@ class Zume_Goals_Public_Stats extends Zume_Goals_Chart_Base
         }
     }
 
+    public function base_menu( $content ) {
+        $content .= '<li><hr></li>';
+        $content .= '<li>MARKETING</li>';
+        $content .= '<li><a href="'.site_url( '/zume-goals/'.$this->base_slug ).'" id="'.$this->base_slug.'-menu">' .  $this->base_title . '</a></li>';
+        return $content;
+    }
+
     public function wp_head() {
         $this->js_api();
         ?>
@@ -44,7 +51,7 @@ class Zume_Goals_Public_Stats extends Zume_Goals_Chart_Base
                             </div>
                             <hr>
                             <div class="grid-x grid-padding-x">
-                                <div class="cell">
+                                <div class="cell"><span class="loading-spinner active"></span>
                                     <table class="striped">
                                         <thead>
                                             <tr>
@@ -53,6 +60,7 @@ class Zume_Goals_Public_Stats extends Zume_Goals_Chart_Base
                                             </tr>
                                         </thead>
                                         <tbody class="stats_list"></tbody>
+
                                     </table>
                                 </div>
                             </div>
@@ -61,50 +69,15 @@ class Zume_Goals_Public_Stats extends Zume_Goals_Chart_Base
 
                 // totals
                 window.spin_add()
-                makeRequest('GET', 'total', { stage: "general", key: "stats_list" }, window.site_info.rest_root ).done( function( data ) {
-                    jQuery('.'+data.key).empty()
-                    data.list = [
-                        {
-                            'label': 'Number of Languages Available',
-                            'value': window.randNumber()
-                        },
-                        {
-                            'label': 'Number of Native Speakers with Access',
-                            'value': window.randNumber()
-                        },
-                        {
-                            'label': 'Number of People with Some Training',
-                            'value': window.randNumber()
-                        },
-                        {
-                            'label': 'Locations with Zero Activity',
-                            'value': window.randNumber()
-                        },
-                        {
-                            'label': 'Active Coaches',
-                            'value': window.randNumber()
-                        },
-                    ]
-                    jQuery.each( data.list, function( i, v ) {
-                        jQuery('.'+data.key).append( `<tr><td>${v.label}</td><td>${v.value}</td></tr>` )
+                makeRequest('GET', 'stats_list', { key: "all" }, window.site_info.rest_root ).done( function( data ) {
+                    jQuery.each( data, function( index, key ) {
+                        makeRequest('GET', 'stats_list', { key: key }, window.site_info.rest_root ).done( function( data ) {
+                            console.log(data)
+                            jQuery('.stats_list').append(`<tr><td>${data.label}</td><td>${data.value}</td></tr>`)
+                            window.spin_remove()
+                        })
                     })
-                    window.spin_remove()
                 })
-
-                window.path_load = ( range ) => {} /* not used */
-                window.setup_filter()
-
-                window.click_listener = ( data ) => {
-                    window.load_list(data)
-                    window.load_map(data)
-                }
-
-                $(document).foundation();
-
-                window.randNumber = () => {
-                    let number = Math.floor((Math.random() * 10000) + 100)
-                    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                }
             })
         </script>
         <?php

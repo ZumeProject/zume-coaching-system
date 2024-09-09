@@ -32,6 +32,15 @@ class Zume_Charts_API
             ]
         );
         register_rest_route(
+            $namespace, '/stats_list', [
+                'methods'  => [ 'GET', 'POST' ],
+                'callback' => [ $this, 'stats_list' ],
+                'permission_callback' => function () {
+                    return $this->has_permission( $this->coach_permissions );
+                },
+            ]
+        );
+        register_rest_route(
             $namespace, '/location', [
                 'methods'  => [ 'GET', 'POST' ],
                 'callback' => [ $this, 'location' ],
@@ -267,6 +276,8 @@ class Zume_Charts_API
                 return $this->total_practitioners( $params );
             case 'churches':
                 return $this->total_churches( $params );
+            case 'stats_list':
+                return $this->stats_list( $params );
             default:
                 return $this->general( $params );
         }
@@ -1387,9 +1398,6 @@ class Zume_Charts_API
                     'list' => $list,
                 ];
             default:
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
                 break;
         }
 
@@ -1409,6 +1417,39 @@ class Zume_Charts_API
             'trend_percent' => zume_get_percent( $value, $trend ),
             'negative_stat' => $negative_stat,
         ];
+    }
+
+    public function stats_list( WP_REST_Request $request ) {
+        $params = dt_recursive_sanitize_array( $request->get_params() );
+
+        $list_of_keys = [
+            'v5_ready_languages',
+//            'number_of_coaches'
+        ];
+
+        switch ( $params['key'] ) {
+            case 'all':
+                return $list_of_keys;
+            case 'v5_ready_languages':
+                return [
+                    'key' => $params['key'],
+                    'label' => 'Zume 5 Ready Languages',
+                    'value' => Zume_Queries_Stats::v5_ready_languages(),
+                ];
+            case 'number_of_coaches':
+                return [
+                    'key' => $params['key'],
+                    'label' => 'Number of Coaches',
+                    'value' => ''
+                ];
+            default:
+                return [
+                    'label' => '',
+                    'value' => ''
+                ];
+        }
+
+        return $params;
     }
     public function total_practitioners( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;

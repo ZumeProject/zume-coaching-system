@@ -28,8 +28,6 @@ class Zume_Goals_Public_Facts extends Zume_Goals_Chart_Base
     }
 
     public function base_menu( $content ) {
-        $content .= '<li><hr></li>';
-        $content .= '<li>MARKETING</li>';
         $content .= '<li><a href="'.site_url( '/zume-goals/'.$this->base_slug ).'" id="'.$this->base_slug.'-menu">' .  $this->base_title . '</a></li>';
         return $content;
     }
