@@ -29,7 +29,7 @@ class Zume_Funnel_Base {
             require_once( '10-trainee-overview.php' );
             require_once( '18-in-and-out.php' );
             require_once( '11-location-funnel.php' );
-            require_once( '11-anonymous.php' );
+//            require_once( '11-anonymous.php' );
             require_once( '12-registrants.php' );
             require_once( '13-active-training.php' );
             require_once( '14-post-training.php' );
