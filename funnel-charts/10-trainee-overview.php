@@ -41,36 +41,34 @@ class Zume_Funnel_Trainee extends Zume_Funnel_Chart_Base
 
             $html = '';
 
-        foreach ( $stages as $stage ) {
-            if ( 'anonymous' === $stage['key'] ) {
-                continue;
+            foreach ( $stages as $stage ) {
+                if ( 'anonymous' === $stage['key'] ) {
+                    continue;
+                }
+                $html .= '<div class="cell medium-9 zume-funnel">
+                                     <div class="'.$stage['key'].'"><span class="loading-spinner active"></span></div>
+                                </div>
+                                <div class="cell medium-3 padding-top">
+                                    <h3>Characteristics</h3>';
+                $html .='<ul>';
+                foreach ( $stage['characteristics'] as $item ) {
+                    $html .='<li>'.$item.'</li>';
+                }
+                $html .= '</ul>';
+
+                $html .= '<h3>Pace Goal</h3>';
+                $html .= '<ul><li>'.$stage['pace'].'</li></ul>';
+
+                $html .= '<h3>Next Steps</h3>';
+
+                $html .= '<ul>';
+                foreach ( $stage['next_steps'] as $item ) {
+                    $html .= '<li>'.$item.'</li>';
+                }
+                $html .= '</ul>';
+
+                $html .= '</div>';
             }
-            $html .= '<div class="cell medium-9 zume-funnel">
-                                 <div class="'.$stage['key'].'"><span class="loading-spinner active"></span></div>
-                            </div>
-                            <div class="cell medium-3 padding-top">
-                                <h3>Characteristics</h3>';
-            $html .='<ul>';
-            foreach ( $stage['characteristics'] as $item ) {
-                $html .='<li>'.$item.'</li>';
-            }
-            $html .= '</ul>';
-
-            $html .= '<h3>Pace Goal</h3>';
-            $html .= '<ul><li>'.$stage['pace'].'</li></ul>';
-
-            $html .= '<h3>Next Steps</h3>';
-
-            $html .= '<ul>';
-            foreach ( $stage['next_steps'] as $item ) {
-                $html .= '<li>'.$item.'</li>';
-            }
-            $html .= '</ul>';
-
-
-
-            $html .= '</div>';
-        }
 
 
         ?>

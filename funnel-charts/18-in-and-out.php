@@ -33,10 +33,6 @@ class Zume_Funnel_In_And_Out extends Zume_Funnel_Chart_Base
     public function wp_head() {
         $this->js_api();
         $stages = zume_funnel_stages();
-        foreach([1,2,3,4,5,6] as $stage ) {
-            $stages[$stage]['pace'] = Zume_Charts_API::_pace_calculator( $stage, 10, 'pace' );
-        }
-
         $html = '';
 
         foreach ( $stages as $stage ) {
@@ -44,18 +40,15 @@ class Zume_Funnel_In_And_Out extends Zume_Funnel_Chart_Base
                 continue;
             }
             $html .= '<div class="cell medium-9 zume-funnel">
-                                 <div class="'.$stage['key'].'"><span class="loading-spinner active"></span></div>
-                            </div>
-                            <div class="cell medium-3 padding-top">
-                                <h3>Characteristics</h3>';
+                         <div class="'.$stage['key'].' in_and_out"><span class="loading-spinner active"></span></div>
+                    </div>
+                    <div class="cell medium-3 padding-top">
+                        <h3>Characteristics</h3>';
             $html .='<ul>';
             foreach ( $stage['characteristics'] as $item ) {
                 $html .='<li>'.$item.'</li>';
             }
             $html .= '</ul>';
-
-            $html .= '<h3>Pace Goal</h3>';
-            $html .= '<ul><li>'.$stage['pace'].'</li></ul>';
 
             $html .= '<h3>Next Steps</h3>';
 
@@ -63,11 +56,7 @@ class Zume_Funnel_In_And_Out extends Zume_Funnel_Chart_Base
             foreach ( $stage['next_steps'] as $item ) {
                 $html .= '<li>'.$item.'</li>';
             }
-            $html .= '</ul>';
-
-
-
-            $html .= '</div>';
+            $html .= '</ul></div>';
         }
 
         ?>
