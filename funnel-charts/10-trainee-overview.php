@@ -35,7 +35,6 @@ class Zume_Funnel_Trainee extends Zume_Funnel_Chart_Base
             $this->js_api();
             $stages = zume_funnel_stages();
 
-            $pace = [];
             foreach([1,2,3,4,5,6] as $stage ) {
                 $stages[$stage]['pace'] = Zume_Charts_API::_pace_calculator( $stage, 10, 'pace' );
             }
