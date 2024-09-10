@@ -67,7 +67,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
                     FROM zume_3_postmeta
                     WHERE meta_key = 'trainee_user_id'
                       AND meta_value = %s",
-                $user_id )
+            $user_id )
         );
 
         $coach_list = [];
@@ -643,7 +643,7 @@ if ( ! function_exists( 'zume_get_user_plans' ) ) {
         if ( ! empty( $connected_plans ) ) {
             $plan_post_ids = [];
             // initialize loop
-            foreach( $connected_plans as $row ) {
+            foreach ( $connected_plans as $row ) {
                 if ( ! isset( $plans[$row['post_id']] ) ) {
                     $plans[$row['post_id']] = [];
                     $plans[$row['post_id']]['title'] = $row['title'];
@@ -666,8 +666,8 @@ if ( ! function_exists( 'zume_get_user_plans' ) ) {
                         'key' => $row['meta_key'],
                         'title' => 'Session ' . $key_array[2] ?? '?',
                         'timestamp' => (int) $row['meta_value'],
-                        'date' => date( 'Y-m-d', (int) $row['meta_value'] ),
-                        'date_formatted' => date( 'M j, Y', (int) $row['meta_value'] ),
+                        'date' => gmdate( 'Y-m-d', (int) $row['meta_value'] ),
+                        'date_formatted' => gmdate( 'M j, Y', (int) $row['meta_value'] ),
                         'completed' => 0,
                         'completed_timestamp' => 0,
                         'completed_date' => '',
@@ -723,6 +723,46 @@ if ( ! function_exists( 'zume_get_user_plans' ) ) {
 //        dt_write_log( __METHOD__);
 //        dt_write_log( $plans );
         return $plans;
+    }
+}
+if ( ! function_exists( 'zume_get_user_churches' ) ) {
+    function zume_get_user_churches( $user_id = null, $by_key = false ) {
+        if ( is_null( $user_id ) ) {
+            $user_id = get_current_user_id();
+        }
+
+        /* Get the groups of type church from the DT posts */
+        $result = DT_Posts::list_posts(
+            'groups',
+            [
+                'group_type' => [ 'church' ],
+                'assigned_to' => [ $user_id ],
+            ]
+        );
+
+        $churches = [];
+        foreach ( $result['posts'] as $church ) {
+            $new_church = [];
+            $new_church['id'] = (int) $church['ID'];
+            $new_church['name'] = $church['name'];
+            $new_church['member_count'] = $church['member_count'] ?? 0;
+            $new_church['start_date'] = $church['start_date'] ?? [];
+            $new_church['status'] = $church['group_status']['key'] ?? '';
+            $new_church['location'] = $church['location_grid_meta'][0]['label'] ?? '';
+            $new_church['location_meta'] = $church['location_grid_meta'][0] ?? [];
+            $new_church['parent'] = !empty( $church['parent_groups'] ) ? $church['parent_groups'][0]['ID'] : null;
+            $new_church['children'] = !empty( $church['child_groups'] ) ? array_map( function ( $church ) {
+                return $church['ID'];
+            }, $church['child_groups'] ) : [];
+
+            if ( $by_key ) {
+                $churches[$new_church['id']] = $new_church;
+            } else {
+                $churches[] = $new_church;
+            }
+        }
+
+        return $churches;
     }
 }
 if ( ! function_exists( 'zume_get_user_contact_id' ) ) {
@@ -1225,7 +1265,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'enable_flags' => [
                     'version_4_available' => true,
                     'translator_enabled' => true,
-                    'version_5_ready' => false,
+                    'version_5_ready' => true,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
@@ -2662,8 +2702,8 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
                     'Get a coach',
                 ],
                 'pace' => [
-                    '2024: 200 visits a day'
-                ]
+                    '2024: 200 visits a day',
+                ],
             ],
             1 => [
                 'key' => 'registrant',
@@ -6243,6 +6283,18 @@ if ( ! function_exists( 'zume_log_insert' ) ) {
         return Zume_System_Log_API::log( $type, $subtype, $data, $log_once );
     }
 }
+if ( ! function_exists( 'zume_log_delete' ) ) {
+    function zume_log_delete( string $type, string $subtype, array $data = [] )
+    {
+        return Zume_System_Log_API::delete( $type, $subtype, $data );
+    }
+}
+if ( ! function_exists( 'zume_log_update' ) ) {
+    function zume_log_update( array $where, array $data = [] )
+    {
+        return Zume_System_Log_API::update( $where, $data );
+    }
+}
 
 if ( ! class_exists( 'Zume_System_Log_API' ) ) {
     // phpcs:ignore
@@ -7338,6 +7390,71 @@ if ( ! class_exists( 'Zume_System_Log_API' ) ) {
 
 
             return $report_id;
+        }
+
+        /**
+         * Update a log
+         * @param array $where
+         * @param array $data
+         * @return bool|int
+         */
+        public static function update( array $where, array $data ) {
+            global $wpdb;
+
+            $where_format = self::make_format( $where );
+            $format = self::make_format( $data );
+
+            $updates = $wpdb->update( 'zume_dt_reports', $data, $where, $format, $where_format );
+
+            return $updates;
+        }
+
+        /**
+         * Delete a log from the reports
+         * @param string $type
+         * @param string $subtype
+         * @param array $data
+         * @return int|bool
+         */
+        public static function delete( string $type, string $subtype, array $data = [] ) {
+            global $wpdb;
+
+            $where = [
+                'type' => $type,
+                'subtype' => $subtype,
+                'user_id' => $data['user_id'] ?? get_current_user_id(),
+            ];
+
+            unset( $data['user_id'] );
+
+            $where = [
+                ...$where,
+                ...$data,
+            ];
+
+            $where_format = self::make_format( $where );
+
+            $deleted = $wpdb->delete( 'zume_dt_reports', $where, $where_format );
+
+            return $deleted;
+        }
+
+        public static function make_format( $args ) {
+            $format = [];
+
+            foreach ( $args as $key => $value ) {
+                if ( in_array( $key, [ 'user_id', 'parent_id', 'post_id', 'value', 'grid_id', 'time_begin', 'time_end', 'timestamp' ] ) ) {
+                    $format[] = '%d';
+                }
+                if ( in_array( $key, [ 'post_type', 'type', 'subtype', 'payload', 'level', 'label', 'hash', 'language_code' ] ) ) {
+                    $format[] = '%s';
+                }
+                if ( in_array( $key, [ 'lng', 'lat' ] ) ) {
+                    $format[] = '%f';
+                }
+            }
+
+            return $format;
         }
 
         /**
