@@ -962,6 +962,7 @@ class Zume_Charts_API
         return [
             'key' => $params['key'],
             'stage' => $params['stage'],
+            'range' => (float) $range,
             'label' => $label,
             'description' => $description,
             'link' => $link,
