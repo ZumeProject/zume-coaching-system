@@ -313,6 +313,7 @@ class Zume_Charts_API
         return [
             'key' => $params['key'],
             'stage' => $params['stage'],
+            'range' => (float) $range,
             'label' => $label,
             'description' => $description,
             'link' => $link,
@@ -439,6 +440,7 @@ class Zume_Charts_API
         return [
             'key' => $params['key'],
             'stage' => $params['stage'],
+            'range' => (float) $range,
             'label' => $label,
             'description' => $description,
             'link' => $link,
@@ -559,6 +561,7 @@ class Zume_Charts_API
         return [
             'key' => $params['key'],
             'stage' => $params['stage'],
+            'range' => (float) $range,
             'label' => $label,
             'description' => $description,
             'link' => $link,
@@ -671,6 +674,7 @@ class Zume_Charts_API
         return [
             'key' => $params['key'],
             'stage' => $params['stage'],
+            'range' => (float) $range,
             'label' => $label,
             'description' => $description,
             'link' => $link,
@@ -768,6 +772,7 @@ class Zume_Charts_API
         return [
             'key' => $params['key'],
             'stage' => $params['stage'],
+            'range' => (float) $range,
             'label' => $label,
             'description' => $description,
             'link' => $link,
@@ -867,6 +872,7 @@ class Zume_Charts_API
         return [
             'key' => $params['key'],
             'stage' => $params['stage'],
+            'range' => (float) $range,
             'label' => $label,
             'description' => $description,
             'link' => $link,
@@ -1419,38 +1425,7 @@ class Zume_Charts_API
         ];
     }
 
-    public function stats_list( WP_REST_Request $request ) {
-        $params = dt_recursive_sanitize_array( $request->get_params() );
 
-        $list_of_keys = [
-            'v5_ready_languages',
-//            'number_of_coaches'
-        ];
-
-        switch ( $params['key'] ) {
-            case 'all':
-                return $list_of_keys;
-            case 'v5_ready_languages':
-                return [
-                    'key' => $params['key'],
-                    'label' => 'Zume 5 Ready Languages',
-                    'value' => Zume_Queries_Stats::v5_ready_languages(),
-                ];
-            case 'number_of_coaches':
-                return [
-                    'key' => $params['key'],
-                    'label' => 'Number of Coaches',
-                    'value' => ''
-                ];
-            default:
-                return [
-                    'label' => '',
-                    'value' => ''
-                ];
-        }
-
-        return $params;
-    }
     public function total_practitioners( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
 
@@ -1506,7 +1481,6 @@ class Zume_Charts_API
             'negative_stat' => $negative_stat,
         ];
     }
-
     public function total_churches( $params ) {
         $negative_stat = $params['negative_stat'] ?? false;
 
@@ -1561,6 +1535,38 @@ class Zume_Charts_API
             'negative_stat' => $negative_stat,
         ];
     }
+    public function stats_list( WP_REST_Request $request ) {
+        $params = dt_recursive_sanitize_array( $request->get_params() );
+
+        $list_of_keys = [
+            'v5_ready_languages',
+//            'number_of_coaches'
+        ];
+
+        switch ( $params['key'] ) {
+            case 'all':
+                return $list_of_keys;
+            case 'v5_ready_languages':
+                return [
+                    'key' => $params['key'],
+                    'label' => 'Zume 5 Ready Languages',
+                    'value' => Zume_Queries_Stats::v5_ready_languages(),
+                ];
+            case 'number_of_coaches':
+                return [
+                    'key' => $params['key'],
+                    'label' => 'Number of Coaches',
+                    'value' => ''
+                ];
+            default:
+                return [
+                    'label' => '',
+                    'value' => ''
+                ];
+        }
+
+        return $params;
+    }
 
     public function location_funnel() {
         $data = DT_Mapping_Module::instance()->data();
@@ -1587,25 +1593,29 @@ class Zume_Charts_API
             return new WP_Error( 'no_stage', __( 'No stage key provided.', 'zume' ), array( 'status' => 400 ) );
         }
 
+        if ( ! isset( $params['range'] ) ) {
+            $params['range'] = -1;
+        }
+
         switch ( $params['stage'] ) {
             case 'anonymous':
-                return $this->map_geojson( [ 0 ] );
+                return $this->map_geojson( [ 0 ], $params['range'] );
             case 'registrant':
-                return $this->map_geojson( [ 1 ] );
+                return $this->map_geojson( [ 1 ], $params['range'] );
             case 'active_training_trainee':
-                return $this->map_geojson( [ 2 ] );
+                return $this->map_geojson( [ 2 ], $params['range'] );
             case 'post_training_trainee':
-                return $this->map_geojson( [ 3 ] );
+                return $this->map_geojson( [ 3 ], $params['range'] );
             case 'partial_practitioner':
-                return $this->map_geojson( [ 4 ] );
+                return $this->map_geojson( [ 4 ], $params['range'] );
             case 'full_practitioner':
-                return $this->map_geojson( [ 5 ] );
+                return $this->map_geojson( [ 5 ], $params['range'] );
             case 'multiplying_practitioner':
-                return $this->map_geojson( [ 6 ] );
+                return $this->map_geojson( [ 6 ], $params['range'] );
             case 'trainees':
-                return $this->map_geojson( [ 1,2,3 ] );
+                return $this->map_geojson( [ 1,2,3 ], $params['range'] );
             case 'practitioners':
-                return $this->map_geojson( [ 4,5,6 ] );
+                return $this->map_geojson( [ 4,5,6 ], $params['range'] );
             case 'churches':
                 return $this->map_churches_geojson( 6 );
 //            case 'facilitator':
@@ -1618,10 +1628,10 @@ class Zume_Charts_API
                 return $this->general( $params );
         }
     }
+    public function map_geojson( array $stage, $range ) {
+        $results = Zume_Queries::stage_by_location( $stage, $range );
 
-    public function map_geojson( array $stage ) {
-        $results = Zume_Queries::stage_by_location( $stage );
-
+        $count = 0;
         $features = [];
         foreach ( $results as $result ) {
 
@@ -1631,7 +1641,7 @@ class Zume_Charts_API
             $features[] = array(
                 'type' => 'Feature',
                 'properties' => [
-                    'name' => $result['name'],
+                    'name' => $result['name'] ?? '',
                     'post_id' => $result['post_id'],
                     'post_type' => 'contacts',
                 ],
@@ -1644,15 +1654,62 @@ class Zume_Charts_API
                     ),
                 ),
             );
+
+            $count++;
         }
 
         $new_data = array(
             'stage' => $stage,
+            'range' => $range,
+            'total' => $count,
             'type' => 'FeatureCollection',
             'features' => $features,
         );
 
         return $new_data;
+    }
+    public function map_list_switcher( WP_REST_Request $request ) {
+        $params = dt_recursive_sanitize_array( $request->get_params() );
+        if ( ! isset( $params['stage'], $params['north'], $params['south'], $params['east'], $params['west'] ) ) {
+            return new WP_Error( 'no_stage', __( 'No stage key or complete boundaries provided.', 'zume' ), array( 'status' => 400 ) );
+        }
+        $range = -1;
+        if ( isset( $params['range'] ) ) {
+            $range = (float) $params['range'];
+        }
+        $params['north'] = (float) $params['north'];
+        $params['south'] = (float) $params['south'];
+        $params['east'] = (float) $params['east'];
+        $params['west'] = (float) $params['west'];
+
+        switch ( $params['stage'] ) {
+            case 'anonymous':
+                return Zume_Queries::stage_by_boundary( [ 0 ], $range, $params['north'], $params['south'], $params['east'], $params['west'] );
+            case 'registrant':
+                return Zume_Queries::stage_by_boundary( [ 1 ], $range, $params['north'], $params['south'], $params['east'], $params['west'] );
+            case 'active_training_trainee':
+                return Zume_Queries::stage_by_boundary( [ 2 ], $range, $params['north'], $params['south'], $params['east'], $params['west'] );
+            case 'post_training_trainee':
+                return Zume_Queries::stage_by_boundary( [ 3 ], $range, $params['north'], $params['south'], $params['east'], $params['west'] );
+            case 'partial_practitioner':
+                return Zume_Queries::stage_by_boundary( [ 4 ], $range, $params['north'], $params['south'], $params['east'], $params['west'] );
+            case 'full_practitioner':
+                return Zume_Queries::stage_by_boundary( [ 5 ], $range, $params['north'], $params['south'], $params['east'], $params['west'] );
+            case 'multiplying_practitioner':
+                return Zume_Queries::stage_by_boundary( [ 6 ], $range, $params['north'], $params['south'], $params['east'], $params['west'] );
+            case 'practitioners':
+                return Zume_Queries::stage_by_boundary( [ 4,5,6 ], $range, $params['north'], $params['south'], $params['east'], $params['west'] );
+            case 'churches':
+                return Zume_Queries::churches_by_boundary( $params['north'], $params['south'], $params['east'], $params['west'] );
+//            case 'facilitator':
+//                return $this->total_facilitator( $params );
+//            case 'early':
+//                return $this->total_early( $params );
+//            case 'advanced':
+//                return $this->total_advanced( $params );
+            default:
+                return $this->general( $params );
+        }
     }
 
     public function map_churches_geojson() {
@@ -1691,44 +1748,11 @@ class Zume_Charts_API
         return $new_data;
     }
 
-    public function map_list_switcher( WP_REST_Request $request ) {
-        $params = dt_recursive_sanitize_array( $request->get_params() );
-        if ( ! isset( $params['stage'], $params['north'], $params['south'], $params['east'], $params['west'] ) ) {
-            return new WP_Error( 'no_stage', __( 'No stage key or complete boundaries provided.', 'zume' ), array( 'status' => 400 ) );
-        }
-        $params['north'] = (float) $params['north'];
-        $params['south'] = (float) $params['south'];
-        $params['east'] = (float) $params['east'];
-        $params['west'] = (float) $params['west'];
-
-        switch ( $params['stage'] ) {
-            case 'anonymous':
-                return Zume_Queries::stage_by_boundary( [ 0 ], $params['north'], $params['south'], $params['east'], $params['west'] );
-            case 'registrant':
-                return Zume_Queries::stage_by_boundary( [ 1 ], $params['north'], $params['south'], $params['east'], $params['west'] );
-            case 'active_training_trainee':
-                return Zume_Queries::stage_by_boundary( [ 2 ], $params['north'], $params['south'], $params['east'], $params['west'] );
-            case 'post_training_trainee':
-                return Zume_Queries::stage_by_boundary( [ 3 ], $params['north'], $params['south'], $params['east'], $params['west'] );
-            case 'partial_practitioner':
-                return Zume_Queries::stage_by_boundary( [ 4 ], $params['north'], $params['south'], $params['east'], $params['west'] );
-            case 'full_practitioner':
-                return Zume_Queries::stage_by_boundary( [ 5 ], $params['north'], $params['south'], $params['east'], $params['west'] );
-            case 'multiplying_practitioner':
-                return Zume_Queries::stage_by_boundary( [ 6 ], $params['north'], $params['south'], $params['east'], $params['west'] );
-            case 'practitioners':
-                return Zume_Queries::stage_by_boundary( [ 4,5,6 ], $params['north'], $params['south'], $params['east'], $params['west'] );
-            case 'churches':
-                return Zume_Queries::churches_by_boundary( $params['north'], $params['south'], $params['east'], $params['west'] );
-//            case 'facilitator':
-//                return $this->total_facilitator( $params );
-//            case 'early':
-//                return $this->total_early( $params );
-//            case 'advanced':
-//                return $this->total_advanced( $params );
-            default:
-                return $this->general( $params );
-        }
+    public function location( WP_REST_Request $request ) {
+        return DT_Ipstack_API::get_location_grid_meta_from_current_visitor();
+    }
+    public function training_elements( WP_REST_Request $request ) {
+        return Zume_Views::training_elements( dt_recursive_sanitize_array( $request->get_params() ) );
     }
 
     public function query_location_funnel( array $range ) {
@@ -1864,19 +1888,6 @@ class Zume_Charts_API
         $data['custom_column_data']   = $column_data;
         return $data;
     }
-
-    public function location( WP_REST_Request $request ) {
-        return DT_Ipstack_API::get_location_grid_meta_from_current_visitor();
-    }
-    public function training_elements( WP_REST_Request $request ) {
-        return Zume_Views::training_elements( dt_recursive_sanitize_array( $request->get_params() ) );
-    }
-
-    // dev
-//    public function sample( WP_REST_Request $request ) {
-//        return Zume_Views::sample( dt_recursive_sanitize_array( $request->get_params() ) );
-//    }
-
     public function location_goals() {
         $data = DT_Mapping_Module::instance()->data();
 
@@ -2082,7 +2093,6 @@ class Zume_Charts_API
         $data['custom_column_data']   = $column_data;
         return $data;
     }
-
     public function add_practitioners_goal_column( $data ) {
         global $wpdb;
         $column_labels = $data['custom_column_labels'] ?? [];

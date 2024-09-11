@@ -195,7 +195,7 @@ jQuery(document).ready(function($) {
                     </div>
                     <div class="z-card-footer ${key}">
                         <div class="grid-x">
-                            <div class="cell small-6 z-card-sub-left sub ${goal_valence} ${key}">
+                            <div class="cell small-6 z-card-sub ${goal_valence} ${key}">
                                 <div class="z-card-title ${key}">
                                       PACE
                                   </div>
@@ -206,7 +206,7 @@ jQuery(document).ready(function($) {
                                        target for this period (${goal})
                                    </div>
                             </div>
-                            <div class="cell small-6 z-card-sub-right sub ${trend_valence} ${key}">
+                            <div class="cell small-6 z-card-sub ${trend_valence} ${key}">
                                 <div class="z-card-title ${key}">
                                       TREND
                                   </div>
@@ -217,8 +217,16 @@ jQuery(document).ready(function($) {
                                         previous period (${trend})
                                  </div>
                             </div>
+                            <div class="cell z-card-sub-bottom hover zume-map ${key}">
+                                <i class="fi-map"></i>
+                            </div>
                         </div>
                     </div>
+                    <div class="z-card-footer ${key}">
+                        <div class="grid-x">
+
+                        </div>
+                  </div>
                 </div>
             </div>
         `;
@@ -248,7 +256,7 @@ jQuery(document).ready(function($) {
         jQuery('#modal-full-title').empty().html(`${data.label}<hr>`)
         jQuery('#modal-full-content').empty().html('<span class="loading-spinner active"></span>')
 
-        makeRequest('POST', 'map', { stage: data.stage, key: data.key }, window.site_info.rest_root ).done( function( data_map ) {
+        makeRequest('POST', 'map', { stage: data.stage, key: data.key, range: data.range }, window.site_info.rest_root ).done( function( data_map ) {
           console.log(data_map)
           let height = window.innerHeight - 150;
           jQuery('#modal-full-content').html(`
@@ -350,7 +358,7 @@ jQuery(document).ready(function($) {
           function list_result() {
             // console.log(map.getBounds())
             let bounds = map.getBounds()
-            makeRequest('POST', 'map_list', { stage: data.stage, key: data.key, north: bounds._ne.lat, south: bounds._sw.lat, east: bounds._ne.lng, west: bounds._sw.lng }, window.site_info.rest_root ).done( function( list ) {
+            makeRequest('POST', 'map_list', { stage: data.stage, key: data.key, range: data.range, north: bounds._ne.lat, south: bounds._sw.lat, east: bounds._ne.lng, west: bounds._sw.lng }, window.site_info.rest_root ).done( function( list ) {
               console.log(list)
               let container = jQuery('#list-results')
               container.empty()
@@ -358,7 +366,7 @@ jQuery(document).ready(function($) {
                 container.append( `<div class="grid-x grid-padding-x">
                     <div class="cell small-12">
                         <h3><strong>${ v.name }</strong> (${ v.label })</h3>
-                        <a class="button small" href="https://zume.training/${v.post_type}/${v.post_id}">Training Contact</a>
+                        <!-- <a class="button small" href="https://zume.training/${v.post_type}/${v.post_id}">Training Contact</a> -->
                         <hr>
                    </div>
                 </div>`)

@@ -118,6 +118,13 @@ Card Base
     cursor: pointer;
     background-color: var(--darkgrey);
 }
+.z-card-sub {
+    color: var(--white);
+    min-height: 50px;
+    font-size: var(--large);
+    border: 1px solid var(--white);
+    padding: var(--medium) 0;
+}
 .z-card-sub-left {
     border-radius: 0 0 0 var(--radius);
     color: var(--white);

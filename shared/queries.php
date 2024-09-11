@@ -81,14 +81,25 @@ class Zume_Queries {
         return $stages;
     }
 
-    public static function stage_by_location( array $range = [ 1 ] ) {
+    public static function stage_by_location( array $stage, $range, $trend = false ) {
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
 
-        if ( count( $range ) > 1 ) {
-            $range = '(' . implode( ',', $range ) . ')';
+        $end = time();
+        if ( $range < 1 ) {
+            $begin = 0;
         } else {
-            $range = '(' . $range[0] . ')';
+            $begin = strtotime( '-'. $range . ' days' );
+            if ( $trend ) {
+                $end = $begin;
+                $begin = strtotime( '-'. ( $range * 2 ) . ' days' );
+            }
+        }
+
+        if ( count( $stage ) > 1 ) {
+            $stage = '(' . implode( ',', $stage ) . ')';
+        } else {
+            $stage = '(' . $stage[0] . ')';
         }
 
         $results = $wpdb->get_results(
@@ -99,7 +110,9 @@ class Zume_Queries {
             ) as tb
             LEFT JOIN zume_posts p ON p.ID=tb.post_id
             LEFT JOIN zume_dt_location_grid_meta lgm ON lgm.post_id=tb.post_id AND lgm.post_type='contacts'
-            WHERE tb.stage IN $range;", ARRAY_A );
+            WHERE tb.stage IN $stage
+                  AND tb.timestamp > $begin
+                  AND tb.timestamp < $end;", ARRAY_A );
 
         if ( empty( $results ) ) {
             return [];
@@ -108,14 +121,25 @@ class Zume_Queries {
         return $results;
     }
 
-    public static function stage_by_boundary( array $range, float $north, float $south, float $east, float $west ) {
+    public static function stage_by_boundary( array $stages, $range, float $north, float $south, float $east, float $west, $trend = false ) {
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
 
-        if ( count( $range ) > 1 ) {
-            $range = '(' . implode( ',', $range ) . ')';
+        $end = time();
+        if ( $range < 1 ) {
+            $begin = 0;
         } else {
-            $range = '(' . $range[0] . ')';
+            $begin = strtotime( '-'. $range . ' days' );
+            if ( $trend ) {
+                $end = $begin;
+                $begin = strtotime( '-'. ( $range * 2 ) . ' days' );
+            }
+        }
+
+        if ( count( $stages ) > 1 ) {
+            $stages = '(' . implode( ',', $stages ) . ')';
+        } else {
+            $stages = '(' . $stages[0] . ')';
         }
 
         $results = $wpdb->get_results(
@@ -126,11 +150,13 @@ class Zume_Queries {
             ) as tb
             LEFT JOIN zume_posts p ON p.ID=tb.post_id
             LEFT JOIN zume_dt_location_grid_meta lgm ON lgm.post_id=tb.post_id AND lgm.post_type='contacts'
-            WHERE tb.stage IN $range
+            WHERE tb.stage IN $stages
             AND lgm.lat > $south
             AND lgm.lat < $north
             AND lgm.lng > $west
             AND lgm.lng < $east
+            AND tb.timestamp > $begin
+            AND tb.timestamp < $end;
             ;", ARRAY_A );
 
         if ( empty( $results ) ) {
