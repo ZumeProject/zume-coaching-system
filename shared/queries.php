@@ -81,9 +81,11 @@ class Zume_Queries {
         return $stages;
     }
 
-    public static function stage_by_location( array $stage, $range, $trend = false ) {
+    public static function stage_by_location( array $stages, $range, $trend = false ) {
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
+
+        $range = (float) $range;
 
         $end = time();
         if ( $range < 1 ) {
@@ -96,23 +98,26 @@ class Zume_Queries {
             }
         }
 
-        if ( count( $stage ) > 1 ) {
-            $stage = '(' . implode( ',', $stage ) . ')';
+        if ( count( $stages ) > 1 ) {
+            $stages = '(' . implode( ',', $stages ) . ')';
         } else {
-            $stage = '(' . $stage[0] . ')';
+            $stages = '(' . $stages[0] . ')';
         }
 
         $results = $wpdb->get_results(
-            "SELECT p.post_title as name, tb.user_id, tb.post_id, lgm.post_type, tb.stage, lgm.label, lgm.grid_id, lgm.lng, lgm.lat, lgm.level
+            "SELECT p.post_title as name, tb.user_id, tb.post_id, tb.stage, r1.label, r1.grid_id, r1.lng, r1.lat, r1.level
             FROM
             (
               $query_for_user_stage
             ) as tb
             LEFT JOIN zume_posts p ON p.ID=tb.post_id
             LEFT JOIN zume_dt_location_grid_meta lgm ON lgm.post_id=tb.post_id AND lgm.post_type='contacts'
-            WHERE tb.stage IN $stage
+            LEFT JOIN zume_dt_reports r1 ON r1.id=tb.rid
+            WHERE tb.stage IN $stages
                   AND tb.timestamp > $begin
                   AND tb.timestamp < $end;", ARRAY_A );
+
+//        dt_write_log($results);
 
         if ( empty( $results ) ) {
             return [];
@@ -142,22 +147,25 @@ class Zume_Queries {
             $stages = '(' . $stages[0] . ')';
         }
 
-        $results = $wpdb->get_results(
-            "SELECT p.post_title as name, tb.user_id, tb.post_id, lgm.post_type, tb.stage, lgm.label, lgm.grid_id, lgm.lng, lgm.lat, lgm.level
+        $sql = "SELECT p.post_title as name, tb.user_id, tb.post_id, tb.stage, r1.label, r1.grid_id, r1.lng, r1.lat, r1.level
             FROM
             (
               $query_for_user_stage
             ) as tb
             LEFT JOIN zume_posts p ON p.ID=tb.post_id
             LEFT JOIN zume_dt_location_grid_meta lgm ON lgm.post_id=tb.post_id AND lgm.post_type='contacts'
+            LEFT JOIN zume_dt_reports r1 ON r1.id=tb.rid
             WHERE tb.stage IN $stages
-            AND lgm.lat > $south
-            AND lgm.lat < $north
-            AND lgm.lng > $west
-            AND lgm.lng < $east
+            AND r1.lat > $south
+            AND r1.lat < $north
+            AND r1.lng > $west
+            AND r1.lng < $east
             AND tb.timestamp > $begin
             AND tb.timestamp < $end;
-            ;", ARRAY_A );
+            ;";
+        $results = $wpdb->get_results($sql, ARRAY_A );
+
+//        dt_write_log($sql);
 
         if ( empty( $results ) ) {
             return [];

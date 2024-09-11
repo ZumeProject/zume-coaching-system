@@ -6501,7 +6501,7 @@ if ( ! class_exists( 'Zume_System_Log_API' ) ) {
             if ( isset( $data['post_id'] ) && !empty( $data['post_id'] ) ) {
                 $report['post_id'] = absint( $data['post_id'] );
             } else if ( isset( $report['user_id'] ) && !empty( $report['user_id'] ) ) {
-                $contact = Disciple_Tools_Users::get_contact_for_user( $report['user_id'] );
+                $contact = zume_get_user_contact_id( $report['user_id'] );
                 if ( !is_wp_error( $contact ) && !empty( $contact ) ) {
                     $report['post_id'] = $contact;
                 } else {

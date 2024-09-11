@@ -888,7 +888,7 @@ class Zume_Charts_API
         ];
     }
     public function total_multiplying_practitioner( $params ) {
-        $range = sanitize_text_field( $params['range'] );
+        $range = (float) sanitize_text_field( $params['range'] );
         $negative_stat = $params['negative_stat'] ?? false;
         $stage = 6;
 
