@@ -7664,6 +7664,12 @@ if ( ! class_exists( 'Zume_System_Log_API' ) ) {
                     $report['type'] = 'system';
                     $report['subtype'] = 'current_level';
                     $report['post_id'] = zume_get_user_contact_id( $user_id );
+                    $location = zume_get_user_location( $user_id );
+                    $report['lng'] = $location['lng'];
+                    $report['lat'] = $location['lat'];
+                    $report['label'] = $location['label'];
+                    $report['grid_id'] = $location['grid_id'];
+                    $report['level'] = $location['level'];
                     $report['value'] = $i;
                     $report['hash'] = hash( 'sha256', maybe_serialize( $report ) . time() . $i );
                     $added_log[] = self::insert( $report, true, false );
