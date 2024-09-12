@@ -117,7 +117,7 @@ class Zume_Queries {
                   AND tb.timestamp > $begin
                   AND tb.timestamp < $end;", ARRAY_A );
 
-        dt_write_log($results);
+//        dt_write_log($results);
 
         if ( empty( $results ) ) {
             return [];
