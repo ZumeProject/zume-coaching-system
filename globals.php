@@ -6599,7 +6599,7 @@ if ( ! class_exists( 'Zume_System_Log_API' ) ) {
              * business logic:
              * - if a user completes a plan, create a made_post_training_plan log entry
              */
-            if ( 'training' === $type && 'made_post_training_plan' === $subtype ) {
+            if ( 'training' === $type && 'made_post_training_plan' === $subtype ) { // @todo if think this logic is not working
                 if ( self::_needs_to_be_logged( $log, 'training', 'made_post_training_plan' ) ) {
                     $data_item = $data;
                     $data_item['type'] = 'training';
@@ -7663,6 +7663,7 @@ if ( ! class_exists( 'Zume_System_Log_API' ) ) {
                 for ( $i = $highest_logged_stage + 1; $i <= $current_stage; $i++ ) {
                     $report['type'] = 'system';
                     $report['subtype'] = 'current_level';
+                    $report['post_id'] = zume_get_user_contact_id( $user_id );
                     $report['value'] = $i;
                     $report['hash'] = hash( 'sha256', maybe_serialize( $report ) . time() . $i );
                     $added_log[] = self::insert( $report, true, false );

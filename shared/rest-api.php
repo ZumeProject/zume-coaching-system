@@ -175,7 +175,7 @@ class Zume_Charts_API
                 $value = 5;
                 $data['value'] = intval( $days * $value ); // events per day
                 $data['description'] = 'People who have registered but have not progressed into training.';
-                $data['pace'] = $value .' registrations per day';
+                $data['pace'] = $value .' new registrants per day';
                 break;
             case 'active_training_trainee':
             case '2';
