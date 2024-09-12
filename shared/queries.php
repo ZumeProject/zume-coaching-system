@@ -4,9 +4,9 @@ if ( !defined( 'ABSPATH' ) ) { exit; } // Exit if accessed directly.
 class Zume_Queries {
 
     // this is a reusable query that gets the user_id, post_id (contact_id), stage, and report id (rid) from the reports table.
-    public static $query_for_user_stage = "SELECT r.user_id, r.post_id, r.post_id as contact_id, MAX(r.value) as stage, MAX(r.id) as rid, MAX(r.timestamp) as timestamp FROM zume_dt_reports r
+    public static $query_for_user_stage = "SELECT r.user_id, r.post_id, r.post_id as contact_id, r.type, r.subtype, MAX(r.value) as stage, MAX(r.id) as rid, MAX(r.timestamp) as timestamp FROM zume_dt_reports r
                                                   WHERE r.type = 'system' and r.subtype = 'current_level'
-                                                  GROUP BY r.user_id, r.post_id";
+                                                  GROUP BY r.user_id, r.post_id, r.type, r.subtype";
 
 
     public static function stage_total( $stage, $range, $trend = false ) {
@@ -105,7 +105,7 @@ class Zume_Queries {
         }
 
         $results = $wpdb->get_results(
-            "SELECT p.post_title as name, tb.user_id, tb.post_id, tb.stage, r1.label, r1.grid_id, r1.lng, r1.lat, r1.level
+            "SELECT p.post_title as name, tb.user_id, tb.post_id, tb.stage, lgm.label, lgm.grid_id, lgm.lng, lgm.lat, lgm.level
             FROM
             (
               $query_for_user_stage
@@ -117,7 +117,7 @@ class Zume_Queries {
                   AND tb.timestamp > $begin
                   AND tb.timestamp < $end;", ARRAY_A );
 
-//        dt_write_log($results);
+        dt_write_log($results);
 
         if ( empty( $results ) ) {
             return [];
@@ -147,7 +147,7 @@ class Zume_Queries {
             $stages = '(' . $stages[0] . ')';
         }
 
-        $sql = "SELECT p.post_title as name, tb.user_id, tb.post_id, tb.stage, r1.label, r1.grid_id, r1.lng, r1.lat, r1.level
+        $sql = "SELECT p.post_title as name, tb.user_id, tb.post_id, tb.stage, lgm.label, lgm.grid_id, lgm.lng, lgm.lat, lgm.level
             FROM
             (
               $query_for_user_stage
@@ -156,10 +156,10 @@ class Zume_Queries {
             LEFT JOIN zume_dt_location_grid_meta lgm ON lgm.post_id=tb.post_id AND lgm.post_type='contacts'
             LEFT JOIN zume_dt_reports r1 ON r1.id=tb.rid
             WHERE tb.stage IN $stages
-            AND r1.lat > $south
-            AND r1.lat < $north
-            AND r1.lng > $west
-            AND r1.lng < $east
+            AND lgm.lat > $south
+            AND lgm.lat < $north
+            AND lgm.lng > $west
+            AND lgm.lng < $east
             AND tb.timestamp > $begin
             AND tb.timestamp < $end;
             ;";
