@@ -14,7 +14,7 @@ class Zume_Goals_Locations_Goals extends Zume_Goals_Chart_Base
     public $slug = 'locations_goals'; // lowercase
     public $js_object_name = 'wp_js_object'; // This object will be loaded into the metrics.js file by the wp_localize_script.
     public $js_file_name = '/dt-metrics/combined/locations-list.js'; // should be full file name plus extension
-    public $permissions = [ 'access_contacts', 'view_project_metrics' ];
+    public $permissions = [ 'access_contacts' ];
     public $namespace = 'zume_funnel/v1';
 
     public function __construct() {

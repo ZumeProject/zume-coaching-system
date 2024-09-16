@@ -26,9 +26,12 @@ class Zume_Funnel_Base {
 
             require_once( 'abstract.php' );
 
+            // overview
             require_once( '10-trainee-overview.php' );
             require_once( '18-in-and-out.php' );
             require_once( '11-location-funnel.php' );
+
+            // funnel
 //            require_once( '11-anonymous.php' );
             require_once( '12-registrants.php' );
             require_once( '13-active-training.php' );
@@ -37,6 +40,7 @@ class Zume_Funnel_Base {
             require_once( '16-full-practitioner.php' );
             require_once( '17-multiplying-practitioner.php' );
 
+            // coaching
             if ( user_can( get_current_user_id(), 'manage_options' ) ) :
                 require_once( '20-overview.php' );
                 require_once( '21-facilitator.php' );
