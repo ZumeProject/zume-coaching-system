@@ -36,7 +36,7 @@ class Zume_Goals_Metrics_Base {
     }
 
     public function add_navigation_links( $tabs ) {
-        if ( current_user_can( 'manage_dt' ) ) {
+        if ( current_user_can( 'access_contacts' ) ) {
             $tabs[] = [
                 'link' => site_url( '/zume-goals/' ), // the link where the user will be directed when they click
                 'label' => __( 'Goals', 'zume_goals' ),  // the label the user will see
