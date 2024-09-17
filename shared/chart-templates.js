@@ -98,25 +98,6 @@ jQuery(document).ready(function($) {
               </div>
           `;
     }
-  window.template_pace_arrow = ({key, valence, label, value, description}) => {
-    return `
-              <div class="grid-x">
-                <div class="cell z-card pace ${key} ${valence}">
-                    <div class="z-card-single">
-                        <div class="z-card-title ${key}">
-                            ${label}
-                        </div>
-                        <div class="z-card-value ${key}">
-                            ${value}
-                        </div>
-                        <div class="z-card-description ${key}">
-                            ${description}
-                        </div>
-                    </div>
-                </div>
-              </div>
-          `;
-  }
     window.template_single_list = ({key, valence, label, value, description}) => {
       return `
               <div class="grid-x">

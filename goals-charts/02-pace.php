@@ -98,7 +98,7 @@ class Zume_Funnel_Pace extends Zume_Goals_Chart_Base
                     })
                     window.spin_add()
                     makeRequest('GET', 'pace', { stage: "practitioners", key: "days_left", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.stage+'.'+data.key).html( window.template_pace_arrow( data ) )
+                        jQuery('.'+data.stage+'.'+data.key).html( window.template_single( data ) )
                         window.click_listener(data)
                         window.spin_remove()
                     })
@@ -124,7 +124,7 @@ class Zume_Funnel_Pace extends Zume_Goals_Chart_Base
                     })
                     window.spin_add()
                     makeRequest('GET', 'pace', { stage: "churches", key: "days_left", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.stage+'.'+data.key).html( window.template_pace_arrow( data ) )
+                        jQuery('.'+data.stage+'.'+data.key).html( window.template_single( data ) )
                         window.click_listener(data)
                         window.spin_remove()
                     })
