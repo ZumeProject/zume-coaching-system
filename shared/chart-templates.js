@@ -235,14 +235,14 @@ jQuery(document).ready(function($) {
     window.load_list = ( data ) => {
       jQuery('.zume-list.'+data.key).click(function(){
         jQuery('#modal-large').foundation('open')
-        jQuery('#modal-large-title').empty().html(`${data.label} <span style="float:right; margin-right: 2em;"><a href="https://zume.training/contacts?query=eyJmaWVsZHMiOlt7InR5cGUiOlsidXNlciJdfV0sInNvcnQiOiJuYW1lIiwib2Zmc2V0IjowfQ%3D%3D&labels=W3siaWQiOiJ1c2VyIiwibmFtZSI6IkNvbnRhY3QgVHlwZTogVXNlciIsImZpZWxkIjoidHlwZSJ9XQ%3D%3D&filter_id=1689018512.323&filter_tab=" class="button small">Take Action</a></span> <hr>`)
+        jQuery('#modal-large-title').empty().html(`${data.label} <span style="float:right; margin-right: 2em;"></span> <hr>`)
         jQuery('#modal-large-content').empty().html('<span class="loading-spinner active"></span>')
 
-        makeRequest('GET', 'list', {}, window.site_info.rest_root ).done( function( data_list ) {
+        makeRequest('GET', 'list', { stage: data.stage, key: data.key, range: data.range, data: data  }, window.site_info.rest_root ).done( function( data_list ) {
           jQuery('#modal-large-content').empty().html('<table class="hover"><tbody id="zume-goals-list-modal"></tbody></table>')
-          jQuery('#zume-goals-list-modal').append( `<tr><td></td><td><strong>Name</strong></td><td><strong>Registered</strong></td></tr>`)
+          jQuery('#zume-goals-list-modal').append( `<tr><td></td><td><strong>Name</strong></td><td><strong>Email</strong></td><td><strong>Phone</strong></td></tr>`)
           jQuery.each(data_list, function(i,v)  {
-            jQuery('#zume-goals-list-modal').append( `<tr><td><input type="checkbox" /></td><td><a href="https://zume.training/contacts?query=eyJmaWVsZHMiOlt7InR5cGUiOlsidXNlciJdfV0sInNvcnQiOiJuYW1lIiwib2Zmc2V0IjowfQ%3D%3D&labels=W3siaWQiOiJ1c2VyIiwibmFtZSI6IkNvbnRhY3QgVHlwZTogVXNlciIsImZpZWxkIjoidHlwZSJ9XQ%3D%3D&filter_id=1689018512.323&filter_tab=">${ v.display_name }</a></td><td>${v.user_registered}</td></tr>`)
+            jQuery('#zume-goals-list-modal').append( `<tr><td><input type="checkbox" /></td><td>${ v.name }</td><td>${v.user_email}</td><td>${v.user_phone}</td></tr>`)
           })
           jQuery('.loading-spinner').removeClass('active')
         })

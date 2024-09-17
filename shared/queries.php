@@ -42,6 +42,42 @@ class Zume_Queries {
         return (float) $result;
     }
 
+    public static function stage_total_list( $stage, $range, $trend = false ) {
+        global $wpdb;
+        $query_for_user_stage = self::$query_for_user_stage;
+
+        $end = time();
+        if ( $range < 1 ) {
+            $begin = 0;
+        } else {
+            $begin = strtotime( '-'. $range . ' days' );
+            if ( $trend ) {
+                $end = $begin;
+                $begin = strtotime( '-'. ( $range * 2 ) . ' days' );
+            }
+        }
+
+        $sql = "SELECT *
+                FROM
+                (
+                   $query_for_user_stage
+                ) as tb
+                WHERE tb.timestamp > $begin
+                  AND tb.timestamp < $end
+                  AND tb.stage = $stage
+                ;";
+
+        dt_write_log($sql);
+
+        $list = $wpdb->get_results( $sql, ARRAY_A );
+
+        if ( empty( $list ) ) {
+            return [];
+        }
+
+        return $list;
+    }
+
     public static function stage_totals_by_range( $range, $trend = false ) {
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
@@ -629,6 +665,52 @@ class Zume_Queries {
         return $count;
     }
 
+    public static function has_coach_list( $stage, $range = -1, $trend = false, $negative = false ) {
+        global $wpdb;
+        $query_for_user_stage = self::$query_for_user_stage;
+
+        if ( $negative ) {
+            $where = "AND pm.meta_value = ''";
+        } else {
+            $where = "AND pm.meta_value != ''";
+        }
+
+        $end = time();
+        if ( $range < 1 ) {
+            $begin = 0;
+        } else {
+            $begin = strtotime( '-'. $range . ' days' );
+            if ( $trend ) {
+                $end = $begin;
+                $begin = strtotime( '-'. ( $range * 2 ) . ' days' );
+            }
+        }
+
+        $sql = "
+            SELECT tb.user_id, tb.post_id, pm.meta_value as coaching_contact_id, p.post_title as name, pm1.meta_value as user_email, pm2.meta_value as user_phone
+            FROM
+               (
+                  $query_for_user_stage
+                ) as tb
+            JOIN zume_posts p ON p.ID=tb.post_id
+            JOIN zume_postmeta pm ON pm.post_id=tb.post_id AND pm.meta_key = 'coaching_contact_id' $where
+			LEFT JOIN zume_postmeta pm1 ON pm1.post_id=tb.post_id AND pm1.meta_key = 'user_email'
+			LEFT JOIN zume_postmeta pm2 ON pm2.post_id=tb.post_id AND pm2.meta_key = 'user_phone'
+            WHERE tb.stage = $stage
+                AND tb.timestamp > $begin
+                AND tb.timestamp < $end;
+            ";
+
+//        dt_write_log($sql);
+        $list = $wpdb->get_results( $sql, ARRAY_A );
+
+        if ( empty( $list ) ) {
+            return [];
+        }
+
+        return $list;
+    }
+
     public static function checkins( $stage, $range, $trend = false, $negative = false ) {
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
@@ -785,7 +867,6 @@ class Zume_Queries {
         if ( $count < 1 ) {
             return 0;
         }
-//        dt_write_log($count);
 
         if ( $negative ) {
             $stage_total = self::stage_total( $stage, $range, $trend );
@@ -798,6 +879,63 @@ class Zume_Queries {
         }
 
         return (float) $count;
+    }
+
+    public static function query_stage_by_type_and_subtype_list( $stage, $range, $type, $subtype, $trend = false, $negative = false ) {
+        global $wpdb;
+        $query_for_user_stage = self::$query_for_user_stage;
+
+        $end = time();
+        if ( $range < 1 ) {
+            $begin = 0;
+        } else {
+            $begin = strtotime( '-'. $range . ' days' );
+            if ( $trend ) {
+                $end = $begin;
+                $begin = strtotime( '-'. ( $range * 2 ) . ' days' );
+            }
+        }
+
+        $sql = "
+            SELECT DISTINCT tb.user_id, tb.post_id, pm.meta_value as coaching_contact_id, p.post_title as name, pm1.meta_value as user_email, pm2.meta_value as user_phone, IF( r.id, true, false ) as logged
+            FROM
+               (
+                  $query_for_user_stage
+                ) as tb
+            LEFT JOIN zume_dt_reports r ON r.user_id=tb.user_id AND r.type = '$type' AND r.subtype LIKE '$subtype'
+			JOIN zume_posts p ON p.ID=tb.post_id
+			LEFT JOIN zume_postmeta pm ON pm.post_id=tb.post_id AND pm.meta_key = 'coaching_contact_id'
+			LEFT JOIN zume_postmeta pm1 ON pm1.post_id=tb.post_id AND pm1.meta_key = 'user_email'
+			LEFT JOIN zume_postmeta pm2 ON pm2.post_id=tb.post_id AND pm2.meta_key = 'user_phone'
+            WHERE tb.stage = $stage
+               AND tb.timestamp > $begin
+              AND tb.timestamp < $end
+            ORDER BY p.post_title
+            ";
+//        dt_write_log($sql);
+        $list = $wpdb->get_results( $sql, ARRAY_A );
+
+        if ( empty( $list ) ) {
+            return [];
+        }
+
+        $data_list = [
+            'negative' => [],
+            'positive' => [],
+        ];
+        foreach( $list as $row ) {
+            if ( $row['logged'] ) {
+                $data_list['positive'][] = $row;
+            } else {
+                $data_list['negative'][] = $row;
+            }
+        }
+
+        if ( $negative ) {
+            return $data_list['negative'];
+        } else {
+            return $data_list['positive'];
+        }
     }
 
     public static function registrations( $range = -1, $trend = false ) {

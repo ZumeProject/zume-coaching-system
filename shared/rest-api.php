@@ -348,9 +348,6 @@ class Zume_Charts_API
         $stage = 1;
         $negative_stat = $params['negative_stat'] ?? false;
 
-//        $all_stages_totols = Zume_Queries::stage_totals_by_range( $range );
-//        $stage_total = $all_stages_totols[$stage]['total'];
-
         $label = '';
         $description = '';
         $link = '';
@@ -992,6 +989,113 @@ class Zume_Charts_API
             'negative_stat' => $negative_stat,
         ];
     }
+    public function list( WP_REST_Request $request ) {
+        $params = dt_recursive_sanitize_array( $request->get_params() );
+        if ( ! isset( $params['stage'] ) ) {
+            return new WP_Error( 'no_stage', __( 'No stage key provided.', 'zume' ), array( 'status' => 400 ) );
+        }
+
+        if ( ! isset( $params['negative_stat'] ) ) {
+            $params['negative_stat'] = false;
+        }
+
+        if ( ! isset( $params['range'] ) ) {
+            $params['range'] = false;
+        }
+
+        switch ( $params['stage'] ) {
+            case 'anonymous':
+            case 'registrant':
+            case 'active_training_trainee':
+            case 'post_training_trainee':
+            case 'partial_practitioner':
+            case 'full_practitioner':
+            case 'multiplying_practitioner':
+            case 'practitioners':
+            case 'churches':
+            default:
+                return $this->list_general( $params );
+        }
+
+    }
+    public function list_general( $params ) {
+        $list = [];
+        $range = (float) sanitize_text_field( $params['range'] );
+        $negative_stat = $params['negative_stat'] ?? false;
+        $stage = $this->get_stage_number(  sanitize_text_field( $params['stage'] ) );
+
+        $label = '';
+        $description = '';
+        $link = '';
+        $value = 0;
+        $goal = 0;
+        $trend = 0;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
+        $days = 0;
+        if ( $range > 0 ) {
+            $days = (int) $range;
+        }
+
+        switch ( $params['key'] ) {
+            case 'total_registrants':
+                $list = Zume_Queries::stage_total_list( $stage, $range );
+                break;
+            case 'total_active_training_trainee':
+            case 'total_post_training_trainee':
+            case 'total_partial_practitioner':
+            case 'total_full_practitioner':
+            case 'total_multiplying_practitioner':
+                $list = [];
+                break;
+
+
+            case 'locations':
+                $list = [];
+                break;
+            case 'languages':
+                $list = [];
+                break;
+
+
+            case 'not_set_phone':
+                $list = Zume_Queries::query_stage_by_type_and_subtype_list( $stage, $range, 'system', 'set_profile_phone', false, true );
+                break;
+            case 'not_set_name':
+                $list = Zume_Queries::query_stage_by_type_and_subtype_list( $stage, $range, 'system', 'set_profile_name', false, true );
+                break;
+            case 'not_set_location':
+                $list = Zume_Queries::query_stage_by_type_and_subtype_list( $stage, $range, 'system', 'set_profile_location', false, true );
+                break;
+            case 'has_not_completed_profile':
+                $list = Zume_Queries::query_stage_by_type_and_subtype_list( $stage, $range, 'system', 'set_profile', false, true );
+                break;
+            case 'has_no_coach':
+                $list = Zume_Queries::has_coach_list( $stage, $range, false, true );
+                break;
+            case 'has_not_reported':
+                $negative_stat = true;
+                $list = [];
+                break;
+
+
+            case 'coach_requests':
+                $list = Zume_Queries::query_stage_by_type_and_subtype_list( $stage, $range, 'coaching', 'requested_a_coach', false, false );
+                break;
+
+            case 'plans':
+            case 'reporting_churches':
+                $list = [];
+                break;
+
+            default:
+                break;
+        }
+
+        return $list;
+    }
+
     public function total_facilitator( $params ) {
         $range = sanitize_text_field( $params['range'] );
         $negative_stat = $params['negative_stat'] ?? false;
@@ -1598,8 +1702,26 @@ class Zume_Charts_API
         return $data;
     }
 
-    public function list( WP_REST_Request $request ) {
-        return true;
+
+
+    public function get_stage_number( $stage ) {
+        switch ( $stage ) {
+            case 'registrant':
+                return 1;
+            case 'active_training_trainee':
+                return 2;
+            case 'post_training_trainee':
+                return 3;
+            case 'partial_practitioner':
+                return 4;
+            case 'full_practitioner':
+                return 5;
+            case 'multiplying_practitioner':
+                return 6;
+            case 'anonymous':
+            default:
+                return 0;
+        }
     }
 
     public function pace( WP_REST_Request $request ) {
@@ -1735,7 +1857,6 @@ class Zume_Charts_API
 
 
     }
-
     public function global_goals( $type ) {
         if ( 'churches' === $type ) {
             $global_div = 25000;
@@ -1758,7 +1879,6 @@ class Zume_Charts_API
 
         return $needed_without_us + $needed_in_the_us;
     }
-
 
     public function map_switcher( WP_REST_Request $request ) {
         $params = dt_recursive_sanitize_array( $request->get_params() );
