@@ -17,60 +17,31 @@ class Zume_Funnel_Pace extends Zume_Goals_Chart_Base
         if ( !$this->has_permission() ){
             return;
         }
-        $this->base_title = __( 'Top Goals', 'zume_goals' );
+        $this->base_title = __( 'Pace', 'zume_goals' );
 
         $url_path = dt_get_url_path( true );
-        if ( 'zume-goals' === $url_path ) {
+        if ( 'zume-goals/'.$this->base_slug === $url_path ) {
             add_action( 'wp_enqueue_scripts', [ $this, 'base_scripts' ], 99 );
             add_action( 'wp_head', [ $this, 'wp_head' ], 1000 );
         }
     }
 
     public function base_menu( $content ) {
-        $content .= '<li>GOALS</li>';
-        $content .= '<li><a href="'.site_url( '/zume-goals/'.$this->base_slug ).'" id="'.$this->base_slug.'-menu">' .  $this->base_title . '</a></li>';
         return $content;
     }
 
     public function wp_head() {
         $this->js_api();
-        $stages = zume_funnel_stages();
-        $html = '';
-
-        foreach ( $stages as $stage ) {
-            if ( 'anonymous' === $stage['key'] ) {
-                continue;
-            }
-            $html .= '<div class="cell medium-9 zume-funnel">
-                         <div class="'.$stage['key'].' in_and_out"><span class="loading-spinner active"></span></div>
-                    </div>
-                    <div class="cell medium-3 padding-top">
-                        <h3>Characteristics</h3>';
-            $html .='<ul>';
-            foreach ( $stage['characteristics'] as $item ) {
-                $html .='<li>'.$item.'</li>';
-            }
-            $html .= '</ul>';
-
-            $html .= '<h3>Next Steps</h3>';
-
-            $html .= '<ul>';
-            foreach ( $stage['next_steps'] as $item ) {
-                $html .= '<li>'.$item.'</li>';
-            }
-            $html .= '</ul></div>';
-        }
-
         ?>
+
         <script>
             jQuery(document).ready(function(){
                 "use strict";
                 let chart = jQuery('#chart')
-                let list = `<?php echo $html; ?>`;
                 chart.empty().html(`
                         <div id="zume-funnel">
                             <div class="grid-x">
-                                <div class="cell small-6"><h1>In and Out Funnel</h1></div>
+                                <div class="cell small-6"><h1>Pace</h1></div>
                                 <div class="cell small-6">
                                     <span style="float: right;">
                                         <select id="range-filter">
@@ -82,72 +53,87 @@ class Zume_Funnel_Pace extends Zume_Goals_Chart_Base
                                                 <?php
                                                 }
                                             ?>
+                                            <option value="1095">3 Years</option>
+                                            <option value="365">Last 1 Year</option>
+                                            <option value="<?php echo date( 'z' ); ?>">Since year start</option>
                                             <option value="90">Last 90 days</option>
                                             <option value="30">Last 30 days</option>
                                             <option value="7">Last 7 days</option>
-                                            <option value="365">Last 1 Year</option>
-                                            <option value="<?php echo date( 'z' ); ?>">Since year start</option>
-                                            <option value="-1">All Time</option>
                                         </select>
                                     </span>
                                     <span class="loading-spinner active right" style="margin:.5em 1em;"></span>
                                 </div>
                             </div>
                             <div class="grid-x grid-padding-x"><div class="cell"><hr></div></div>
+
+                            <div class="grid-x grid-padding-x"><div class="cell"><h2>Practitioners Pace <span class="loading-spinner"></span></h2></div></div>
                             <div class="grid-x grid-padding-x">
-                                <div class="cell medium-9 center">
-                                     STEPS
-                                </div>
-                                <div class="cell medium-3"></div>
-                                ${list}
+                                <div class="cell medium-3 practitioners previous_pace"></div>
+                                <div class="cell medium-3 practitioners current_pace"></div>
+                                <div class="cell medium-3 practitioners days_left"></div>
+                                <div class="cell medium-3 practitioners goal"></div>
+                            </div>
+                            <div class="grid-x grid-padding-x"><div class="cell"><h2>Churches Pace <span class="loading-spinner"></span></h2></div></div>
+                            <div class="grid-x grid-padding-x">
+                                <div class="cell medium-3 churches previous_pace"></div>
+                                <div class="cell medium-3 churches current_pace"></div>
+                                <div class="cell medium-3 churches days_left"></div>
+                                <div class="cell medium-3 churches goal"></div>
                             </div>
                         </div>
                     `)
 
                 window.path_load = ( range ) => {
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "registrant", key: "in_and_out", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        data.label = "Registrant"
-                        jQuery('.'+data.stage+'.'+data.key).html( window.template_in_out( data ) )
+                    makeRequest('GET', 'pace', { stage: "practitioners", key: "previous_pace", range: range }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.stage+'.'+data.key).html( window.template_single( data ) )
                         window.click_listener(data)
                         window.spin_remove()
                     })
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "active_training_trainee", key: "in_and_out", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        data.label = "Active Training Trainee"
-                        jQuery('.'+data.stage+'.'+data.key).html( window.template_in_out( data ) )
+                    makeRequest('GET', 'pace', { stage: "practitioners", key: "current_pace", range: range }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.stage+'.'+data.key).html( window.template_single( data ) )
                         window.click_listener(data)
                         window.spin_remove()
                     })
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "post_training_trainee", key: "in_and_out", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        data.label = "Post Training Trainee"
-                        jQuery('.'+data.stage+'.'+data.key).html( window.template_in_out( data ) )
+                    makeRequest('GET', 'pace', { stage: "practitioners", key: "days_left", range: range }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.stage+'.'+data.key).html( window.template_pace_arrow( data ) )
                         window.click_listener(data)
                         window.spin_remove()
                     })
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "partial_practitioner", key: "in_and_out", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        data.label = "(S1) Partial Practitioner"
-                        jQuery('.'+data.stage+'.'+data.key).html( window.template_in_out( data ) )
-                        window.click_listener(data)
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "full_practitioner", key: "in_and_out", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        data.label = "(S2) Full Practitioner"
-                        jQuery('.'+data.stage+'.'+data.key).html( window.template_in_out( data ) )
-                        window.click_listener(data)
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "multiplying_practitioner", key: "in_and_out", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        data.label = "(S3) Multiplying Practitioner"
-                        jQuery('.'+data.stage+'.'+data.key).html( window.template_in_out( data ) )
+                    makeRequest('GET', 'pace', { stage: "practitioners", key: "goal", range: range }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.stage+'.'+data.key).html( window.template_single( data ) )
                         window.click_listener(data)
                         window.spin_remove()
                     })
 
+
+                    window.spin_add()
+                    makeRequest('GET', 'pace', { stage: "churches", key: "previous_pace", range: range }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.stage+'.'+data.key).html( window.template_single( data ) )
+                        window.click_listener(data)
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'pace', { stage: "churches", key: "current_pace", range: range }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.stage+'.'+data.key).html( window.template_single( data ) )
+                        window.click_listener(data)
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'pace', { stage: "churches", key: "days_left", range: range }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.stage+'.'+data.key).html( window.template_pace_arrow( data ) )
+                        window.click_listener(data)
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'pace', { stage: "churches", key: "goal", range: range }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.stage+'.'+data.key).html( window.template_single( data ) )
+                        window.click_listener(data)
+                        window.spin_remove()
+                    })
                 }
                 window.setup_filter()
 

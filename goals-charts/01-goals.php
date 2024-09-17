@@ -83,10 +83,6 @@ class Zume_Goals_Goals extends Zume_Goals_Chart_Base
 
                     window.spin_add()
                     makeRequest('GET', 'total', { stage: "practitioners", key: "practitioners_total", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        data.label = 'Practitioners'
-                        data.link = 'heatmap_practitioners'
-                        data.valence = 'valence-grey'
-                        data.description = 'Practitioners are those who have identified as movement practitioners (of all stages: Partial, Full, Multiplying). They are seeking movement with multiplicative methods and want to participate in the Zúme Community.'
                         jQuery('.'+data.key).html(window.template_hero_map_only(data))
                         window.click_listener( data )
                         window.spin_remove()

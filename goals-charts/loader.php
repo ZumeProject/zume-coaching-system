@@ -27,7 +27,7 @@ class Zume_Goals_Metrics_Base {
 
             require_once( '01-goals.php' );
             require_once( '01-location-goal.php' );
-//            require_once( '02-pace.php' );
+            require_once( '02-pace.php' );
 
             require_once( '20-maps.php' );
 

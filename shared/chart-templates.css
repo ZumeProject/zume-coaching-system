@@ -1,8 +1,11 @@
 :root {
     --white: #ffffff;
+
     --lightgrey: #cccccc;
     --darkgrey: #999999;
 
+    --whitesmoke: rgb(245, 245, 245, 1);
+    --whitesmoke-hover: rgb(245, 245, 245, .8);
     --darkred: rgba(255, 0, 0, 1);
     --darkred-hover: rgba(255, 0, 0, .8);
     --red: rgba(255, 165, 0, 1);
@@ -50,6 +53,13 @@
 }
 .valence-grey.hover:hover {
     background-color: var(--grey-hover) !important;
+    cursor: pointer;
+}
+.valence-white {
+    background-color: var(--white) !important;
+}
+.valence-white.hover:hover {
+    background-color: var(--white) !important;
     cursor: pointer;
 }
 .valence-green {
@@ -199,8 +209,3 @@ Card Base
     font-size: var(--xlarge);
     font-weight: var(--medium-weight);
 }
-
-
-
-
-

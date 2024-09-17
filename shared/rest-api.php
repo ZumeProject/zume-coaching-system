@@ -108,6 +108,21 @@ class Zume_Charts_API
             ]
         );
         register_rest_route(
+            $this->namespace, '/pace', [
+                [
+                    'methods'  => 'GET',
+                    'callback' => [ $this, 'pace' ],
+                    'permission_callback' => function () {
+                        return $this->has_permission( $this->coach_permissions );
+                    },
+                ],
+            ]
+        );
+
+
+
+        // @todo have these been replaced by global.php class?
+        register_rest_route(
             $this->namespace, '/mawl', [
                 [
                     'methods'  => 'GET',
@@ -333,7 +348,7 @@ class Zume_Charts_API
         $stage = 1;
         $negative_stat = $params['negative_stat'] ?? false;
 
-        $all_stages_totols = Zume_Queries::stage_totals_by_range( $range );
+//        $all_stages_totols = Zume_Queries::stage_totals_by_range( $range );
 //        $stage_total = $all_stages_totols[$stage]['total'];
 
         $label = '';
@@ -1428,7 +1443,9 @@ class Zume_Charts_API
 
 
     public function total_practitioners( $params ) {
+        $range = (float) sanitize_text_field( $params['range'] );
         $negative_stat = $params['negative_stat'] ?? false;
+        $stages = [3,4,5,6];
 
         $label = '';
         $description = '';
@@ -1440,27 +1457,24 @@ class Zume_Charts_API
 
         switch ( $params['key'] ) {
 
-            case 'churches_total':
-                $label = 'Total Registrations';
-                $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
-                $value = Zume_Queries::query_total_churches();
+            case 'practitioners_total':
+                $label = 'Practitioners';
+                $description = 'Practitioners are those who have identified as movement practitioners (of all stages: Post-Training, Partial, Full, Multiplying). They are seeking movement with multiplicative methods and want to participate in the Zúme Community.';
+                $value = Zume_Queries::query_total_practitioners();
+                $link = 'heatmap_practitioners';
                 $goal = 0;
                 $trend = 0;
-                ;
                 $valence = 'valence-grey';
                 break;
-            case 'practitioners_total':
-                $label = 'Visitors';
+            case 'pace_to_goal':
+                $label = 'Practitioners Pace';
                 $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
-                $value = Zume_Queries::query_total_practitioners();
+                $value = Zume_Queries::query_total_practitioners( $stages, $range );
                 $goal = 0;
                 $trend = 0;
                 $valence = 'valence-grey';
                 break;
             default:
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
                 break;
 
         }
@@ -1468,6 +1482,7 @@ class Zume_Charts_API
         return [
             'key' => $params['key'],
             'stage' => $params['stage'],
+            'range' => (float) $range,
             'label' => $label,
             'description' => $description,
             'link' => $link,
@@ -1585,6 +1600,163 @@ class Zume_Charts_API
 
     public function list( WP_REST_Request $request ) {
         return true;
+    }
+
+    public function pace( WP_REST_Request $request ) {
+        $params = dt_recursive_sanitize_array( $request->get_params() );
+        if ( ! isset( $params['stage'] ) ) {
+            return new WP_Error( 'no_stage', __( 'No stage key provided.', 'zume' ), array( 'status' => 400 ) );
+        }
+
+        if ( ! isset( $params['negative_stat'] ) ) {
+            $params['negative_stat'] = false;
+        }
+
+        if ( ! isset( $params['range'] ) ) {
+            $params['range'] = false;
+        }
+
+        $range = (float) sanitize_text_field( $params['range'] );
+        $negative_stat = $params['negative_stat'] ?? false;
+        $stages = [3,4,5,6];
+
+        $label = '';
+        $description = '';
+        $link = '';
+        $value = 0;
+        $goal = 0;
+        $trend = 0;
+        $valence = null;
+
+        switch ( $params['stage'] . '_' . $params['key'] ) {
+
+            case 'practitioners_previous_pace':
+                $label = 'Previous';
+                $description = 'Cumulative total '. $range.' days ago.';
+                $value = Zume_Queries::query_practitioners_cumulative( $stages, $range, false );
+                $valence = 'valence-grey';
+                break;
+            case 'practitioners_current_pace':
+                $label = 'Current';
+                $description = 'Current cumulative total';
+                $value = Zume_Queries::query_practitioners_cumulative( $stages, $range );
+                $valence = 'valence-grey';
+                break;
+            case 'practitioners_days_left':
+                $label = 'Days to Goal';
+                $description = 'Days to attain goal';
+                $previous_pace = Zume_Queries::query_practitioners_cumulative( $stages, $range, false );
+                $current_pace = Zume_Queries::query_practitioners_cumulative( $stages, $range );
+                $global_goal = $this->global_goals( 'practitioners' );
+
+                $difference = $current_pace - $previous_pace;
+                $per_day =  $difference / $range;
+
+                $missing = $global_goal - $current_pace;
+
+                $days_to_goal = 0;
+                if ( $per_day ) {
+                    $days_to_goal =  $missing / $per_day;
+                } else {
+                    $description = 'No pace detected in '.$range.' days';
+                }
+
+                $value = $days_to_goal;
+                $valence = 'valence-red';
+                break;
+            case 'practitioners_goal':
+                $label = 'Goal';
+                $description = 'Global practitioner goal';
+                $value = $this->global_goals( 'practitioners' );
+                $valence = 'valence-grey';
+                break;
+            case 'churches_previous_pace':
+                $label = 'Previous';
+                $description = 'Cumulative total '. $range.' days ago.';
+                $value = Zume_Queries::query_churches_cumulative( $range, false );
+                $valence = 'valence-grey';
+                break;
+            case 'churches_current_pace':
+                $label = 'Current';
+                $description = 'Current cumulative total';
+                $value = Zume_Queries::query_churches_cumulative( $range );
+                $valence = 'valence-grey';
+                break;
+            case 'churches_days_left':
+                $label = 'Days to Goal';
+                $description = 'Days to attain goal';
+                $previous_pace = Zume_Queries::query_churches_cumulative( $range, false );
+                $current_pace = Zume_Queries::query_churches_cumulative( $range, true );
+                $global_goal = $this->global_goals( 'churches' );
+
+                $difference = $current_pace - $previous_pace;
+                $per_day =  $difference / $range;
+
+                $missing = $global_goal - $current_pace;
+
+                $days_to_goal = 0;
+                if ( $per_day ) {
+                    $days_to_goal =  $missing / $per_day;
+                } else {
+                    $description = 'No pace detected in '.$range.' days';
+                }
+
+                $value = $days_to_goal;
+                $valence = 'valence-red';
+                break;
+            case 'churches_goal':
+                $label = 'Goal';
+                $description = 'Global churches goal';
+                $value = $this->global_goals( 'churches' );
+                $valence = 'valence-grey';
+                break;
+            default:
+                break;
+
+        }
+
+        return [
+            'key' => $params['key'],
+            'stage' => $params['stage'],
+            'range' => (float) $range,
+            'label' => $label,
+            'description' => $description,
+            'link' => $link,
+            'value' => zume_format_int( $value ),
+            'valence' => $valence ?? zume_get_valence( $value, $goal, $negative_stat ),
+            'goal' => $goal,
+            'goal_valence' => zume_get_valence( $value, $goal, $negative_stat ),
+            'goal_percent' => zume_get_percent( $value, $goal ),
+            'trend' => $trend,
+            'trend_valence' => zume_get_valence( $value, $trend, $negative_stat ),
+            'trend_percent' => zume_get_percent( $value, $trend ),
+            'negative_stat' => $negative_stat,
+        ];
+
+
+    }
+
+    public function global_goals( $type ) {
+        if ( 'churches' === $type ) {
+            $global_div = 25000;
+            $us_div = 2500;
+        }
+        else if ( 'practitioners' === $type ) {
+            $global_div = 50000;
+            $us_div = 5000;
+        } else {
+            return 0;
+        }
+
+        $world_population = 8174493405;
+        $us_population = 335701430;
+        $global_pop_block = $global_div;
+        $us_pop_block = $us_div;
+        $world_population_without_us = $world_population - $us_population;
+        $needed_without_us = $world_population_without_us / $global_pop_block;
+        $needed_in_the_us = $us_population / $us_pop_block;
+
+        return $needed_without_us + $needed_in_the_us;
     }
 
 

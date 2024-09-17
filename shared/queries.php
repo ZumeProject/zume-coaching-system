@@ -261,24 +261,102 @@ class Zume_Queries {
      * Returns the total number of practitioners in the system.
      * @return int
      */
-    public static function query_total_practitioners(): int {
+    public static function query_total_practitioners( $stages = [ 3,4,5,6 ], $range = -1, $trend = false ): int {
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
 
-        $results = $wpdb->get_var(
-            "SELECT count(*) as practitioners
+        $end = time();
+        if ( $range < 1 ) {
+            $begin = 0;
+        } else {
+            $begin = strtotime( '-'. $range . ' days' );
+            if ( $trend ) {
+                $end = $begin;
+                $begin = strtotime( '-'. ( $range * 2 ) . ' days' );
+            }
+        }
+
+        $stages_list = dt_array_to_sql( $stages );
+
+        $sql = "SELECT COUNT(tb.user_id)
                 FROM
                 (
-                    $query_for_user_stage
+                   $query_for_user_stage
                 ) as tb
-            WHERE tb.stage >= 4;"
-        );
+                WHERE tb.timestamp > $begin
+                  AND tb.timestamp < $end
+                  AND tb.stage IN ($stages_list)
+                ";
 
-        if ( $results ) {
-            return (int) $results;
-        } else {
+        $result = $wpdb->get_var($sql);
+
+        if ( empty( $result ) ) {
             return 0;
         }
+
+        return (float) $result;
+    }
+
+    public static function query_practitioners_cumulative( $stages, $range, $current = true ): int {
+        global $wpdb;
+        $query_for_user_stage = self::$query_for_user_stage;
+
+        $begin = 0;
+        $end = time();
+        if ( ! $current ) {
+            $end = strtotime( '-'. $range . ' days' );
+        }
+
+        if ( ! $stages ) {
+            $stages = [ 3,4,5,6 ];
+        }
+
+        $stages_list = dt_array_to_sql( $stages );
+
+        $sql = "SELECT COUNT(tb.user_id)
+                FROM
+                (
+                   $query_for_user_stage
+                ) as tb
+                WHERE tb.timestamp > $begin
+                  AND tb.timestamp < $end
+                  AND tb.stage IN ($stages_list)
+                ";
+
+        $result = $wpdb->get_var($sql);
+
+        if ( empty( $result ) ) {
+            return 0;
+        }
+
+        return (float) $result;
+    }
+
+    public static function query_churches_cumulative( $range, $current = true ): int {
+        global $wpdb;
+
+        $begin = 1;
+        $end = time();
+        if ( ! $current ) {
+            $end = strtotime( '-'. $range . ' days' );
+        }
+
+        $sql = "SELECT COUNT(*) as count
+                FROM zume_posts p
+                JOIN zume_postmeta pm2 ON pm2.post_id=p.ID AND pm2.meta_key = 'group_status' AND pm2.meta_value = 'active'
+                LEFT JOIN zume_postmeta pm3 ON pm3.post_id=p.ID AND pm3.meta_key = 'church_start_date' AND pm3.meta_value != ''
+                WHERE post_type = 'groups'
+                    AND pm3.meta_value > $begin
+                    AND pm3.meta_value < $end
+        ;";
+
+        $result = $wpdb->get_var($sql);
+
+        if ( empty( $result ) ) {
+            return 0;
+        }
+
+        return (float) $result;
     }
 
     public static function world_grid_sql(): string {
