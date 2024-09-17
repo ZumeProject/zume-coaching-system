@@ -1088,7 +1088,7 @@ class Zume_Charts_API
                 break;
 
             case 'reporting_churches':
-                $list = [];
+                $list = Zume_Queries::query_stage_by_type_and_subtype_list( $stage, $range, 'practicing', 'new_church', false, false );
                 break;
 
             default:
