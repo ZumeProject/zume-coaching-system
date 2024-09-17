@@ -1074,17 +1074,19 @@ class Zume_Charts_API
             case 'has_no_coach':
                 $list = Zume_Queries::has_coach_list( $stage, $range, false, true );
                 break;
+
             case 'has_not_reported':
                 $negative_stat = true;
                 $list = [];
                 break;
 
-
+            case 'plans':
+                $list = Zume_Queries::query_stage_by_type_and_subtype_list( $stage, $range, 'training', 'plan_created', false, false );
+                break;
             case 'coach_requests':
                 $list = Zume_Queries::query_stage_by_type_and_subtype_list( $stage, $range, 'coaching', 'requested_a_coach', false, false );
                 break;
 
-            case 'plans':
             case 'reporting_churches':
                 $list = [];
                 break;

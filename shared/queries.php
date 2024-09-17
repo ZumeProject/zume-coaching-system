@@ -862,6 +862,7 @@ class Zume_Queries {
                AND tb.timestamp > $begin
               AND tb.timestamp < $end
             ";
+//        dt_write_log($sql);
         $count = $wpdb->get_var( $sql );
 
         if ( $count < 1 ) {

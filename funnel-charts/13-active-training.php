@@ -105,63 +105,65 @@ class Zume_Funnel_Active extends Zume_Funnel_Chart_Base
                 window.path_load = ( range ) => {
                     jQuery('.loading-spinner').addClass('active')
 
+                    let stage = 'active_training_trainee'
+
                     // totals
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "active_training_trainee", key: "total_active_training_trainee", range: range  }, window.site_info.rest_root ).done( function( data ) {
+                    makeRequest('GET', 'total', { stage: stage, key: "total_active_training_trainee", range: range  }, window.site_info.rest_root ).done( function( data ) {
                         jQuery('.'+data.key).html(window.template_trio(data))
                         window.click_listener( data )
                         window.spin_remove()
                     })
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "active_training_trainee", key: "locations", range: range  }, window.site_info.rest_root ).done( function( data ) {
+                    makeRequest('GET', 'total', { stage: stage, key: "locations", range: range  }, window.site_info.rest_root ).done( function( data ) {
                         jQuery('.'+data.key).html(window.template_single_map(data))
                         window.click_listener( data )
                         window.spin_remove()
                     })
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "active_training_trainee", key: "languages", range: range  }, window.site_info.rest_root ).done( function( data ) {
+                    makeRequest('GET', 'total', { stage: stage, key: "languages", range: range  }, window.site_info.rest_root ).done( function( data ) {
                         jQuery('.'+data.key).html(window.template_single_list(data))
                         window.click_listener( data )
                         window.spin_remove()
                     })
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "active_training_trainee", key: "has_no_coach", range: range  }, window.site_info.rest_root ).done( function( data ) {
+                    makeRequest('GET', 'total', { stage: stage, key: "has_no_coach", range: range  }, window.site_info.rest_root ).done( function( data ) {
                         jQuery('.'+data.key).html(window.template_single_list(data))
                         window.click_listener( data )
                         window.spin_remove()
                     })
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "active_training_trainee", key: "has_not_completed_profile", range: range  }, window.site_info.rest_root ).done( function( data ) {
+                    makeRequest('GET', 'total', { stage: stage, key: "has_not_completed_profile", range: range  }, window.site_info.rest_root ).done( function( data ) {
                         jQuery('.'+data.key).html(window.template_single_list(data))
                         window.click_listener( data )
                         window.spin_remove()
                     })
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "active_training_trainee", key: "plans", range: range }, window.site_info.rest_root ).done( function( data ) {
+                    makeRequest('GET', 'total', { stage: stage, key: "plans", range: range }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.key).html(window.template_single_list(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: stage, key: "total_checkins", range: range }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.key).html(window.template_single_list(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: stage, key: "new_coaching_requests", range: range }, window.site_info.rest_root ).done( function( data ) {
                         jQuery('.'+data.key).html(window.template_single_map(data))
                         window.click_listener( data )
                         window.spin_remove()
                     })
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "active_training_trainee", key: "total_checkins", range: range }, window.site_info.rest_root ).done( function( data ) {
+                    makeRequest('GET', 'total', { stage: stage, key: "post_training_plans", range: range }, window.site_info.rest_root ).done( function( data ) {
                         jQuery('.'+data.key).html(window.template_single_map(data))
                         window.click_listener( data )
                         window.spin_remove()
                     })
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "active_training_trainee", key: "new_coaching_requests", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single_map(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "active_training_trainee", key: "post_training_plans", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single_map(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "active_training_trainee", key: "in_and_out", range: range }, window.site_info.rest_root ).done( function( data ) {
+                    makeRequest('GET', 'total', { stage: stage, key: "in_and_out", range: range }, window.site_info.rest_root ).done( function( data ) {
                         data.label = 'Active Training Flow'
                         jQuery('.'+data.key).html( window.template_in_out( data ) )
                         window.click_listener( data )
