@@ -796,7 +796,6 @@ class Zume_Queries {
 
     public static function languages( $stages = [ 1 ], $range = -1, $trend = false, $negative = false ) {
         global $wpdb;
-        $world_grid_ids = self::world_grid_id_sql();
 
         $end = time();
         if ( $range < 1 ) {
@@ -812,21 +811,24 @@ class Zume_Queries {
         $stages_list = dt_array_to_sql( $stages );
 
         $sql = "
-            SELECT COUNT( DISTINCT( r.language_code ) ) as count
+            SELECT language_code, count(*)
             FROM zume_dt_reports r
-            JOIN
-            (
-                $world_grid_ids
-            ) as grid_ids ON r.grid_id=grid_ids.grid_id
-            WHERE
-                r.value IN ( $stages_list )
+            WHERE r.value IN ( $stages_list )
               AND r.timestamp > $begin
               AND r.timestamp < $end
+            AND r.language_code != ''
+            GROUP BY language_code
             ";
-        $count = $wpdb->get_var( $sql );
+        $list = $wpdb->get_results( $sql, ARRAY_A );
+
+        if ( empty( $list ) ) {
+            return 0;
+        }
+
+        $count = count($list);
 
         if ( $negative && $count ) {
-            $count = 40 - (int) $count;
+            $count = 45 - (int) $count;
         }
 
         if ( $count < 1 ) {
@@ -834,6 +836,48 @@ class Zume_Queries {
         }
 
         return (float) $count;
+    }
+
+    public static function languages_list( $stages = [ 1 ], $range = -1, $trend = false, $negative = false ) {
+        global $wpdb;
+        $languages = zume_languages();
+
+        $end = time();
+        if ( $range < 1 ) {
+            $begin = 0;
+        } else {
+            $begin = strtotime( '-'. $range . ' days' );
+            if ( $trend ) {
+                $end = $begin;
+                $begin = strtotime( '-'. ( $range * 2 ) . ' days' );
+            }
+        }
+
+        $stages_list = dt_array_to_sql( $stages );
+
+        $sql = "
+            SELECT language_code, count(*) as activities
+            FROM zume_dt_reports r
+            WHERE r.value IN ( $stages_list )
+              AND r.timestamp > $begin
+              AND r.timestamp < $end
+            AND r.language_code != ''
+            GROUP BY language_code
+            ORDER BY activities DESC
+            ";
+        $list = $wpdb->get_results( $sql, ARRAY_A );
+
+        if ( empty( $list ) ) {
+            return [];
+        }
+
+        $language_list = [];
+        foreach( $list as $lang ) {
+            $language_list[$lang['language_code']] = $languages[$lang['language_code']];
+            $language_list[$lang['language_code']]['activities'] = $lang['activities'];
+        }
+
+        return $language_list;
     }
 
     public static function query_stage_by_type_and_subtype( $stage, $range, $type, $subtype, $trend = false, $negative = false ) {

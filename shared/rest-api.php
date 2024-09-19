@@ -118,53 +118,8 @@ class Zume_Charts_API
                 ],
             ]
         );
-
-
-
-        // @todo have these been replaced by global.php class?
-        register_rest_route(
-            $this->namespace, '/mawl', [
-                [
-                    'methods'  => 'GET',
-                    'callback' => [ $this, 'list_mawl' ],
-                    'permission_callback' => function () {
-                        return $this->has_permission( $this->coach_permissions );
-                    },
-                ],
-            ]
-        );
-        register_rest_route(
-            $this->namespace, '/mawl', [
-                [
-                    'methods'  => 'POST',
-                    'callback' => [ $this, 'create_mawl' ],
-                    'permission_callback' => function () {
-                        return $this->has_permission( $this->coach_permissions );
-                    },
-                ],
-            ]
-        );
-        register_rest_route(
-            $this->namespace, '/mawl', [
-                [
-                    'methods'  => 'DELETE',
-                    'callback' => [ $this, 'delete_mawl' ],
-                    'permission_callback' => function () {
-                        return $this->has_permission( $this->coach_permissions );
-                    },
-                ],
-            ]
-        );
     }
-    public function has_permission( $permissions = [] ) {
-        $pass = false;
-        foreach ( $permissions as $permission ){
-            if ( current_user_can( $permission ) ){
-                $pass = true;
-            }
-        }
-        return $pass;
-    }
+
 
     /**
      * @param $stage
@@ -1055,7 +1010,7 @@ class Zume_Charts_API
                 $list = [];
                 break;
             case 'languages':
-                $list = [];
+                $list = Zume_Queries::languages_list( [ $stage ], $range );
                 break;
 
 
@@ -2499,49 +2454,15 @@ class Zume_Charts_API
         return $data;
     }
 
-    public function list_mawl( WP_REST_Request $request ) {
-        $params = dt_recursive_sanitize_array( $request->get_params() );
-        if ( ! isset( $params['user_id'] ) ) {
-            return new WP_Error( __METHOD__, 'User_id required.', array( 'status' => 401 ) );
+    public function has_permission( $permissions = [] ) {
+        $pass = false;
+        foreach ( $permissions as $permission ){
+            if ( current_user_can( $permission ) ){
+                $pass = true;
+            }
         }
-        $user_id = zume_validate_user_id_request( $params['user_id'] );
-
-        return zume_get_user_host( $user_id );
+        return $pass;
     }
-    public function create_mawl( WP_REST_Request $request ) {
-        $params = dt_recursive_sanitize_array( $request->get_params() );
-        if ( ! isset( $params['type'], $params['subtype'], $params['user_id'] ) ) {
-            return new WP_Error( __METHOD__, 'Type, subtype, and user_id required.', array( 'status' => 401 ) );
-        }
-        if ( 'coaching' !== $params['type'] ) {
-            return new WP_Error( __METHOD__, 'Type must be coaching.', array( 'status' => 401 ) );
-        }
-        $user_id = zume_validate_user_id_request( $params['user_id'] );
-
-        return zume_log_insert( $params['type'], $params['subtype'], [ 'user_id' => $user_id ] );
-    }
-    public function delete_mawl( WP_REST_Request $request ) {
-        global $wpdb;
-        $params = dt_recursive_sanitize_array( $request->get_params() );
-        if ( ! isset( $params['type'], $params['subtype'], $params['user_id'] ) ) {
-            return new WP_Error( __METHOD__, 'Type, subtype, and user_id required.', array( 'status' => 401 ) );
-        }
-        if ( 'coaching' !== $params['type'] ) {
-            return new WP_Error( __METHOD__, 'Type must be coaching.', array( 'status' => 401 ) );
-        }
-        $user_id = zume_validate_user_id_request( $params['user_id'] );
-
-        $fields = [
-            'type' => $params['type'],
-            'subtype' => $params['subtype'],
-            'user_id' => $user_id,
-        ];
-
-        $delete = $wpdb->delete( 'zume_dt_reports', $fields );
-
-        return $delete;
-    }
-
     public function authorize_url( $authorized ){
         if ( isset( $_SERVER['REQUEST_URI'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), $this->namespace ) !== false ) {
             $authorized = true;

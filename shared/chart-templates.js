@@ -240,10 +240,20 @@ jQuery(document).ready(function($) {
 
         makeRequest('GET', 'list', { stage: data.stage, key: data.key, range: data.range, data: data  }, window.site_info.rest_root ).done( function( data_list ) {
           jQuery('#modal-large-content').empty().html('<table class="hover"><tbody id="zume-goals-list-modal"></tbody></table>')
-          jQuery('#zume-goals-list-modal').append( `<tr><td></td><td><strong>Name</strong></td><td><strong>Email</strong></td><td><strong>Phone</strong></td></tr>`)
-          jQuery.each(data_list, function(i,v)  {
-            jQuery('#zume-goals-list-modal').append( `<tr><td><input type="checkbox" /></td><td>${ v.name }</td><td>${v.user_email}</td><td>${v.user_phone}</td></tr>`)
-          })
+
+          if ( 'languages' === data.key ) {
+            jQuery('#zume-goals-list-modal').append( `<tr><td></td><td><strong>Name</strong></td><td><strong>Activities</strong></td></tr>`)
+            jQuery.each(data_list, function(i,v)  {
+              jQuery('#zume-goals-list-modal').append( `<tr><td><input type="checkbox" /></td><td>${ v.name }</td><td>${ v.activities }</td></tr>`)
+            })
+          }
+          else {
+            jQuery('#zume-goals-list-modal').append( `<tr><td></td><td><strong>Name</strong></td><td><strong>Email</strong></td><td><strong>Phone</strong></td></tr>`)
+            jQuery.each(data_list, function(i,v)  {
+              jQuery('#zume-goals-list-modal').append( `<tr><td><input type="checkbox" /></td><td>${ v.name }</td><td>${v.user_email}</td><td>${v.user_phone}</td></tr>`)
+            })
+          }
+
           jQuery('.loading-spinner').removeClass('active')
         })
       })
