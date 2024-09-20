@@ -47,16 +47,7 @@ class Zume_Goals_Goals extends Zume_Goals_Chart_Base
                             <div class="grid-x">
                                 <div class="cell small-6"><h1>Zúme Top Goals</h1></div>
                                 <div class="cell small-6">
-                                     <span style="float: right;">
-                                        <select id="range-filter">
-                                            <option value="-1">All Time</option>
-                                            <option value="30">Last 30 days</option>
-                                            <option value="7">Last 7 days</option>
-                                            <option value="90">Last 90 days</option>
-                                            <option value="365">Last 1 Year</option>
-                                        </select>
-                                        <span class="loading-spinner active"></span>
-                                    </span>
+
                                 </div>
                             </div>
                             <hr>

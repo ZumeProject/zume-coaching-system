@@ -16,41 +16,4 @@ class Zume_Views {
 
         return $results;
     }
-
-//    public static function stage_totals( $stage = null, $range = null, $trend = false ) {
-//        $results = Zume_Queries::stage_totals_by_range( $range, $trend );
-//
-//        $totals = [
-//            '1' => 0,
-//            '2' => 0,
-//            '3' => 0,
-//            '4' => 0,
-//            '5' => 0,
-//            '6' => 0,
-//        ];
-//
-//        foreach ( $results as $result ) {
-//            $totals[$result['stage']] = (int) $result['total'];
-//        }
-//
-//        if ( is_null( $stage ) ) {
-//            return $totals;
-//        }
-//
-//        if ( 1 == $stage ) {
-//            return (int) $totals['1'] ?? 0;
-//        } else if ( 2 == $stage ) {
-//            return (int) $totals['2'] ?? 0;
-//        } else if ( 3 == $stage ) {
-//            return (int) $totals['3'] ?? 0;
-//        } else if ( 4 == $stage ) {
-//            return (int) $totals['4'] ?? 0;
-//        } else if ( 5 == $stage ) {
-//            return (int) $totals['5'] ?? 0;
-//        } else if ( 6 == $stage ) {
-//            return (int) $totals['6'] ?? 0;
-//        }
-//
-//        return $totals;
-//    }
 }
