@@ -1043,6 +1043,8 @@ class Zume_Charts_API
         $range = (float) sanitize_text_field( $params['range'] );
         $negative_stat = $params['negative_stat'] ?? false;
 
+        $stages = [0,1,2,3,4,5,6];
+
         $label = '';
         $description = '';
         $link = '';
@@ -1057,15 +1059,15 @@ class Zume_Charts_API
 
             case 'locations':
                 $label = 'Locations';
-                $value = Zume_Query_Events::locations( $range );
-                $trend = Zume_Query_Events::locations( $range, true );
+                $value = Zume_Query_Events::locations( $stages, $range );
+                $trend = Zume_Query_Events::locations( $stages, $range, true );
                 $description = 'Grid locations. (Previous period '.zume_format_int($trend).')';
                 $goal = $trend;
                 break;
             case 'languages':
                 $label = 'Languages';
-                $value = Zume_Query_Events::languages( [ $stage ], $range );
-                $trend = Zume_Query_Events::languages( [ $stage ], $range, true );
+                $value = Zume_Query_Events::languages( $stages, $range );
+                $trend = Zume_Query_Events::languages( $stages, $range, true );
                 $description = 'Languages used. (Previous period '.zume_format_int($trend).')';
                 $goal = $trend;
                 break;
