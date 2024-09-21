@@ -70,11 +70,6 @@ class Zume_Funnel_Post extends Zume_Funnel_Chart_Base
                                 <div class="cell total_post_training_trainee"><span class="loading-spinner active"></span></div>
                             </div>
                             <div class="grid-x grid-margin-x grid-margin-y">
-                                 <div class="cell medium-6 locations"><span class="loading-spinner active"></span></div>
-                                <div class="cell medium-6 languages"><span class="loading-spinner active"></span></div>
-                            </div>
-                            <hr>
-                            <div class="grid-x grid-margin-x grid-margin-y">
                                  <div class="cell medium-6 has_no_coach"><span class="loading-spinner active"></span></div>
                                  <div class="cell medium-6 has_not_completed_profile"><span class="loading-spinner active"></span></div>
                                  <div class="cell medium-6 needs_3_month_plan"><span class="loading-spinner active"></span></div>
@@ -94,18 +89,6 @@ class Zume_Funnel_Post extends Zume_Funnel_Chart_Base
                     window.spin_add()
                     makeRequest('GET', 'total', { stage: "post_training_trainee", key: "total_post_training_trainee", range: range  }, window.site_info.rest_root ).done( function( data ) {
                         jQuery('.'+data.key).html(window.template_trio(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "post_training_trainee", key: "locations", range: range  }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single_map(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "post_training_trainee", key: "languages", range: range  }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single_list(data))
                         window.click_listener( data )
                         window.spin_remove()
                     })

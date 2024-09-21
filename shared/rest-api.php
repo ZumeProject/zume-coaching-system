@@ -220,7 +220,6 @@ class Zume_Charts_API
             $params['range'] = false;
         }
 
-
         switch ( $params['stage'] ) {
             case 'anonymous':
                 return $this->total_anonymous( $params );
@@ -248,6 +247,7 @@ class Zume_Charts_API
                 return $this->total_churches( $params );
             case 'stats_list':
                 return $this->stats_list( $params );
+            case 'general':
             default:
                 return $this->general( $params );
         }
@@ -329,20 +329,7 @@ class Zume_Charts_API
                 $description = self::_pace_calculator( $stage, $days, 'description' );
                 $goal = self::_pace_calculator( $stage, $days );
                 break;
-            case 'locations':
-                $label = 'Locations';
-                $value = Zume_Query_Funnel::locations( [ $stage ], $range );
-                $trend = Zume_Query_Funnel::locations( [ $stage ], $range, true );
-                $description = 'Grid locations. (Previous period '.zume_format_int($trend).')';
-                $goal = $trend;
-                break;
-            case 'languages':
-                $label = 'Languages';
-                $value = Zume_Query_Funnel::languages( [ $stage ], $range );
-                $trend = Zume_Query_Funnel::languages( [ $stage ], $range, true );
-                $description = 'Languages used. (Previous period '.zume_format_int($trend).')';
-                $goal = $trend;
-                break;
+
             case 'has_no_coach':
                 $negative_stat = true;
                 $label = 'Has No Coach';
@@ -1052,6 +1039,58 @@ class Zume_Charts_API
 
         return $list;
     }
+    public function general( $params ) {
+        $range = (float) sanitize_text_field( $params['range'] );
+        $negative_stat = $params['negative_stat'] ?? false;
+
+        $label = '';
+        $description = '';
+        $link = '';
+        $value = 0;
+        $goal = 0;
+        $trend = 0;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
+
+        switch ( $params['key'] ) {
+
+            case 'locations':
+                $label = 'Locations';
+                $value = Zume_Query_Events::locations( $range );
+                $trend = Zume_Query_Events::locations( $range, true );
+                $description = 'Grid locations. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
+                break;
+            case 'languages':
+                $label = 'Languages';
+                $value = Zume_Query_Events::languages( [ $stage ], $range );
+                $trend = Zume_Query_Events::languages( [ $stage ], $range, true );
+                $description = 'Languages used. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
+                break;
+            default:
+                break;
+        }
+
+        return [
+            'key' => $params['key'],
+            'stage' => $params['stage'],
+            'range' => (float) $range,
+            'label' => $label,
+            'description' => $description,
+            'link' => $link,
+            'value' => zume_format_int( $value ),
+            'valence' => $valence ?? zume_get_valence( $value, $goal, $negative_stat ),
+            'goal' => $goal,
+            'goal_valence' => $goal_valence ?? zume_get_valence( $value, $goal, $negative_stat ),
+            'goal_percent' => zume_get_percent( $value, $goal ),
+            'trend' => $trend,
+            'trend_valence' => $trend_valence ?? zume_get_valence( $value, $trend, $negative_stat ),
+            'trend_percent' => zume_get_percent( $value, $trend ),
+            'negative_stat' => $negative_stat,
+        ];
+    }
 
     public function total_facilitator( $params ) {
         $range = sanitize_text_field( $params['range'] );
@@ -1294,213 +1333,7 @@ class Zume_Charts_API
             'negative_stat' => $negative_stat,
         ];
     }
-    public function general( $params ) {
-        $negative_stat = $params['negative_stat'] ?? false;
 
-        $label = '';
-        $description = '';
-        $link = '';
-        $value = 0;
-        $goal = 0;
-        $trend = 0;
-        $valence = null;
-        $goal_valence = null;
-        $trend_valence = null;
-
-        switch ( $params['key'] ) {
-
-            case 'active_coaches':
-                $label = 'Active Coaches';
-                $description = 'Number of active coaches';
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
-                $valence = 'valence-grey';
-                break;
-            case 'total_people_in_coaching':
-                $label = 'People in Coaching';
-                $description = 'Number of people in coaching';
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
-                $valence = 'valence-grey';
-                break;
-            case 'people_in_coaching':
-                $label = 'People in Coaching';
-                $description = 'Number of people in coaching';
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
-                $valence = 'valence-grey';
-                break;
-            case 'coaching_engagements':
-                $label = 'Coaching Engagements';
-                $description = 'Number of coaching engagements';
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
-                $valence = 'valence-grey';
-                break;
-            case 'in_and_out':
-                return [
-                    'key' => $params['key'],
-                    'label' => '',
-                    'description' => 'Description',
-                    'link' => '',
-                    'value_in' => zume_format_int( 0 ),
-                    'value_idle' => zume_format_int( 0 ),
-                    'value_out' => zume_format_int( 0 ),
-                ];
-            case 'all_time_stats':
-                global $wpdb;
-                $list = [];
-
-                $thirty_days_ago = strtotime( date( 'Y-m-d H:i:s', time() ) . ' -30 days' );
-                $sql_30_days_ago = date( 'Y-m-d H:i:s', $thirty_days_ago );
-                $year_to_date = strtotime( 'first day of january this year' );
-                $year_ago = strtotime( '365 days ago' );
-                $world_sql = Zume_Query_Funnel::world_grid_sql();
-
-//                dt_write_log( $thirty_days_ago );
-//                dt_write_log( $year_to_date );
-//                dt_write_log( $year_ago );
-
-                # individual visitors last 30 days
-                $number = $wpdb->get_var("
-                    SELECT COUNT( DISTINCT(user_id) )
-                    FROM zume_dt_reports
-                    WHERE timestamp > $thirty_days_ago;
-                ");
-                $list[] = 'Logged in users engaging training in the last 30 days: '.zume_format_int( $number );
-
-                # (probably) individual views of Pieces pages this month
-                $number = $wpdb->get_var("
-                    SELECT COUNT(*)
-                    FROM (
-                    SELECT subtype, lng, count(*)
-                        FROM zume_dt_reports_anonymous
-                        WHERE timestamp > $thirty_days_ago AND type = 'studying'
-                    GROUP BY subtype, lng
-                    ) as tb
-                ");
-                $list[] = 'Pieces pages being studied in the last 30 days: '.zume_format_int( $number );
-
-                # (individual) registrations this month
-
-                $number = $wpdb->get_var("
-                    SELECT COUNT( DISTINCT(user_id) )
-                    FROM zume_dt_reports
-                    WHERE timestamp > $thirty_days_ago AND subtype = 'registered';
-                ");
-                $list[] = 'Registrations in the last 30 days: '.zume_format_int( $number );
-
-                # (usually probably group) sessions completed this month
-                $number = $wpdb->get_var("
-                    SELECT COUNT( DISTINCT(user_id) )
-                    FROM zume_dt_reports
-                    WHERE timestamp > $thirty_days_ago AND ( subtype LIKE 'set_a_%' OR subtype LIKE 'set_b_%' OR subtype LIKE 'set_c_%' );
-                ");
-                $list[] = 'Individual session checkins in the last 30 days: '.zume_format_int( $number );
-
-                # (usually probably group) session 10 completions this month
-                $number = $wpdb->get_var("
-                    SELECT COUNT( DISTINCT(user_id) )
-                    FROM zume_dt_reports
-                    WHERE timestamp > $thirty_days_ago AND subtype = 'training_completed';
-                ");
-                $list[] = 'Individuals completing the training in the last 30 days: '.zume_format_int( $number );
-
-                # (indiviudals in) countries this month
-                $number = $wpdb->get_var("
-                   SELECT COUNT( DISTINCT( admin0_grid_id) )
-                    FROM (
-                    SELECT lg.admin0_grid_id
-                    FROM zume_dt_reports r
-                    LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=r.grid_id
-                    WHERE r.timestamp > $thirty_days_ago
-                    GROUP BY lg.admin0_grid_id
-                    UNION ALL
-                    SELECT lg.admin0_grid_id
-                    FROM zume_dt_reports_anonymous ra
-                    LEFT JOIN zume_dt_location_grid lg ON lg.grid_id=ra.grid_id
-                    WHERE ra.timestamp > $thirty_days_ago
-                    GROUP BY lg.admin0_grid_id
-                    ) as tb
-                ");
-                $list[] = 'Countries and territories engaged in the last 30 days: '.zume_format_int( $number ). ' out of 248';
-
-                // unique training locations
-                $number = $wpdb->get_var("
-                   SELECT COUNT( DISTINCT( r.grid_id ) )
-                    FROM zume_dt_reports r
-                    JOIN ( $world_sql ) as list ON list.grid_id=r.grid_id
-                ");
-                $list[] = 'Targeted training locations engaged: '.zume_format_int( $number ).' out of 44,395';
-
-                //unique church locations
-                $number = $wpdb->get_var("
-                   SELECT COUNT( DISTINCT( r.grid_id ) )
-                    FROM zume_dt_location_grid_meta r
-                    JOIN ( $world_sql ) as list ON list.grid_id=r.grid_id
-                    WHERE r.post_type = 'groups'");
-                $list[] = 'Targeted church locations engaged: '.zume_format_int( $number ).' out of 44,395';
-
-                //active contacts (YTD)
-                $number = $wpdb->get_var("
-                   SELECT COUNT( DISTINCT( r.user_id) )
-                    FROM zume_dt_reports r
-                    WHERE timestamp > $year_to_date
-                ");
-                $list[] = 'Active trainees since Jan 1 this year: '.zume_format_int( $number );
-
-                $number = $wpdb->get_var("
-                   SELECT COUNT( DISTINCT( r.user_id) )
-                    FROM zume_dt_reports r
-                    WHERE timestamp > $year_ago
-                ");
-                $list[] = 'Active trainees since 1 year ago: '.zume_format_int( $number );
-
-                //coaching requests
-                $number = $wpdb->get_var("
-                    SELECT COUNT( DISTINCT(user_id) )
-                    FROM zume_dt_reports
-                    WHERE timestamp > $year_to_date AND subtype = 'requested_a_coach';
-                ");
-                $list[] = 'Coaching requests in since Jan 1 this year: '.zume_format_int( $number );
-
-                //coaching requests
-                $number = $wpdb->get_var("
-                    SELECT COUNT( DISTINCT(user_id) )
-                    FROM zume_dt_reports
-                    WHERE timestamp > $year_ago AND subtype = 'requested_a_coach';
-                ");
-                $list[] = 'Coaching requests since 1 year ago: '.zume_format_int( $number );
-
-                return [
-                    'key' => 'all_time_stats',
-                    'list' => $list,
-                ];
-            default:
-                break;
-        }
-
-        return [
-            'key' => $params['key'],
-            'stage' => $params['stage'],
-            'label' => $label,
-            'description' => $description,
-            'link' => $link,
-            'value' => zume_format_int( $value ),
-            'valence' => $valence ?? zume_get_valence( $value, $goal, $negative_stat ),
-            'goal' => $goal,
-            'goal_valence' => $goal_valence ?? zume_get_valence( $value, $goal, $negative_stat ),
-            'goal_percent' => zume_get_percent( $value, $goal ),
-            'trend' => $trend,
-            'trend_valence' => $trend_valence ?? zume_get_valence( $value, $trend, $negative_stat ),
-            'trend_percent' => zume_get_percent( $value, $trend ),
-            'negative_stat' => $negative_stat,
-        ];
-    }
 
 
     public function total_practitioners( $params ) {

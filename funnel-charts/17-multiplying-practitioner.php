@@ -70,10 +70,6 @@ class Zume_Funnel_L3 extends Zume_Funnel_Chart_Base
                                 <div class="cell total_multiplying_practitioner"><span class="loading-spinner active"></span></div>
                             </div>
                             <div class="grid-x grid-margin-x grid-margin-y">
-                                <div class="cell medium-6 locations"><span class="loading-spinner active"></span></div>
-                                <div class="cell medium-6 languages"><span class="loading-spinner active"></span></div>
-                            </div>
-                            <div class="grid-x grid-margin-x grid-margin-y">
                                  <div class="cell medium-6 has_not_reported"><span class="loading-spinner active"></span></div>
                                  <div class="cell medium-6 reporting_churches"><span class="loading-spinner active"></span></div>
                                  <div class="cell medium-12 in_and_out"><span class="loading-spinner active"></span></div>

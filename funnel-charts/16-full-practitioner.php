@@ -70,10 +70,6 @@ class Zume_Funnel_L2 extends Zume_Funnel_Chart_Base
                                 <div class="cell total_full_practitioner"><span class="loading-spinner active"></span></div>
                             </div>
                             <div class="grid-x grid-margin-x grid-margin-y">
-                                <div class="cell medium-6 locations"><span class="loading-spinner active"></span></div>
-                                <div class="cell medium-6 languages"><span class="loading-spinner active"></span></div>
-                            </div>
-                            <div class="grid-x grid-margin-x grid-margin-y">
                                  <div class="cell medium-6 has_no_coach"><span class="loading-spinner active"></span></div>
                                  <div class="cell medium-6 has_reported"><span class="loading-spinner active"></span></div>
                                  <div class="cell medium-6 reporting_churches"><span class="loading-spinner active"></span></div>
@@ -92,18 +88,6 @@ class Zume_Funnel_L2 extends Zume_Funnel_Chart_Base
                     window.spin_add()
                     makeRequest('GET', 'total', { stage: "full_practitioner", key: "total_full_practitioner", range: range  }, window.site_info.rest_root ).done( function( data ) {
                         jQuery('.'+data.key).html(window.template_trio(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "full_practitioner", key: "locations", range: range  }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single_map(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "full_practitioner", key: "languages", range: range  }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single_list(data))
                         window.click_listener( data )
                         window.spin_remove()
                     })
