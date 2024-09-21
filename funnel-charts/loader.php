@@ -40,10 +40,10 @@ class Zume_Funnel_Base {
             require_once( '16-full-practitioner.php' );
             require_once( '17-multiplying-practitioner.php' );
 
-            require_once( '20-events.php' );
 
             // coaching
             if ( user_can( get_current_user_id(), 'manage_options' ) ) :
+                require_once( '20-events.php' );
                 require_once( '30-overview.php' );
                 require_once( '31-facilitator.php' );
                 require_once( '32-early.php' );
