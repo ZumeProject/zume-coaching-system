@@ -28,16 +28,39 @@ class Zume_Tile_Basics {
 
         $h = $host['percent']['h'] ?? 0;
         $o = $host['percent']['o'] ?? 0;
-        ;
         $s = $host['percent']['s'] ?? 0;
-        ;
         $t = $host['percent']['t'] ?? 0;
-        ;
+
         $m = $mawl['percent']['m'] ?? 0;
         $a = $mawl['percent']['a'] ?? 0;
         $w = $mawl['percent']['w'] ?? 0;
         $l = $mawl['percent']['l'] ?? 0;
 
+
+        // email quality check
+        if ( isset( $this_post[0]['value'] ) && $profile['communications_email'] !== $this_post[0]['value'] ) { // no match
+            // update email
+            $fields = [
+                'contact_email' => [
+                    'values' => [
+                        ["key" => $this_post[0]['key'], "delete" => true],
+                        [ 'value' => $profile['communications_email'] ]
+                    ]
+                ]
+            ];
+            DT_Posts::update_post( 'contacts', $this_post['ID'], $fields, false, false );
+        }
+        else if( ! isset( $this_post[0]['value'] ) ) { // not present
+            // add email
+            $fields = [
+                'contact_email' => [
+                    'values' => [
+                        [ 'value' => $profile['communications_email'] ]
+                    ]
+                ]
+            ];
+            DT_Posts::update_post( 'contacts', $this_post['ID'], $fields, false, false );
+        }
         ?>
         <style>
             .open_host_modal, .open_host_modal progress, .open_host_modal label, .open_mawl_modal, .open_mawl_modal progress, .open_mawl_modal label {

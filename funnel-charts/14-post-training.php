@@ -111,12 +111,7 @@ class Zume_Funnel_Post extends Zume_Funnel_Chart_Base
                         window.click_listener( data )
                         window.spin_remove()
                     })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "post_training_trainee", key: "new_coaching_requests", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single_list(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
+
                     window.spin_add()
                     makeRequest('GET', 'total', { stage: "post_training_trainee", key: "new_3_month_plans", range: range }, window.site_info.rest_root ).done( function( data ) {
                         jQuery('.'+data.key).html(window.template_single_list(data))

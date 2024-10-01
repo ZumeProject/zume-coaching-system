@@ -1071,6 +1071,13 @@ class Zume_Charts_API
                 $description = 'Languages used. (Previous period '.zume_format_int($trend).')';
                 $goal = $trend;
                 break;
+            case 'new_coaching_requests':
+                $label = 'Coaching Requests';
+                $value = Zume_Query_Funnel::has_coach( $stage, $range );
+                $trend = Zume_Query_Funnel::has_coach( $stage, $range, true );
+                $description = 'Languages used. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
+                break;
             default:
                 break;
         }

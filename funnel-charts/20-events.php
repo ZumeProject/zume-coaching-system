@@ -76,6 +76,7 @@ class Zume_Funnel_Events extends Zume_Funnel_Chart_Base
                             <div class="grid-x grid-margin-x grid-margin-y">
                                 <div class="cell medium-6 locations"><span class="loading-spinner active"></span></div>
                                 <div class="cell medium-6 languages"><span class="loading-spinner active"></span></div>
+                                <div class="cell medium-6 new_coaching_requests"><span class="loading-spinner active"></span></div>
                             </div>
                         </div>
                 `)
@@ -93,6 +94,12 @@ class Zume_Funnel_Events extends Zume_Funnel_Chart_Base
                     })
                     window.spin_add()
                     makeRequest('GET', 'total', { stage: "general", key: "languages", range: range  }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.key).html(window.template_single_list(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "general", key: "new_coaching_requests", range: range }, window.site_info.rest_root ).done( function( data ) {
                         jQuery('.'+data.key).html(window.template_single_list(data))
                         window.click_listener( data )
                         window.spin_remove()

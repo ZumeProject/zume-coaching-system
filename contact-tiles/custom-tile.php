@@ -113,7 +113,7 @@ class Zume_Coaching_Tile
         ?>
         <style>
             #details-tile {
-                display:none;
+                /*display:none;*/
             }
         </style>
         <?php
