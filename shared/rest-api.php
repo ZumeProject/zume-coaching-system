@@ -1549,16 +1549,8 @@ class Zume_Charts_API
             case 'practitioners_total':
                 $label = 'Practitioners';
                 $description = 'Practitioners are those who have identified as movement practitioners (of all stages: Post-Training, Partial, Full, Multiplying). They are seeking movement with multiplicative methods and want to participate in the Zúme Community.';
-                $value = Zume_Query_Cumulative::query_total_practitioners();
+                $value = Zume_Query_Funnel::query_total_practitioners();
                 $link = 'heatmap_practitioners';
-                $goal = 0;
-                $trend = 0;
-                $valence = 'valence-grey';
-                break;
-            case 'pace_to_goal':
-                $label = 'Practitioners Pace';
-                $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
-                $value = Zume_Query_Cumulative::query_total_practitioners( $stages, $range );
                 $goal = 0;
                 $trend = 0;
                 $valence = 'valence-grey';
@@ -1602,23 +1594,10 @@ class Zume_Charts_API
             case 'churches_total':
                 $label = 'Total Registrations';
                 $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
-                $value = Zume_Query_Cumulative::query_total_churches();
-                $goal = 0;
-                $trend = 0;
-                $valence = 'valence-grey';
-                break;
-            case 'practitioners_total':
-                $label = 'Visitors';
-                $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
-                $value = Zume_Query_Cumulative::query_total_practitioners();
-                $goal = 0;
-                $trend = 0;
+                $value = Zume_Queries::query_total_churches();
                 $valence = 'valence-grey';
                 break;
             default:
-                $value = 0;
-                $goal = 0;
-                $trend = 0;
                 break;
 
         }
