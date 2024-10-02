@@ -128,7 +128,7 @@ class Zume_Funnel_L2 extends Zume_Funnel_Chart_Base
                     makeRequest('GET', 'total', { stage: "full_practitioner", key: "joined_affinity_hub", range: range }, window.site_info.rest_root ).done( function( data ) {
                         data.label = 'Joined Affinity Hub'
                         data.description = 'A peer mentoring group.'
-                        jQuery('.'+data.key).html(window.template_single_map(data))
+                        jQuery('.'+data.key).html(window.template_single_list(data))
                         window.click_listener( data )
                         window.spin_remove()
                     })

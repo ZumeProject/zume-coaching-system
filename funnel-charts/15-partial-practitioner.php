@@ -96,7 +96,7 @@ class Zume_Funnel_S1 extends Zume_Funnel_Chart_Base
                     window.spin_add()
                     makeRequest('GET', 'total', { stage: "partial_practitioner", key: "joined_community", range: range }, window.site_info.rest_root ).done( function( data ) {
                         data.label = 'Joined Community'
-                        jQuery('.'+data.key).html(window.template_single_map(data))
+                        jQuery('.'+data.key).html(window.template_single_list(data))
                         window.click_listener( data )
                         window.spin_remove()
                     })
