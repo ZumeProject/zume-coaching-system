@@ -81,7 +81,7 @@ class Zume_Funnel_Events extends Zume_Funnel_Chart_Base
                             </div>
                             <hr>
                             <div class="grid-x grid-margin-x grid-margin-y">
-                                <div class="cell center"><h2>Sessions</h2></div>
+                                <div class="cell center"><h2>Checkins</h2></div>
                             </div>
                             <div class="grid-x grid-margin-x grid-margin-y">
                                 <div class="cell medium-6 set_a_01"><span class="loading-spinner active"></span></div>
