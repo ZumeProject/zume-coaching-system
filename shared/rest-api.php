@@ -247,6 +247,10 @@ class Zume_Charts_API
                 return $this->total_churches( $params );
             case 'stats_list':
                 return $this->stats_list( $params );
+            case 'cumulative':
+                return $this->cumulative( $params );
+            case 'time_range':
+                return $this->time_range( $params );
             case 'general':
             default:
                 return $this->general( $params );
@@ -333,8 +337,8 @@ class Zume_Charts_API
             case 'has_no_coach':
                 $negative_stat = true;
                 $label = 'Has No Coach';
-                $value = Zume_Query_Funnel::has_coach( $stage, $range, false, true );
-                $trend = Zume_Query_Funnel::has_coach( $stage, $range, true, true );
+                $value = Zume_Query_Funnel::has_coach( [ $stage ], $range, false, true );
+                $trend = Zume_Query_Funnel::has_coach( [ $stage ], $range, true, true );
                 $description = 'People who have no coach. (Previous period '.zume_format_int($trend).')';
                 $goal = $trend;
                 break;
@@ -457,8 +461,8 @@ class Zume_Charts_API
             case 'has_no_coach':
                 $negative_stat = true;
                 $label = 'Has No Coach';
-                $value = Zume_Query_Funnel::has_coach( $stage, $range, false, true );
-                $trend = Zume_Query_Funnel::has_coach( $stage, $range, true, true );
+                $value = Zume_Query_Funnel::has_coach( [ $stage ], $range, false, true );
+                $trend = Zume_Query_Funnel::has_coach( [ $stage ], $range, true, true );
                 $description = 'People who have no coach. (Previous period '.zume_format_int($trend).')';
                 $goal = $trend;
                 break;
@@ -577,8 +581,8 @@ class Zume_Charts_API
             case 'has_no_coach':
                 $negative_stat = true;
                 $label = 'Has No Coach';
-                $value = Zume_Query_Funnel::has_coach( $stage, $range, false, true );
-                $trend = Zume_Query_Funnel::has_coach( $stage, $range, true, true );
+                $value = Zume_Query_Funnel::has_coach( [ $stage ], $range, false, true );
+                $trend = Zume_Query_Funnel::has_coach( [ $stage ], $range, true, true );
                 $description = 'People who have no coach. (Previous period '.zume_format_int($trend).')';
                 $goal = $trend;
                 break;
@@ -600,8 +604,8 @@ class Zume_Charts_API
                 break;
             case 'new_coaching_requests':
                 $label = 'Coaching Requests';
-                $value = Zume_Query_Funnel::has_coach( $stage, $range );
-                $trend = Zume_Query_Funnel::has_coach( $stage, $range, true );
+                $value = Zume_Query_Funnel::has_coach( [ $stage ], $range );
+                $trend = Zume_Query_Funnel::has_coach( [ $stage ], $range, true );
                 $description = 'Has made a coaching requests. (Previous period '.zume_format_int($trend).')';
                 $goal = $trend;
                 break;
@@ -690,8 +694,8 @@ class Zume_Charts_API
             case 'has_no_coach':
                 $negative_stat = true;
                 $label = 'Has No Coach';
-                $value = Zume_Query_Funnel::has_coach( $stage, $range, false, true );
-                $trend = Zume_Query_Funnel::has_coach( $stage, $range, true, true );
+                $value = Zume_Query_Funnel::has_coach( [ $stage ], $range, false, true );
+                $trend = Zume_Query_Funnel::has_coach( [ $stage ], $range, true, true );
                 $description = 'People who have no coach. (Previous period '.zume_format_int($trend).')';
                 $goal = $trend;
                 break;
@@ -789,8 +793,8 @@ class Zume_Charts_API
             case 'has_no_coach':
                 $negative_stat = true;
                 $label = 'Has No Coach';
-                $value = Zume_Query_Funnel::has_coach( $stage, $range, false, true );
-                $trend = Zume_Query_Funnel::has_coach( $stage, $range, true, true );
+                $value = Zume_Query_Funnel::has_coach( [ $stage ], $range, false, true );
+                $trend = Zume_Query_Funnel::has_coach( [ $stage ], $range, true, true );
                 $description = 'People who have no coach. (Previous period '.zume_format_int($trend).')';
                 $goal = $trend;
                 break;
@@ -1014,7 +1018,7 @@ class Zume_Charts_API
                 $list = Zume_Query_Funnel::query_stage_by_type_and_subtype_list( $stage, $range, 'system', 'set_profile', false, true );
                 break;
             case 'has_no_coach':
-                $list = Zume_Query_Funnel::has_coach_list( $stage, $range, false, true );
+                $list = Zume_Query_Funnel::has_coach_list( [ $stage ], $range, false, true );
                 break;
 
             case 'has_not_reported':
@@ -1038,6 +1042,181 @@ class Zume_Charts_API
         }
 
         return $list;
+    }
+    public function cumulative( $params ) {
+        $end_date = sanitize_text_field( $params['end_date'] );
+        if ( $end_date ) {
+            $end_date = strtotime( $end_date );
+        } else {
+            $end_date = time();
+        }
+        $negative_stat = $params['negative_stat'] ?? false;
+
+        if ( empty( $end_date ) ) {
+            $end_date = time();
+        }
+
+        $stages = [0,1,2,3,4,5,6];
+
+        $label = '';
+        $description = '';
+        $link = '';
+        $value = 0;
+        $goal = 0;
+        $trend = 0;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
+
+        switch ( $params['key'] ) {
+
+            case 'locations':
+                $label = 'Locations';
+                $value = Zume_Query_Cumulative::locations( $stages, $end_date );
+                $description = 'Grid locations.';
+                break;
+            case 'languages':
+                $label = 'Languages';
+                $value = Zume_Query_Cumulative::languages( $stages, $end_date );
+                $description = 'Languages used.';
+                break;
+            case 'registrations':
+                $label = 'Registrations';
+                $value = Zume_Query_Cumulative::registrations( $end_date );
+                $description = 'Registrations in the system.';
+                break;
+            case 'coaching_requests':
+                $label = 'Coaching Requests';
+                $value = Zume_Query_Cumulative::query_stages_by_type_and_subtype( $end_date, 'coaching', 'requested_a_coach' );
+                $description = 'New coaching requests.';
+                break;
+            case 'checkins':
+                $label = 'Checkins';
+                $value = Zume_Query_Cumulative::checkins( $end_date );
+                $description = 'Checkins.';
+                break;
+            case 'set_a_01':
+            case 'set_a_02':
+            case 'set_a_03':
+            case 'set_a_04':
+            case 'set_a_05':
+            case 'set_a_06':
+            case 'set_a_07':
+            case 'set_a_08':
+            case 'set_a_09':
+            case 'set_a_10':
+                $number = (int) substr( $params['key'], -2, 2 );
+                $label = '10 Session / Session '.$number;
+                $value = Zume_Query_Cumulative::query_stages_by_type_and_subtype( $end_date, 'training', $params['key'] );
+                $description = '10 Session.';
+                break;
+            default:
+                break;
+        }
+
+        return [
+            'key' => $params['key'],
+            'stage' => $params['stage'],
+            'range' => '',
+            'label' => $label,
+            'description' => $description,
+            'link' => $link,
+            'value' => zume_format_int( $value ),
+            'valence' => $valence ?? zume_get_valence( $value, $goal, $negative_stat ),
+            'goal' => $goal,
+            'goal_valence' => $goal_valence ?? zume_get_valence( $value, $goal, $negative_stat ),
+            'goal_percent' => zume_get_percent( $value, $goal ),
+            'trend' => $trend,
+            'trend_valence' => $trend_valence ?? zume_get_valence( $value, $trend, $negative_stat ),
+            'trend_percent' => zume_get_percent( $value, $trend ),
+            'negative_stat' => $negative_stat,
+        ];
+    }
+
+    public function time_range( $params ) {
+        $range = (float) sanitize_text_field( $params['range'] );
+        $negative_stat = $params['negative_stat'] ?? false;
+
+        $stages = [0,1,2,3,4,5,6];
+
+        $label = '';
+        $description = '';
+        $link = '';
+        $value = 0;
+        $goal = 0;
+        $trend = 0;
+        $valence = null;
+        $goal_valence = null;
+        $trend_valence = null;
+
+        switch ( $params['key'] ) {
+
+            case 'locations':
+                $label = 'Locations';
+                $value = Zume_Query_Time_Range::locations( $stages, $range );
+                $trend = Zume_Query_Time_Range::locations( $stages, $range, true );
+                $description = 'Grid locations. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
+                break;
+            case 'languages':
+                $label = 'Languages';
+                $value = Zume_Query_Time_Range::languages( $stages, $range );
+                $trend = Zume_Query_Time_Range::languages( $stages, $range, true );
+                $description = 'Languages used. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
+                break;
+            case 'registrations':
+                $label = 'Registrations';
+                $value = Zume_Query_Time_Range::registrations( $range );
+                $trend = Zume_Query_Time_Range::registrations( $range, true );
+                $description = 'Registrations in the system. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
+                break;
+            case 'coach_requests':
+                $label = 'New Coaching Requests';
+                $value = Zume_Query_Funnel::query_stages_by_type_and_subtype( $stages, $range, 'coaching', 'requested_a_coach' );
+                $trend = Zume_Query_Funnel::query_stages_by_type_and_subtype( $stages, $range, 'coaching', 'requested_a_coach', true );
+                $description = 'New coaching requests from post training trainees. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
+                break;
+            case 'set_a_01':
+            case 'set_a_02':
+            case 'set_a_03':
+            case 'set_a_04':
+            case 'set_a_05':
+            case 'set_a_06':
+            case 'set_a_07':
+            case 'set_a_08':
+            case 'set_a_09':
+            case 'set_a_10':
+                $number = (int) substr( $params['key'], -2, 2 );
+                $label = '10 Session / Session '.$number;
+                $value = Zume_Query_Funnel::query_stages_by_type_and_subtype( $stages, $range, 'training', $params['key'] );
+                $trend = Zume_Query_Funnel::query_stages_by_type_and_subtype( $stages, $range, 'training', $params['key'], true );
+                $description = '10 Session. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
+                break;
+            default:
+                break;
+        }
+
+        return [
+            'key' => $params['key'],
+            'stage' => $params['stage'],
+            'range' => (float) $range,
+            'label' => $label,
+            'description' => $description,
+            'link' => $link,
+            'value' => zume_format_int( $value ),
+            'valence' => $valence ?? zume_get_valence( $value, $goal, $negative_stat ),
+            'goal' => $goal,
+            'goal_valence' => $goal_valence ?? zume_get_valence( $value, $goal, $negative_stat ),
+            'goal_percent' => zume_get_percent( $value, $goal ),
+            'trend' => $trend,
+            'trend_valence' => $trend_valence ?? zume_get_valence( $value, $trend, $negative_stat ),
+            'trend_percent' => zume_get_percent( $value, $trend ),
+            'negative_stat' => $negative_stat,
+        ];
     }
     public function general( $params ) {
         $range = (float) sanitize_text_field( $params['range'] );
@@ -1073,9 +1252,16 @@ class Zume_Charts_API
                 break;
             case 'new_coaching_requests':
                 $label = 'Coaching Requests';
-                $value = Zume_Query_Funnel::has_coach( $stage, $range );
-                $trend = Zume_Query_Funnel::has_coach( $stage, $range, true );
-                $description = 'Languages used. (Previous period '.zume_format_int($trend).')';
+                $value = Zume_Query_Funnel::has_coach( $stages, $range );
+                $trend = Zume_Query_Funnel::has_coach( $stages, $range, true );
+                $description = 'Coaching requests in the system. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
+                break;
+            case 'coach_requests':
+                $label = 'New Coaching Requests';
+                $value = Zume_Query_Funnel::query_stages_by_type_and_subtype( $stages, $range, 'coaching', 'requested_a_coach' );
+                $trend = Zume_Query_Funnel::query_stages_by_type_and_subtype( $stages, $range, 'coaching', 'requested_a_coach', true );
+                $description = 'New coaching requests from post training trainees. (Previous period '.zume_format_int($trend).')';
                 $goal = $trend;
                 break;
             default:
@@ -1363,7 +1549,7 @@ class Zume_Charts_API
             case 'practitioners_total':
                 $label = 'Practitioners';
                 $description = 'Practitioners are those who have identified as movement practitioners (of all stages: Post-Training, Partial, Full, Multiplying). They are seeking movement with multiplicative methods and want to participate in the Zúme Community.';
-                $value = Zume_Query_Funnel::query_total_practitioners();
+                $value = Zume_Query_Cumulative::query_total_practitioners();
                 $link = 'heatmap_practitioners';
                 $goal = 0;
                 $trend = 0;
@@ -1372,7 +1558,7 @@ class Zume_Charts_API
             case 'pace_to_goal':
                 $label = 'Practitioners Pace';
                 $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
-                $value = Zume_Query_Funnel::query_total_practitioners( $stages, $range );
+                $value = Zume_Query_Cumulative::query_total_practitioners( $stages, $range );
                 $goal = 0;
                 $trend = 0;
                 $valence = 'valence-grey';
@@ -1416,7 +1602,7 @@ class Zume_Charts_API
             case 'churches_total':
                 $label = 'Total Registrations';
                 $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
-                $value = Zume_Query_Churches::query_total_churches();
+                $value = Zume_Query_Cumulative::query_total_churches();
                 $goal = 0;
                 $trend = 0;
                 $valence = 'valence-grey';
@@ -1424,7 +1610,7 @@ class Zume_Charts_API
             case 'practitioners_total':
                 $label = 'Visitors';
                 $description = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
-                $value = Zume_Query_Churches::query_total_practitioners();
+                $value = Zume_Query_Cumulative::query_total_practitioners();
                 $goal = 0;
                 $trend = 0;
                 $valence = 'valence-grey';

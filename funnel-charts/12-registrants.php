@@ -115,6 +115,7 @@ class Zume_Funnel_Registrant extends Zume_Funnel_Chart_Base
                     })
                     window.spin_add()
                     makeRequest('GET', 'total', { stage: "registrant", key: "not_set_phone", range: range  }, window.site_info.rest_root ).done( function( data ) {
+                        console.log(data)
                         jQuery('.'+data.key).html(window.template_single_list(data))
                         window.click_listener( data )
                         window.spin_remove()
@@ -131,12 +132,7 @@ class Zume_Funnel_Registrant extends Zume_Funnel_Chart_Base
                         window.click_listener( data )
                         window.spin_remove()
                     })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "registrant", key: "coach_requests", range: range  }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single_list(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
+
                     // positive
                     window.spin_add()
                     makeRequest('GET', 'total', { stage: "registrant", key: "in_and_out", range: range }, window.site_info.rest_root ).done( function( data ) {

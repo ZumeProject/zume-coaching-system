@@ -1,7 +1,144 @@
 <?php
-if ( !defined( 'ABSPATH' ) ) { exit; } // Exit if accessed directly.
 
-class Zume_Query_Events {
+abstract class Zume_Queries_Base {
+
+    // this is a reusable query that gets the user_id, post_id (contact_id), stage, and report id (rid) from the reports table.
+    public static $query_for_user_stage = "SELECT r.user_id, r.post_id, r.post_id as contact_id, r.type, r.subtype, MAX(r.value) as stage, MAX(r.id) as rid, MAX(r.timestamp) as timestamp FROM zume_dt_reports r
+                                                  WHERE r.type = 'system' and r.subtype = 'current_level'
+                                                  GROUP BY r.user_id, r.post_id, r.type, r.subtype";
+
+    public static function query_for_user_stage( $stage, $range, $trend ) {
+
+        $end = time();
+        if ( $range < 1 ) {
+            $begin = 0;
+        } else {
+            $begin = strtotime( '-'. $range . ' days' );
+            if ( $trend ) {
+                $end = $begin;
+                $begin = strtotime( '-'. ( $range * 2 ) . ' days' );
+            }
+        }
+
+        $sql = "SELECT
+                    p.post_title as name,
+                    sub.user_id,
+                    sub.post_id,
+                    pm.meta_value as coaching_contact_id,
+                    sub.stage,
+                    slgm.lng,
+                    slgm.lat,
+                    slgm.level,
+                    slgm.label,
+                    slgm.grid_id,
+                    pm1.meta_value as user_email,
+                    pm2.meta_value as user_phone,
+					sub.timestamp
+                FROM (
+                    SELECT rr.user_id, rr.post_id, rr.type, rr.subtype, MAX(rr.value) as stage, MAX(rr.id) as rid, MAX(rr.timestamp) as timestamp FROM zume_dt_reports rr
+                    WHERE rr.type = 'system' and rr.subtype = 'current_level'
+                    GROUP BY rr.user_id, rr.post_id, rr.type, rr.subtype
+                ) as sub
+                LEFT JOIN zume_dt_location_grid_meta slgm ON slgm.post_id=sub.post_id
+                LEFT JOIN zume_postmeta pm ON pm.post_id=sub.post_id AND pm.meta_key = 'coaching_contact_id'
+                LEFT JOIN zume_posts p ON p.ID=sub.post_id
+                LEFT JOIN zume_postmeta pm1 ON pm1.post_id=sub.post_id AND pm1.meta_key = 'user_email'
+                LEFT JOIN zume_postmeta pm2 ON pm2.post_id=sub.post_id AND pm2.meta_key = 'user_phone'
+                WHERE sub.stage = $stage
+                AND sub.timestamp > $begin
+                AND sub.timestamp < $end";
+
+        return $sql;
+    }
+
+    public static function query_for_user_stages( array $stages, $range, $trend = false ) {
+
+        $end = time();
+        if ( $range < 1 ) {
+            $begin = 0;
+        } else {
+            $begin = strtotime( '-'. $range . ' days' );
+            if ( $trend ) {
+                $end = $begin;
+                $begin = strtotime( '-'. ( $range * 2 ) . ' days' );
+            }
+        }
+
+        $stages_list = implode( ',', $stages );
+
+        $sql = "SELECT p.post_title as name,
+                    sub.user_id,
+                    sub.post_id,
+                    pm.meta_value as coaching_contact_id,
+                    sub.stage,
+                    slgm.lng,
+                    slgm.lat,
+                    slgm.level,
+                    slgm.label,
+                    slgm.grid_id,
+                    pm1.meta_value as user_email,
+                    pm2.meta_value as user_phone,
+					sub.timestamp
+                FROM (
+                    SELECT rr.user_id, rr.post_id, rr.type, rr.subtype, MAX(rr.value) as stage, MAX(rr.id) as rid, MAX(rr.timestamp) as timestamp FROM zume_dt_reports rr
+                    WHERE rr.type = 'system' and rr.subtype = 'current_level'
+                    GROUP BY rr.user_id, rr.post_id, rr.type, rr.subtype
+                ) as sub
+                LEFT JOIN zume_dt_location_grid_meta slgm ON slgm.post_id=sub.post_id
+                LEFT JOIN zume_postmeta pm ON pm.post_id=sub.post_id AND pm.meta_key = 'coaching_contact_id'
+                LEFT JOIN zume_posts p ON p.ID=sub.post_id
+                LEFT JOIN zume_postmeta pm1 ON pm1.post_id=sub.post_id AND pm1.meta_key = 'user_email'
+                LEFT JOIN zume_postmeta pm2 ON pm2.post_id=sub.post_id AND pm2.meta_key = 'user_phone'
+                WHERE sub.stage IN ( $stages_list )
+                AND sub.timestamp > $begin
+                AND sub.timestamp < $end
+                ";
+
+//        dt_write_log($sql);
+
+        return $sql;
+    }
+
+    public static function query_cumulative_for_user_stages( $end_date ) {
+
+        $begin = 0;
+        if ( empty( $end_date ) ) {
+            $end = time();
+        } else {
+            $end = $end_date;
+        }
+
+        $sql = "SELECT p.post_title as name,
+                    sub.user_id,
+                    sub.post_id,
+                    pm.meta_value as coaching_contact_id,
+                    sub.stage,
+                    slgm.lng,
+                    slgm.lat,
+                    slgm.level,
+                    slgm.label,
+                    slgm.grid_id,
+                    pm1.meta_value as user_email,
+                    pm2.meta_value as user_phone,
+					sub.timestamp
+                FROM (
+                    SELECT rr.user_id, rr.post_id, rr.type, rr.subtype, MAX(rr.value) as stage, MAX(rr.id) as rid, MAX(rr.timestamp) as timestamp FROM zume_dt_reports rr
+                    WHERE rr.type = 'system' and rr.subtype = 'current_level'
+                    GROUP BY rr.user_id, rr.post_id, rr.type, rr.subtype
+                ) as sub
+                LEFT JOIN zume_dt_location_grid_meta slgm ON slgm.post_id=sub.post_id
+                LEFT JOIN zume_postmeta pm ON pm.post_id=sub.post_id AND pm.meta_key = 'coaching_contact_id'
+                LEFT JOIN zume_posts p ON p.ID=sub.post_id
+                LEFT JOIN zume_postmeta pm1 ON pm1.post_id=sub.post_id AND pm1.meta_key = 'user_email'
+                LEFT JOIN zume_postmeta pm2 ON pm2.post_id=sub.post_id AND pm2.meta_key = 'user_phone'
+                WHERE sub.timestamp > $begin
+                AND sub.timestamp < $end
+                ";
+
+//        dt_write_log($sql);
+
+        return $sql;
+    }
 
     public static function world_grid_sql(): string {
         return "SELECT
@@ -234,122 +371,4 @@ class Zume_Query_Events {
               #'Romania', 'Estonia', 'Bhutan', 'Croatia', 'Solomon Islands', 'Guyana', 'Iceland', 'Vanuatu', 'Cape Verde', 'Samoa', 'Faroe Islands', 'Norway', 'Uruguay', 'Mongolia', 'United Arab Emirates', 'Slovenia', 'Bulgaria', 'Honduras', 'Columbia', 'Namibia', 'Switzerland', 'Western Sahara'
               AND lg5.admin0_grid_id NOT IN (100314737,100083318,100041128,100133112,100341242,100132648,100222839,100379914,100055707,100379993,100130389,100255271,100363975,100248845,100001527,100342458,100024289,100132795,100054605,100253456,100342975,100074571)";
     }
-
-    /**
-     * Training subtype counts for all *heard* reports.
-     *
-     * subtype
-     * value count
-     * @return array
-     */
-    public static function training_subtype_counts(  ) {
-        global $wpdb;
-
-        $results = $wpdb->get_results( $wpdb->prepare(
-            "SELECT subtype, COUNT(*) as value
-            FROM zume_dt_reports
-            WHERE type = 'training' AND subtype LIKE '%heard'
-            GROUP BY subtype
-            " ), ARRAY_A );
-
-        if ( empty( $results ) || is_wp_error( $results ) ) {
-            return [];
-        }
-
-        return $results;
-    }
-
-    public static function locations( $stages = [ 0,1,2,3,4,5,6 ], $range = -1, $trend = false, $negative = false ) {
-        $list = self::locations_list( $stages, $range, $trend, $negative );
-        if( empty( $list ) ) {
-            return 0;
-        } else {
-            return count( $list );
-        }
-    }
-
-    public static function locations_list( $stages = [ 0,1,2,3,4,5,6 ], $range = -1, $trend = false, $negative = false ) {
-        global $wpdb;
-        $world_grid_ids = self::world_grid_id_sql();
-
-        $end = time();
-        if ( $range < 1 ) {
-            $begin = 0;
-        } else {
-            $begin = strtotime( '-'. $range . ' days' );
-            if ( $trend ) {
-                $end = $begin;
-                $begin = strtotime( '-'. ( $range * 2 ) . ' days' );
-            }
-        }
-
-        $stages_list = dt_array_to_sql( $stages );
-
-        $sql = "
-            SELECT DISTINCT r.grid_id, r.label
-            FROM zume_dt_reports r
-            JOIN
-            (
-                $world_grid_ids
-            ) as grid_ids ON r.grid_id=grid_ids.grid_id
-            WHERE r.value IN ( $stages_list )
-              AND r.timestamp > $begin
-              AND r.timestamp < $end
-            ";
-
-        return $wpdb->get_results( $sql, ARRAY_A );
-    }
-
-    public static function languages( $stages = [ 1 ], $range = -1, $trend = false, $negative = false ) {
-        $language_list = self::languages_list( $stages, $range, $trend, $negative );
-        if( empty( $language_list ) ) {
-            return 0;
-        } else {
-            return count( $language_list );
-        }
-    }
-
-    public static function languages_list( $stages = [ 1 ], $range = -1, $trend = false, $negative = false ) {
-        global $wpdb;
-        $languages = zume_languages();
-
-        $end = time();
-        if ( $range < 1 ) {
-            $begin = 0;
-        } else {
-            $begin = strtotime( '-'. $range . ' days' );
-            if ( $trend ) {
-                $end = $begin;
-                $begin = strtotime( '-'. ( $range * 2 ) . ' days' );
-            }
-        }
-
-        $stages_list = dt_array_to_sql( $stages );
-
-        $sql = "
-            SELECT language_code, count(*) as activities
-            FROM zume_dt_reports r
-            WHERE r.value IN ( $stages_list )
-              AND r.timestamp > $begin
-              AND r.timestamp < $end
-            AND r.language_code != ''
-            GROUP BY language_code
-            ORDER BY activities DESC
-            ";
-        $list = $wpdb->get_results( $sql, ARRAY_A );
-
-        if ( empty( $list ) ) {
-            return [];
-        }
-
-        $language_list = [];
-        foreach( $list as $lang ) {
-            $language_list[$lang['language_code']] = $languages[$lang['language_code']] ?? [];
-            $language_list[$lang['language_code']]['activities'] = $lang['activities'];
-        }
-
-        return $language_list;
-    }
-
-
 }
