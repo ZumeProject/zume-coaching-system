@@ -2869,7 +2869,7 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
                 'description' => 'Practitioner who has completed the MAWL checklist, but is not multiplying.',
                 'description_full' => 'Practitioner who has completed the MAWL checklist, but is not multiplying.',
                 'characteristics' => [
-                    'Has completed HOST/MAWL checklist',
+                    'Has completed HOST/MAWL',
                     'Consistent effort, inconsistent fruit',
                     'Inconsistent 1st generation fruit',
                 ],
