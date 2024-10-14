@@ -1184,6 +1184,13 @@ class Zume_Charts_API
                 $description = 'New coaching requests from post training trainees. (Previous period '.zume_format_int($trend).')';
                 $goal = $trend;
                 break;
+            case 'downloads':
+                $label = 'Downloads';
+                $value = Zume_Query_Time_Range::downloads( $range );
+                $trend = Zume_Query_Time_Range::downloads( $range, true );
+                $description = 'Downloads. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
+                break;
             case 'set_a_01':
             case 'set_a_02':
             case 'set_a_03':

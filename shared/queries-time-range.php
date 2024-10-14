@@ -169,5 +169,32 @@ class Zume_Query_Time_Range extends Zume_Queries_Base {
 
         return (float) $count;
     }
+    public static function downloads( $range = -1, $trend = false ) {
+        global $wpdb;
+
+        $end = time();
+        if ( $range < 1 ) {
+            $begin = 0;
+        } else {
+            $begin = strtotime( '-'. $range . ' days' );
+            if ( $trend ) {
+                $end = $begin;
+                $begin = strtotime( '-'. ( $range * 2 ) . ' days' );
+            }
+        }
+
+        $sql = "
+            SELECT COUNT(*)
+            FROM `zume_dt_reports_anonymous`
+            WHERE type = 'downloading'
+                AND timestamp > $begin
+                AND timestamp < $end;
+            ";
+//        dt_write_log($sql);
+        $count = $wpdb->get_var( $sql );
+
+        return (float) $count;
+    }
+
 
 }
