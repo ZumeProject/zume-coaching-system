@@ -305,4 +305,18 @@ class Zume_Query_Cumulative extends Zume_Queries_Base {
 
         return (float) $count;
     }
+
+    public static function downloads( $end_date) {
+        global $wpdb;
+
+        $sql = "
+            SELECT COUNT(*)
+            FROM `zume_dt_reports_anonymous`
+            WHERE type = 'downloading'
+                AND timestamp < $end_date;
+            ";
+        $count = $wpdb->get_var( $sql );
+
+        return (float) $count;
+    }
 }

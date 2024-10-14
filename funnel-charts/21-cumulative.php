@@ -57,6 +57,7 @@ class Zume_Funnel_Cumulative extends Zume_Funnel_Chart_Base
                                 <div class="cell medium-6 locations"><span class="loading-spinner active"></span></div>
                                 <div class="cell medium-6 languages"><span class="loading-spinner active"></span></div>
                                 <div class="cell medium-6 checkins"><span class="loading-spinner active"></span></div>
+                                <div class="cell medium-6 downloads"><span class="loading-spinner active"></span></div>
                             </div>
                             <hr>
                             <div class="grid-x grid-margin-x grid-margin-y">
@@ -108,6 +109,11 @@ class Zume_Funnel_Cumulative extends Zume_Funnel_Chart_Base
                     })
                     window.spin_add()
                     makeRequest('GET', 'total', { stage: "cumulative", key: "checkins", end_date: end_date }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.key).html(window.template_single(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    makeRequest('GET', 'total', { stage: "cumulative", key: "downloads", end_date: end_date }, window.site_info.rest_root ).done( function( data ) {
                         jQuery('.'+data.key).html(window.template_single(data))
                         window.click_listener( data )
                         window.spin_remove()

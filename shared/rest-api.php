@@ -1095,6 +1095,11 @@ class Zume_Charts_API
                 $value = Zume_Query_Cumulative::checkins( $end_date );
                 $description = 'Checkins.';
                 break;
+            case 'downloads':
+                $label = 'Downloads';
+                $value = Zume_Query_Cumulative::downloads( $end_date );
+                $description = 'Downloads';
+                break;
             case 'set_a_01':
             case 'set_a_02':
             case 'set_a_03':
