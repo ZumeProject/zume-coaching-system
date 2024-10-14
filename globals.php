@@ -2875,9 +2875,9 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
                 ],
                 'priority_next_step' => 'Consistent 2,3,4 generation fruit',
                 'next_steps' => [
-                    'Consistent 2,3,4 disciple generation fruit',
-                    'Consistent 2,3,4 group generation fruit',
-                    'Peer coaching with S2 and S3 practitioners',
+                    'Consistent 2,3,4 gen disciples',
+                    'Consistent 2,3,4 gen groups',
+                    'Peer coaching/mentoring',
                 ],
                 'pace' => [
                     '1 practitioner completing HOST/MAWL every 20 days', // shared/rest-api.php:714
