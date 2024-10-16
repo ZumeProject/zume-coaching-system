@@ -904,8 +904,8 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'enable_flags' => [
                     'version_4_available' => true,
                     'translator_enabled' => true,
-                    'version_5_ready' => false,
-                    'pieces_pages' => false,
+                    'version_5_ready' => true,
+                    'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
             ),
@@ -1569,8 +1569,8 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'enable_flags' => [
                     'version_4_available' => true,
                     'translator_enabled' => true,
-                    'version_5_ready' => false,
-                    'pieces_pages' => false,
+                    'version_5_ready' => true,
+                    'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
             ),
@@ -1854,8 +1854,8 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'enable_flags' => [
                     'version_4_available' => true,
                     'translator_enabled' => true,
-                    'version_5_ready' => false,
-                    'pieces_pages' => false,
+                    'version_5_ready' => true,
+                    'pieces_pages' => true,
                     'course_slides_download' => false,
                 ],
             ),
