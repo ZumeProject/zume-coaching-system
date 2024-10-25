@@ -2777,9 +2777,7 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
                     'Join an online training',
                     'Get a coach',
                 ],
-                'pace' => [
-                    '2024: 200 visits a day',
-                ],
+                'pace' => [],
             ],
             1 => [
                 'key' => 'registrant',
@@ -2796,9 +2794,7 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
                     'Make a training plan',
                     'Invite friends',
                 ],
-                'pace' => [
-                    '4 registrations per day', // shared/rest-api.php:310
-                ],
+                'pace' => [],
             ],
             2 => [
                 'key' => 'active_training_trainee',
@@ -2815,9 +2811,7 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
                     'Complete training',
                     'Create post training plan',
                 ],
-                'pace' => [
-                    '2 trainees engaging training per day', // shared/rest-api.php:418
-                ],
+                'pace' => [],
             ],
             3 => [
                 'key' => 'post_training_trainee',
@@ -2835,9 +2829,7 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
                     'Complete post training plan',
                     'Establish ongoing coaching relationship',
                 ],
-                'pace' => [
-                    '1 trainee completing training every 4 days', // shared/rest-api.php:546
-                ],
+                'pace' => [],
             ],
             4 => [
                 'key' => 'partial_practitioner',
@@ -2857,9 +2849,7 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
                     'Continued reporting',
                     'Connect with S1 and S2 practitioners',
                 ],
-                'pace' => [
-                    '1 trainee becoming practitioner every 10 days', // shared/rest-api.php:714
-                ],
+                'pace' => [],
             ],
             5 => [
                 'key' => 'full_practitioner',
@@ -2879,9 +2869,7 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
                     'Consistent 2,3,4 gen groups',
                     'Peer coaching/mentoring',
                 ],
-                'pace' => [
-                    '1 practitioner completing HOST/MAWL every 20 days', // shared/rest-api.php:714
-                ],
+                'pace' => [],
             ],
             6 => [
                 'key' => 'multiplying_practitioner',
@@ -2898,9 +2886,7 @@ if ( ! function_exists( 'zume_funnel_stages' ) ) {
                 'next_steps' => [
                     'Downstream coaching for consistent generations',
                 ],
-                'pace' => [
-                    '1 practitioner breaking through with multiplication every 30 days', // shared/rest-api.php:714
-                ],
+                'pace' => [],
             ],
         ];
     }
@@ -3010,19 +2996,45 @@ if ( ! function_exists( 'zume_get_valence' ) ) {
 if ( ! function_exists( 'zume_get_percent' ) ) {
     function zume_get_percent( float $value, float $compare )
     {
+        // handle zeros
+        if ( $compare == 0 && $value > 0 ) {
+            return '+' . $value * 100;
+        }
+        if ( $value == 0 && $compare > 0 ) {
+            return '-' . $compare * 100;
+        }
+
+        // process non-zero comparisons
         if ( $value > 0 && $compare > 0 ) {
-            $percent = ( $value / $compare ) * 100;
-            if ( $percent > 100 ) {
-                $percent = round( $percent - 100, 1 );
-            } else if ( $percent < 100 ) {
-                $percent = round( ( 100 - $percent ), 1 ) * -1;
+
+            // handle larger than 100% comparisons
+            if ( $value < $compare && $compare > $value * 2 ) {
+                $percent = ( $compare / $value ) * -1;
             } else {
+                $percent = ( $value / $compare );
+            }
+
+            if ( $percent > 1 && intval( $percent ) <= 10 ) {
+                $percent = $percent * 100;
+                $percent = '+' . round( $percent - 100, 1 );
+            }
+            else if ( $percent > 10 ) {
+                $percent = $percent * 100;
+                $percent = '+' . round( $percent, 1 );
+            }
+            else if ( $percent < 1 && intval( $percent ) <= 10 ) {
+                $percent = $percent * 100;
+                $percent = round( ( 100 - $percent ), 1 ) * -1;
+            }
+            else if ( $percent < 1 && intval( $percent ) >= 10  ) {
+                $percent = $percent * 100;
+                $percent = round( ( $percent ), 1 ) * -1;
+            }
+            else {
                 $percent = 0;
             }
+
             return $percent;
-        }
-        else if ( $value < 1 && $compare > 0 ) {
-            return $compare * 100 * -1;
         }
         else {
             return 0;

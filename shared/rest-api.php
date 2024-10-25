@@ -128,6 +128,7 @@ class Zume_Charts_API
      * @return void
      */
     public static function _pace_calculator( $stage, $days, $type = 'value', $value = 0, $trend = 0 ) {
+        $days = (int) $days;
         $data =  [
             'value' => 0,
             'description' => '',
@@ -142,45 +143,45 @@ class Zume_Charts_API
                 break;
             case 'registrant':
             case '1';
-                $value = 5;
-                $data['value'] = intval( $days * $value ); // events per day
+                $value = 6; // events per day
+                $data['value'] = $days * $value;
                 $data['description'] = 'People who have registered but have not progressed into training.';
-                $data['pace'] = $value .' new registrants per day';
+                $data['pace'] = $value .' new registrants per day ('. zume_format_int((float) $value * 365 ) . ' per year)';
                 break;
             case 'active_training_trainee':
             case '2';
-                $value = 2;
-                $data['value'] = intval( $days * $value ); // events per day
+                $value = 3.7; // events per day
+                $data['value'] = $days * $value;
                 $data['description'] = 'People who are actively working a training plan or have only partially completed the training.';
-                $data['pace'] = $value .' trainees launching training groups per day';
+                $data['pace'] = 'Adding '. $value .' trainees to training groups per day ('. zume_format_int((float) $value * 365 ) . ' per year)';
                 break;
             case 'post_training_trainee':
             case '3';
-                $value = 4;
-                $data['value'] = intval( $days / $value ); // events per days
+                $value = 2; // days per event
+                $data['value'] = round( $days / $value, 1 );
                 $data['description'] = 'People who have completed the training and are working on a post training plan.';
-                $data['pace'] = '1 trainee completing training every '.$value.' days';
+                $data['pace'] = '1 trainee completing training every '.$value.' days ('. zume_format_int( 365 / (float) $value ) . ' per year)';
                 break;
             case 'partial_practitioner':
             case '4';
-                $value = 6;
-                $data['value'] = intval( $days / $value ); // events per days
+                $value = 1.5; // days per event
+                $data['value'] = round( $days / $value, 1 );
                 $data['description'] = 'Learning through doing. Implementing partial checklist';
-                $data['pace'] = '1 trainee becoming practitioner every '.$value.' days';
+                $data['pace'] = '1 trainee becoming practitioner every '.$value.' days ('. zume_format_int( 365 / (float) $value ) . ' per year)';
                 break;
             case 'full_practitioner':
             case '5';
-                $value = 20;
-                $data['value'] = intval( $days / $value ); // events per days
+                $value = 13; // days per event
+                $data['value'] = round( $days / $value, 1 );
                 $data['description'] = 'People who are seeking multiplicative movement and are completely skilled with the coaching checklist.';
-                $data['pace'] = '1 practitioner completing HOST/MAWL every '.$value.' days';
+                $data['pace'] = '1 practitioner completing HOST/MAWL every '.$value.' days ('. zume_format_int( 365 / (float) $value ) . ' per year)';
                 break;
             case 'multiplying_practitioner':
             case '6';
-                $value = 30;
-                $data['value'] = intval( $days / $value ); // events per days
+                $value = 15; // days per event
+                $data['value'] = round( $days / $value, 1 );
                 $data['description'] = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
-                $data['pace'] = '1 multiplying practitioner every '.$value.' days';
+                $data['pace'] = '1 multiplying practitioner every '.$value.' days ('. zume_format_int( 365 / (float) $value ) . ' per year)';
                 break;
             default:
                 break;
@@ -331,7 +332,7 @@ class Zume_Charts_API
                 $value = Zume_Query_Funnel::stage_total( $stage, $range );
                 $trend = Zume_Query_Funnel::stage_total( $stage, $range, true );
                 $description = self::_pace_calculator( $stage, $days, 'description' );
-                $goal = self::_pace_calculator( $stage, $days );
+                $goal = zume_format_int( self::_pace_calculator( $stage, $days ) );
                 break;
 
             case 'has_no_coach':
@@ -442,7 +443,7 @@ class Zume_Charts_API
                 $value = Zume_Query_Funnel::stage_total( $stage, $range );
                 $trend = Zume_Query_Funnel::stage_total( $stage, $range, true );
                 $description = self::_pace_calculator( $stage, $days, 'description' );
-                $goal = self::_pace_calculator( $stage, $days );
+                $goal = zume_format_int( self::_pace_calculator( $stage, $days ) );
                 break;
             case 'locations':
                 $label = 'Locations';
@@ -562,7 +563,7 @@ class Zume_Charts_API
                 $value = Zume_Query_Funnel::stage_total( $stage, $range );
                 $trend = Zume_Query_Funnel::stage_total( $stage, $range, true );
                 $description = self::_pace_calculator( $stage, $days, 'description' );
-                $goal = self::_pace_calculator( $stage, $days );
+                $goal = zume_format_int( self::_pace_calculator( $stage, $days ) );
                 break;
             case 'locations':
                 $label = 'Locations';
@@ -675,7 +676,7 @@ class Zume_Charts_API
                 $value = Zume_Query_Funnel::stage_total( $stage, $range );
                 $trend = Zume_Query_Funnel::stage_total( $stage, $range, true );
                 $description = self::_pace_calculator( $stage, $days, 'description' );
-                $goal = self::_pace_calculator( $stage, $days );
+                $goal = zume_format_int( self::_pace_calculator( $stage, $days ) );
                 break;
             case 'locations':
                 $label = 'Locations';
@@ -774,7 +775,7 @@ class Zume_Charts_API
                 $value = Zume_Query_Funnel::stage_total( $stage, $range );
                 $trend = Zume_Query_Funnel::stage_total( $stage, $range, true );
                 $description = self::_pace_calculator( $stage, $days, 'description' );
-                $goal = self::_pace_calculator( $stage, $days );
+                $goal = zume_format_int( self::_pace_calculator( $stage, $days ) );
                 break;
             case 'locations':
                 $label = 'Locations';
@@ -873,7 +874,7 @@ class Zume_Charts_API
                 $value = Zume_Query_Funnel::stage_total( $stage, $range );
                 $trend = Zume_Query_Funnel::stage_total( $stage, $range, true );
                 $description = self::_pace_calculator( $stage, $days, 'description' );
-                $goal = self::_pace_calculator( $stage, $days );
+                $goal = zume_format_int( self::_pace_calculator( $stage, $days ) );
                 break;
             case 'locations':
                 $label = 'Locations';
