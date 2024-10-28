@@ -67,7 +67,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
                     FROM zume_3_postmeta
                     WHERE meta_key = 'trainee_user_id'
                         AND meta_value = %s",
-                $user_id )
+            $user_id )
         );
 
         $coach_list = [];
@@ -80,7 +80,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
                     LEFT JOIN zume_3_postmeta pm ON pm.post_id = p.ID AND pm.meta_key = 'corresponds_to_user'
                     WHERE p2p_from = %d
                         AND p2p_type = 'contacts_to_contacts'",
-                    $coaching_contact_id ), ARRAY_A
+                $coaching_contact_id ), ARRAY_A
             );
         }
 
@@ -320,14 +320,18 @@ if ( ! function_exists( 'zume_get_user_language' ) ) {
             $zume_languages_by_code = zume_languages( 'code' );
         }
 
-        $language_code = zume_get_language_cookie();
-        if ( $user_id == get_current_user_id() && empty( $language_code ) ) {
-            $language_code = zume_current_language();
-            zume_set_language_cookie( $language_code );
-        }
+        $contact_id = zume_get_user_contact_id($user_id);
+        $language_code = get_post_meta( $contact_id, 'user_preferred_language', true );
 
         if ( ! $language_code ) {
             $language_code = 'en';
+            update_post_meta( $contact_id, 'user_preferred_language', $language_code );
+        }
+
+
+        $language_code = zume_get_language_cookie();
+        if ( $user_id == get_current_user_id() && ! empty( $language_code ) ) {
+            zume_set_language_cookie( $language_code );
         }
 
         return isset( $zume_languages_by_code[$language_code] ) ? $zume_languages_by_code[$language_code] : $zume_languages_by_code['en'];
@@ -347,7 +351,7 @@ if ( ! function_exists( 'zume_get_user_location' ) ) {
                         WHERE pm.meta_key = 'corresponds_to_user' AND pm.meta_value = %d
                         ORDER BY grid_meta_id desc
                         LIMIT 1",
-                $user_id ), ARRAY_A
+            $user_id ), ARRAY_A
         );
 
         if ( empty( $location ) && $ip_lookup ) {
@@ -542,7 +546,7 @@ if ( ! function_exists( 'zume_get_user_friends' ) ) {
                     LEFT JOIN zume_usermeta um ON um.meta_value=p.ID AND um.meta_key = 'zume_corresponds_to_contact'
                     WHERE p2.p2p_type = 'contacts_to_relation'
                     AND p2.p2p_from = %d",
-                $contact_id ), ARRAY_A
+            $contact_id ), ARRAY_A
         );
 
         $to = $wpdb->get_results(
@@ -553,7 +557,7 @@ if ( ! function_exists( 'zume_get_user_friends' ) ) {
                     LEFT JOIN zume_usermeta um ON um.meta_value=p.ID AND um.meta_key = 'zume_corresponds_to_contact'
                     WHERE p2.p2p_type = 'contacts_to_relation'
                     AND p2.p2p_to = %d",
-                $contact_id ), ARRAY_A
+            $contact_id ), ARRAY_A
         );
 
         if ( empty( $from ) && empty( $to ) ) {
@@ -585,7 +589,7 @@ if ( ! function_exists( 'zume_get_user_commitments' ) ) {
                 'SELECT * FROM zume_dt_post_user_meta
                         WHERE user_id = %d
                         ORDER BY date DESC',
-                $user_id), ARRAY_A
+            $user_id), ARRAY_A
         );
 
         $list = [];
