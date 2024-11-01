@@ -171,14 +171,14 @@ class Zume_Charts_API
                 break;
             case 'full_practitioner':
             case '5';
-                $value = 15; // days per event
+                $value = 20; // days per event
                 $data['value'] = round( $days / $value, 1 );
                 $data['description'] = 'People who are seeking multiplicative movement and are completely skilled with the coaching checklist.';
                 $data['pace'] = '1 practitioner completing HOST/MAWL every '.$value.' days ('. zume_format_int( 365 / (float) $value ) . ' per year)';
                 break;
             case 'multiplying_practitioner':
             case '6';
-                $value = 11; // days per event
+                $value = 10; // days per event
                 $data['value'] = round( $days / $value, 1 );
                 $data['description'] = 'People who are seeking multiplicative movement and are stewarding generational fruit.';
                 $data['pace'] = '1 multiplying practitioner every '.$value.' days ('. zume_format_int( 365 / (float) $value ) . ' per year)';
