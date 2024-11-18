@@ -2966,8 +2966,10 @@ if ( ! function_exists( 'zume_format_int' ) ) {
     }
 }
 if ( ! function_exists( 'zume_get_valence' ) ) {
-    function zume_get_valence( float $value, float $compare, $negative_stat = false )
+    function zume_get_valence( $value, $compare, $negative_stat = false )
     {
+        $value = (float) $value;
+        $compare = (float) $compare;
         $percent = zume_get_percent( $value, $compare );
 
         if ( $negative_stat ) {
@@ -2998,8 +3000,11 @@ if ( ! function_exists( 'zume_get_valence' ) ) {
     }
 }
 if ( ! function_exists( 'zume_get_percent' ) ) {
-    function zume_get_percent( float $value, float $compare )
+    function zume_get_percent( $value, $compare )
     {
+        $value = (float) $value;
+        $compare = (float) $compare;
+
         // handle zeros
         if ( $compare == 0 && $value > 0 ) {
             return '+' . $value * 100;
