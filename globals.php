@@ -7616,13 +7616,17 @@ if ( ! class_exists( 'Zume_System_Log_API' ) ) {
                 ]
             );
 
+            /**
+             * Fires after a log is inserted into the database.
+             */
+            do_action( 'zume_log', $args );
+
             $report_id = $wpdb->insert_id;
             if ( !$report_id ) {
                 return $report_id;
             } else {
                 $args['id'] = $report_id;
             }
-
 
             return $report_id;
         }
@@ -7859,6 +7863,11 @@ if ( ! class_exists( 'Zume_System_Log_API' ) ) {
             );
 
             $report_id = $wpdb->insert_id;
+
+            /**
+             * Fires after an anonymous log is inserted into the database.
+             */
+            do_action( 'zume_log_anonymous', $args );
 
             return $report_id;
         }
