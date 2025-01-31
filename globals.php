@@ -965,7 +965,7 @@ if ( ! function_exists( 'zume_languages' ) ) {
                 'enable_flags' => [
                     'version_4_available' => false,
                     'translator_enabled' => true,
-                    'version_5_ready' => false,
+                    'version_5_ready' => true,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                 ],
