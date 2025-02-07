@@ -13,13 +13,6 @@ class Zume_Query_Time_Range extends Zume_Queries_Base {
     }
 
     public static function locations_list( $stages = [ 0,1,2,3,4,5,6 ], $range = -1, $trend = false, $negative = false ) {
-        // object cache
-        $request_key = hash( 'md5', serialize( __METHOD__ . serialize( $stages ) . $range . $trend . $negative ) );
-        $cached = wp_cache_get( $request_key, 'zume' );
-        if ( $cached ) {
-            dt_write_log( __METHOD__ . ' cache hit' );
-            return $cached;
-        }
 
         global $wpdb;
         $world_grid_ids = self::world_grid_id_sql();
@@ -53,8 +46,6 @@ class Zume_Query_Time_Range extends Zume_Queries_Base {
         if ( empty( $list ) ) {
             $list = [];
         }
-
-        wp_cache_set( $request_key, $list, 'zume' );
 
         return $list;
     }

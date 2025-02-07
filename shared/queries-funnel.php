@@ -305,6 +305,13 @@ class Zume_Query_Funnel extends Zume_Queries_Base {
     }
 
     public static function flow( $stage, $flow, $range = -1 ) {
+        $request_key = hash( 'md5', serialize( __METHOD__ . $stage . $flow . $range ) );
+        $cached = get_transient( $request_key );
+        if ( $cached ) {
+            dt_write_log( __METHOD__ . ' cache hit' );
+            return $cached;
+        }
+
         // flow = in, idle, out
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
@@ -352,6 +359,8 @@ class Zume_Query_Funnel extends Zume_Queries_Base {
         if ( $count < 1 ) {
             return 0;
         }
+
+        set_transient( $request_key, $count, HOUR_IN_SECONDS );
 
         return (float) $count;
     }
