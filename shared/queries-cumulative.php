@@ -3,15 +3,30 @@ if ( !defined( 'ABSPATH' ) ) { exit; } // Exit if accessed directly.
 
 class Zume_Query_Cumulative extends Zume_Queries_Base {
 
+    public static $expiration = HOUR_IN_SECONDS;
+
     public static function locations( $stages = [ 0,1,2,3,4,5,6 ], $end_date = null, $trend = false, $negative = false ) {
+        // transient cache
+        $request_key = hash( 'md5', serialize( __METHOD__ . serialize( $stages ) . $end_date . $trend . $negative ) );
+        $cached = get_transient( $request_key );
+        if ( $cached ) {
+            dt_write_log( __METHOD__ . ' transcient hit' );
+            return $cached;
+        }
+
         if ( is_null( $end_date ) ) {
             $end_date = time();
         }
+
         $list = self::locations_list_cumulative( $stages, $end_date, $trend, $negative );
+
         if( empty( $list ) ) {
+            set_transient( $request_key, 0, self::$expiration );
             return 0;
         } else {
-            return count( $list );
+            $count = count( $list );
+            set_transient( $request_key, $count, self::$expiration );
+            return $count;
         }
     }
 
@@ -43,7 +58,13 @@ class Zume_Query_Cumulative extends Zume_Queries_Base {
               AND r.timestamp < $end
             ";
 
-        return $wpdb->get_results( $sql, ARRAY_A );
+        $list = $wpdb->get_results( $sql, ARRAY_A );
+
+        if ( empty( $list ) ) {
+            $list = [];
+        }
+
+        return $list;
     }
 
     public static function languages( $stages = [ 1,2,3,4,5,6 ], $end_date = null, $trend = false, $negative = false ) {
@@ -148,6 +169,14 @@ class Zume_Query_Cumulative extends Zume_Queries_Base {
     }
 
     public static function registrations( $end_date, $trend = false ) {
+        // transient cache
+        $request_key = hash( 'md5', serialize( __METHOD__ . $end_date . $trend ) );
+        $cached = get_transient( $request_key );
+        if ( $cached ) {
+            dt_write_log( __METHOD__ . ' transcient hit' );
+            return $cached;
+        }
+
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
 
@@ -170,10 +199,14 @@ class Zume_Query_Cumulative extends Zume_Queries_Base {
         $count = $wpdb->get_var( $sql );
 
         if ( $count < 1 ) {
-            return 0;
+            $count = 0;
+        } else {
+            $count = (float) $count;
         }
 
-        return (float) $count;
+        set_transient( $request_key, $count, self::$expiration );
+
+        return $count;
     }
 
     public static function query_practitioners_cumulative( $stages, $range, $current = true ): int {
@@ -239,15 +272,33 @@ class Zume_Query_Cumulative extends Zume_Queries_Base {
     }
 
     public static function query_stages_by_type_and_subtype( $end_date, $type, $subtype, $negative = false ) {
+        // transient cache
+        $request_key = hash( 'md5', serialize( __METHOD__ . $end_date . $type . $subtype . $negative ) );
+        $cached = get_transient( $request_key );
+        if ( $cached ) {
+            dt_write_log( __METHOD__ . ' transcient hit' );
+            return $cached;
+        }
+
         $list = self::query_stages_by_type_and_subtype_list( $end_date, $type, $subtype, $negative );
+        
         if( empty( $list ) ) {
+            set_transient( $request_key, 0, self::$expiration );
             return 0;
         } else {
-            return count( $list );
+            $count = count( $list );
+            set_transient( $request_key, $count, self::$expiration );
+            return $count;
         }
     }
 
     public static function query_stages_by_type_and_subtype_list( $end_date, $type, $subtype, $negative = false ) {
+
+
+        if ( is_null( $end_date ) ) {
+            $end_date = time();
+        }
+
         global $wpdb;
         $query_for_user_stage = self::query_cumulative_for_user_stages( $end_date );
 
@@ -276,14 +327,18 @@ class Zume_Query_Cumulative extends Zume_Queries_Base {
 
         if ( $negative ) {
             if ( empty( $data_list['negative'] ) ) {
+
                 return [];
             } else {
+
                 return $data_list['negative'];
             }
         } else {
             if ( empty( $data_list['positive'] ) ) {
+
                 return [];
             } else {
+
                 return $data_list['positive'];
             }
         }
@@ -306,8 +361,20 @@ class Zume_Query_Cumulative extends Zume_Queries_Base {
         return (float) $count;
     }
 
-    public static function downloads( $end_date) {
+    public static function downloads( $end_date = null ) {
+        // transient cache
+        $request_key = hash( 'md5', serialize( __METHOD__ . $end_date ) );
+        $cached = get_transient( $request_key );
+        if ( $cached ) {
+            dt_write_log( __METHOD__ . ' transcient hit' );
+            return $cached;
+        }
+
         global $wpdb;
+
+        if ( empty( $end_date ) ) {
+            $end_date = time();
+        }
 
         $sql = "
             SELECT COUNT(*)
@@ -317,6 +384,14 @@ class Zume_Query_Cumulative extends Zume_Queries_Base {
             ";
         $count = $wpdb->get_var( $sql );
 
-        return (float) $count;
+        if ( empty( $count ) ) {
+            $count = 0;
+        } else {
+            $count = (int) $count;
+        }
+
+        set_transient( $request_key, $count, self::$expiration );
+
+        return $count;
     }
 }

@@ -1049,12 +1049,12 @@ class Zume_Charts_API
         if ( $end_date ) {
             $end_date = strtotime( $end_date );
         } else {
-            $end_date = time();
+            $end_date = null;
         }
         $negative_stat = $params['negative_stat'] ?? false;
 
         if ( empty( $end_date ) ) {
-            $end_date = time();
+            $end_date = null;
         }
 
         $stages = [0,1,2,3,4,5,6];

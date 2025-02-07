@@ -13,6 +13,14 @@ class Zume_Query_Time_Range extends Zume_Queries_Base {
     }
 
     public static function locations_list( $stages = [ 0,1,2,3,4,5,6 ], $range = -1, $trend = false, $negative = false ) {
+        // object cache
+        $request_key = hash( 'md5', serialize( __METHOD__ . serialize( $stages ) . $range . $trend . $negative ) );
+        $cached = wp_cache_get( $request_key, 'zume' );
+        if ( $cached ) {
+            dt_write_log( __METHOD__ . ' cache hit' );
+            return $cached;
+        }
+
         global $wpdb;
         $world_grid_ids = self::world_grid_id_sql();
 
@@ -40,8 +48,15 @@ class Zume_Query_Time_Range extends Zume_Queries_Base {
               AND r.timestamp > $begin
               AND r.timestamp < $end
             ";
+        $list = $wpdb->get_results( $sql, ARRAY_A );
 
-        return $wpdb->get_results( $sql, ARRAY_A );
+        if ( empty( $list ) ) {
+            $list = [];
+        }
+
+        wp_cache_set( $request_key, $list, 'zume' );
+
+        return $list;
     }
 
     public static function languages( $stages = [ 1,2,3,4,5,6 ], $range = -1, $trend = false, $negative = false ) {
@@ -54,6 +69,14 @@ class Zume_Query_Time_Range extends Zume_Queries_Base {
     }
 
     public static function languages_list( $stages = [ 1 ], $range = -1, $trend = false, $negative = false ) {
+        // object cache
+        $request_key = hash( 'md5', serialize( __METHOD__ . serialize( $stages ) . $range . $trend . $negative ) );
+        $cached = wp_cache_get( $request_key, 'zume' );
+        if ( $cached ) {
+            dt_write_log( __METHOD__ . ' cache hit' );
+            return $cached;
+        }
+
         global $wpdb;
         $languages = zume_languages();
 
@@ -83,7 +106,7 @@ class Zume_Query_Time_Range extends Zume_Queries_Base {
         $list = $wpdb->get_results( $sql, ARRAY_A );
 
         if ( empty( $list ) ) {
-            return [];
+            $list = [];
         }
 
         $language_list = [];
@@ -91,6 +114,8 @@ class Zume_Query_Time_Range extends Zume_Queries_Base {
             $language_list[$lang['language_code']] = $languages[$lang['language_code']] ?? [];
             $language_list[$lang['language_code']]['activities'] = $lang['activities'];
         }
+
+        wp_cache_set( $request_key, $language_list, 'zume' );
 
         return $language_list;
     }
@@ -138,6 +163,14 @@ class Zume_Query_Time_Range extends Zume_Queries_Base {
     }
 
     public static function registrations(  $range = -1, $trend = false ) {
+        // object cache
+        $request_key = hash( 'md5', serialize( __METHOD__ . $range . $trend ) );
+        $cached = wp_cache_get( $request_key, 'zume' );
+        if ( $cached ) {
+            dt_write_log( __METHOD__ . ' cache hit' );
+            return $cached;
+        }
+
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
 
@@ -163,13 +196,25 @@ class Zume_Query_Time_Range extends Zume_Queries_Base {
             ";
         $count = $wpdb->get_var( $sql );
 
-        if ( $count < 1 ) {
-            return 0;
+        if ( empty( $count ) ) {
+            $count = 0;
+        } else {
+            $count = (int) $count;
         }
 
-        return (float) $count;
+        wp_cache_set( $request_key, $count, 'zume' );
+
+        return $count;
     }
     public static function downloads( $range = -1, $trend = false ) {
+        // object cache
+        $request_key = hash( 'md5', serialize( __METHOD__ . $range . $trend ) );
+        $cached = wp_cache_get( $request_key, 'zume' );
+        if ( $cached ) {
+            dt_write_log( __METHOD__ . ' cache hit' );
+            return $cached;
+        }
+
         global $wpdb;
 
         $end = time();
@@ -193,7 +238,15 @@ class Zume_Query_Time_Range extends Zume_Queries_Base {
 //        dt_write_log($sql);
         $count = $wpdb->get_var( $sql );
 
-        return (float) $count;
+        if ( empty( $count ) ) {
+            $count = 0;
+        } else {
+            $count = (int) $count;
+        }
+
+        wp_cache_set( $request_key, $count, 'zume' );
+
+        return $count;
     }
 
 

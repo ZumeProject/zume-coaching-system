@@ -3,7 +3,17 @@ if ( !defined( 'ABSPATH' ) ) { exit; } // Exit if accessed directly.
 
 class Zume_Queries extends Zume_Queries_Base {
 
+    public static $expiration = HOUR_IN_SECONDS;
+
     public static function stage_total( $stage, $range, $trend = false ) {
+        // object cache
+        $request_key = hash( 'md5', serialize( __METHOD__ . $stage . $range . $trend ) );
+        $cached = get_transient( $request_key );
+        if ( $cached ) {
+            dt_write_log( __METHOD__ . ' cache hit' );
+            return $cached;
+        }
+
         global $wpdb;
         $query_for_user_stage = self::query_for_user_stage( $stage, $range, $trend );
 
@@ -30,13 +40,18 @@ class Zume_Queries extends Zume_Queries_Base {
                 ;" );
 
         if ( empty( $result ) ) {
-            return 0;
+            $result = 0;
+        } else {
+            $result = (float) $result;
         }
 
-        return (float) $result;
+        set_transient( $request_key, $result, self::$expiration );
+
+        return $result;
     }
 
     public static function stage_total_list( $stage, $range, $trend = false ) {
+
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
 
@@ -66,13 +81,14 @@ class Zume_Queries extends Zume_Queries_Base {
         $list = $wpdb->get_results( $sql, ARRAY_A );
 
         if ( empty( $list ) ) {
-            return [];
+            $list = [];
         }
 
         return $list;
     }
 
     public static function stage_by_location( array $stages, $range, $trend = false ) {
+
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
 
@@ -95,7 +111,7 @@ class Zume_Queries extends Zume_Queries_Base {
             $stages = '(' . $stages[0] . ')';
         }
 
-        $results = $wpdb->get_results(
+        $list = $wpdb->get_results(
             "SELECT p.post_title as name, tb.user_id, tb.post_id, tb.stage, lgm.label, lgm.grid_id, lgm.lng, lgm.lat, lgm.level
             FROM
             (
@@ -108,13 +124,13 @@ class Zume_Queries extends Zume_Queries_Base {
                   AND tb.timestamp > $begin
                   AND tb.timestamp < $end;", ARRAY_A );
 
-//        dt_write_log($results);
-
-        if ( empty( $results ) ) {
-            return [];
+        if ( empty( $list ) ) {
+            $list = [];
         }
 
-        return $results;
+
+
+        return $list;
     }
 
     public static function stage_by_boundary( array $stages, $range, float $north, float $south, float $east, float $west, $trend = false ) {
@@ -156,8 +172,6 @@ class Zume_Queries extends Zume_Queries_Base {
             ;";
         $results = $wpdb->get_results($sql, ARRAY_A );
 
-//        dt_write_log($sql);
-
         if ( empty( $results ) ) {
             return [];
         }
@@ -166,20 +180,30 @@ class Zume_Queries extends Zume_Queries_Base {
     }
 
     public static function churches_with_location() {
+         // object cache
+         $request_key = hash( 'md5', serialize( __METHOD__ . $stages . $range . $trend ) );
+         $cached = wp_cache_get( $request_key, 'zume' );
+         if ( $cached ) {
+            dt_write_log( __METHOD__ . ' cache hit' );
+             return $cached;
+         }
+
         global $wpdb;
 
-        $results = $wpdb->get_results(
+        $list = $wpdb->get_results(
             "SELECT p.ID as post_id, p.post_title as name, 'groups' as post_type, lgm.grid_id, lgm.lng, lgm.lat, lgm.level, lgm.source, lgm.label
             FROM zume_posts p
             LEFT JOIN zume_postmeta pm ON pm.post_id=p.ID AND pm.meta_key = 'location_grid_meta'
             LEFT JOIN zume_dt_location_grid_meta lgm ON lgm.grid_meta_id=pm.meta_value
             WHERE p.post_type = 'groups';", ARRAY_A );
 
-        if ( empty( $results ) ) {
-            return [];
+        if ( empty( $list ) ) {
+            $list = [];
         }
 
-        return $results;
+        wp_cache_set( $request_key, $list, 'zume' );
+
+        return $list;
     }
 
     public static function churches_by_boundary( float $north, float $south, float $east, float $west ) {
@@ -211,21 +235,31 @@ class Zume_Queries extends Zume_Queries_Base {
      * value count
      * @return array
      */
-    public static function training_subtype_counts(  ) {
+    public static function training_subtype_counts() {
+         // object cache
+         $request_key = hash( 'md5', serialize( __METHOD__ . $stages . $range . $trend ) );
+         $cached = wp_cache_get( $request_key, 'zume' );
+         if ( $cached ) {
+            dt_write_log( __METHOD__ . ' cache hit' );
+             return $cached;
+         }
+
         global $wpdb;
 
-        $results = $wpdb->get_results( $wpdb->prepare(
+        $list = $wpdb->get_results( $wpdb->prepare(
             "SELECT subtype, COUNT(*) as value
             FROM zume_dt_reports
             WHERE type = 'training' AND subtype LIKE '%heard'
             GROUP BY subtype
             " ), ARRAY_A );
 
-        if ( empty( $results ) || is_wp_error( $results ) ) {
-            return [];
+       if ( empty( $list ) ) {
+            $list = [];
         }
 
-        return $results;
+        wp_cache_set( $request_key, $list, 'zume' );
+
+        return $list;
     }
 
     /**
@@ -233,19 +267,32 @@ class Zume_Queries extends Zume_Queries_Base {
      * @return int
      */
     public static function query_total_churches(): int {
+         // object cache
+        $request_key = hash( 'md5', __METHOD__ );
+        $cached = get_transient( $request_key );
+        if ( $cached ) {
+            dt_write_log( __METHOD__ . ' cache hit' );
+            return $cached;
+        }
+
         global $wpdb;
-        $results = $wpdb->get_var(
+        $result = $wpdb->get_var(
             "SELECT count(*) as count
                     FROM zume_posts p
                     JOIN zume_postmeta pm ON pm.post_id=p.ID AND pm.meta_key = 'group_type' AND pm.meta_value = 'church'
                     JOIN zume_postmeta pm2 ON pm2.post_id=p.ID AND pm2.meta_key = 'group_status' AND pm2.meta_value = 'active'
                     WHERE post_type = 'groups';"
         );
-        if ( $results ) {
-            return (int) $results;
+
+        if ( empty( $result ) ) {
+            $result = 0;
         } else {
-            return 0;
+            $result = (int) $result;
         }
+
+        set_transient( $request_key, $result, self::$expiration );
+
+        return $result;
     }
 
     /**
@@ -253,6 +300,14 @@ class Zume_Queries extends Zume_Queries_Base {
      * @return int
      */
     public static function query_total_practitioners( $stages = [ 3,4,5,6 ], $range = -1, $trend = false ): int {
+         // transient cache
+         $request_key = hash( 'md5', serialize( __METHOD__ . $stages . $range . $trend ) );
+         $cached = get_transient( $request_key );
+         if ( $cached ) {
+            dt_write_log( __METHOD__ . ' cache hit' );
+             return $cached;
+         }
+
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
 
@@ -282,15 +337,24 @@ class Zume_Queries extends Zume_Queries_Base {
         $result = $wpdb->get_var($sql);
 
         if ( empty( $result ) ) {
-            return 0;
+            $result = 0;
+        } else {
+            $result = (int) $result;
         }
 
-        return (float) $result;
+        set_transient( $request_key, $result, self::$expiration );
+
+        return $result;
     }
 
-
-
     public static function checkins( $stage, $range, $trend = false, $negative = false ) {
+         $request_key = hash( 'md5', serialize( __METHOD__ . serialize(  $stages ) . $range . $trend . $negative ) );
+         $cached = get_transient( $request_key );
+         if ( $cached ) {
+            dt_write_log( __METHOD__ . ' cache hit' );
+             return $cached;
+         }
+
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
 
@@ -328,96 +392,26 @@ class Zume_Queries extends Zume_Queries_Base {
             }
         }
 
-        return (float) $count;
+        if ( empty( $count ) ) {
+            $count = 0;
+        } else {
+            $count = (int) $count;
+        }
+
+        set_transient( $request_key, $count, self::$expiration );
+
+        return $count;
     }
 
-//    public static function locations( $stages = [ 1 ], $range = -1, $trend = false, $negative = false ) {
-//        global $wpdb;
-//        $world_grid_ids = self::world_grid_id_sql();
-//
-//        $end = time();
-//        if ( $range < 1 ) {
-//            $begin = 0;
-//        } else {
-//            $begin = strtotime( '-'. $range . ' days' );
-//            if ( $trend ) {
-//                $end = $begin;
-//                $begin = strtotime( '-'. ( $range * 2 ) . ' days' );
-//            }
-//        }
-//
-//        $stages_list = dt_array_to_sql( $stages );
-//
-//        $sql = "
-//            SELECT COUNT( DISTINCT( r.grid_id ) ) as count
-//            FROM zume_dt_reports r
-//            JOIN
-//            (
-//                $world_grid_ids
-//            ) as grid_ids ON r.grid_id=grid_ids.grid_id
-//            WHERE
-//                r.value IN ( $stages_list )
-//              AND r.timestamp > $begin
-//              AND r.timestamp < $end
-//            ";
-//        $count = $wpdb->get_var( $sql );
-//
-//        if ( $negative && $count ) {
-//            $count = 44395 - (int) $count;
-//        }
-//
-//        if ( $count < 1 ) {
-//            return 0;
-//        }
-//
-//        return (float) $count;
-//    }
-
-//    public static function languages( $stages = [ 1 ], $range = -1, $trend = false, $negative = false ) {
-//        global $wpdb;
-//
-//        $end = time();
-//        if ( $range < 1 ) {
-//            $begin = 0;
-//        } else {
-//            $begin = strtotime( '-'. $range . ' days' );
-//            if ( $trend ) {
-//                $end = $begin;
-//                $begin = strtotime( '-'. ( $range * 2 ) . ' days' );
-//            }
-//        }
-//
-//        $stages_list = dt_array_to_sql( $stages );
-//
-//        $sql = "
-//            SELECT language_code, count(*)
-//            FROM zume_dt_reports r
-//            WHERE r.value IN ( $stages_list )
-//              AND r.timestamp > $begin
-//              AND r.timestamp < $end
-//            AND r.language_code != ''
-//            GROUP BY language_code
-//            ";
-//        $list = $wpdb->get_results( $sql, ARRAY_A );
-//
-//        if ( empty( $list ) ) {
-//            return 0;
-//        }
-//
-//        $count = count($list);
-//
-//        if ( $negative && $count ) {
-//            $count = 45 - (int) $count;
-//        }
-//
-//        if ( $count < 1 ) {
-//            return 0;
-//        }
-//
-//        return (float) $count;
-//    }
-
     public static function query_stage_by_type_and_subtype( $stage, $range, $type, $subtype, $trend = false, $negative = false ) {
+        // object cache
+        $request_key = hash( 'md5', serialize( __METHOD__ . $stage . $range . $type . $subtype . $trend . $negative ) );
+        $cached = get_transient( $request_key );
+        if ( $cached ) {
+            dt_write_log( __METHOD__ . ' cache hit' );
+            return $cached;
+        }
+
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
 
@@ -443,7 +437,6 @@ class Zume_Queries extends Zume_Queries_Base {
                AND r.timestamp > $begin
               AND r.timestamp < $end
             ";
-//        dt_write_log($sql);
         $count = $wpdb->get_var( $sql );
 
         if ( $count < 1 ) {
@@ -460,10 +453,19 @@ class Zume_Queries extends Zume_Queries_Base {
             }
         }
 
-        return (float) $count;
+         if ( empty( $count ) ) {
+            $count = 0;
+        } else {
+            $count = (int) $count;
+        }
+
+        set_transient( $request_key, $count, self::$expiration );
+
+        return $count;
     }
 
     public static function query_stage_by_type_and_subtype_list( $stage, $range, $type, $subtype, $trend = false, $negative = false ) {
+
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
 
@@ -494,7 +496,6 @@ class Zume_Queries extends Zume_Queries_Base {
               AND r.timestamp < $end
             ORDER BY p.post_title
             ";
-//        dt_write_log($sql);
         $list = $wpdb->get_results( $sql, ARRAY_A );
 
         if ( empty( $list ) ) {
@@ -521,6 +522,7 @@ class Zume_Queries extends Zume_Queries_Base {
     }
 
     public static function query_stage_by_type_and_subtype_locations( $stage, $range, $type, $subtype, $trend = false, $negative = false ) {
+
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
 
@@ -551,7 +553,6 @@ class Zume_Queries extends Zume_Queries_Base {
               AND r.timestamp < $end
             ORDER BY p.post_title
             ";
-//        dt_write_log($sql);
         $list = $wpdb->get_results( $sql, ARRAY_A );
 
         if ( empty( $list ) ) {
@@ -577,9 +578,15 @@ class Zume_Queries extends Zume_Queries_Base {
         }
     }
 
-
-
     public static function flow( $stage, $flow, $range = -1 ) {
+        // object cache
+        $request_key = hash( 'md5', serialize( __METHOD__ . $stage . $flow . $range ) );
+        $cached = get_transient( $request_key );
+        if ( $cached ) {
+            dt_write_log( __METHOD__ . ' cache hit' );
+            return $cached;
+        }
+
         // flow = in, idle, out
         global $wpdb;
         $query_for_user_stage = self::$query_for_user_stage;
@@ -624,10 +631,14 @@ class Zume_Queries extends Zume_Queries_Base {
 
         $count = $wpdb->get_var( $sql );
 
-        if ( $count < 1 ) {
-            return 0;
+        if ( empty( $count ) ) {
+            $count = 0;
+        } else {
+            $count = (int) $count;
         }
 
-        return (float) $count;
+        set_transient( $request_key, $count, self::$expiration );
+
+        return $count;
     }
 }
