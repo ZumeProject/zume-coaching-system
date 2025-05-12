@@ -113,7 +113,30 @@ class Zume_Coaching {
         if ( is_admin() ) {
             add_filter( 'plugin_row_meta', [ $this, 'plugin_description_links' ], 10, 4 );
         }
+
+        // Add wp_head hook for scripts
+        add_action( 'wp_head', [ $this, 'insert_head_scripts' ] );
     }
+
+    /**
+     * Insert scripts in the head section
+     */
+    public function insert_head_scripts() {
+        // Add your JavaScript code here
+        ?>
+            <!-- Chipp Chat Widget -->
+            <script>
+            window.CHIPP_APP_URL = "https://zmecopilot-44723.chipp.ai";
+            window.CHIPP_APP_ID = 44723;
+            </script>
+            
+            <link rel="stylesheet" href="https://storage.googleapis.com/chipp-chat-widget-assets/build/bundle.css" />
+            
+            <script defer src="https://storage.googleapis.com/chipp-chat-widget-assets/build/bundle.js"></script>
+            
+        <?php
+    }
+
     public function plugin_description_links( $links_array, $plugin_file_name, $plugin_data, $status ) {
         if ( strpos( $plugin_file_name, basename( __FILE__ ) ) ) {
             $links_array[] = '<a href="https://disciple.tools">Disciple.Tools Community</a>';
@@ -124,6 +147,7 @@ class Zume_Coaching {
         $domain = 'zume-coaching';
         load_plugin_textdomain( $domain, false, trailingslashit( dirname( plugin_basename( __FILE__ ) ) ). 'languages' );
     }
+    
     public function __toString() {
         return 'zume-coaching';
     }
