@@ -16,6 +16,7 @@ class Zume_Coaching_Tile
         add_filter( 'dt_details_additional_tiles', [ $this, 'dt_details_additional_tiles' ], 99, 2 );
         add_filter( 'dt_custom_fields_settings', [ $this, 'dt_custom_fields_settings' ], 1, 2 );
         add_action( 'dt_details_additional_section', [ $this, 'dt_details_additional_section' ], 30, 2 );
+        add_filter( 'dt_after_get_post_fields_filter', [ $this, 'dt_after_get_post_fields_filter' ], 1, 2 );
 
         add_action( 'wp_enqueue_scripts', [ $this, 'scripts' ], 99 );
 
@@ -81,6 +82,18 @@ class Zume_Coaching_Tile
         }
         return $fields;
     }
+
+
+    public function dt_after_get_post_fields_filter( $fields, $post_type ) {
+        //Add a languages field so the dispatching tool picks up on the contact's language. 
+        if ( $post_type === 'contacts' ) {
+            if ( isset( $fields['language_preference']['key'] ) && !isset( $fields['languages'] ) ) {
+                $fields['languages'] = [ $fields['language_preference']['key'] ];
+            }
+        }
+        return $fields;
+    }
+
     public function dt_details_additional_section( $section, $post_type ) {
         // Basics
         if ( $post_type === 'contacts' && $section === 'basics' ) {
