@@ -36,11 +36,7 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
         }
 
         // build contact meta array
-        $contact_meta_query = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM zume_postmeta WHERE post_id = %d', $contact_id ), ARRAY_A );
-        $contact_meta = [];
-        foreach ( $contact_meta_query as $value ) {
-            $contact_meta[$value['meta_key']] = $value['meta_value'];
-        }
+        $contact_meta = zume_get_contact_meta( $contact_id );
 
         // build user profile elements
         $name = $wpdb->get_var( $wpdb->prepare( 'SELECT post_title FROM zume_posts WHERE ID = %d', $contact_id ) );
@@ -163,6 +159,18 @@ if ( ! function_exists( 'zume_get_user_profile' ) ) {
             ];
         }
     }
+}
+if ( ! function_exists( 'zume_get_contact_meta' ) ) {
+    function zume_get_contact_meta( $contact_id ) {
+        global $wpdb;
+        $contact_meta_query = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM zume_postmeta WHERE post_id = %d', $contact_id ), ARRAY_A );
+        $contact_meta = [];
+        foreach ( $contact_meta_query as $value ) {
+            $contact_meta[$value['meta_key']] = $value['meta_value'];
+        }
+        return $contact_meta;
+    }
+
 }
 if ( ! function_exists( 'zume_get_user_stage' ) ) {
     function zume_get_user_stage( $user_id = null, $log = null, $number_only = false ) {

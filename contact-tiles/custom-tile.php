@@ -40,6 +40,7 @@ class Zume_Coaching_Tile
             $tiles['followup'] = [ 'label' => __( 'Funnel Stage', 'zume-coaching' ) ]; // Funnel tile is keyed to followup (reduce tile redundancy)
             $tiles['faith'] = [ 'label' => __( 'Zúme System', 'zume-coaching' ) ]; // System tile is keyed to faith (reduce tile redundancy)
             $tiles['communication'] = [ 'label' => __( 'Communication', 'zume-coaching' ) ];
+            $tiles['details'] = [ 'label' => __( 'Details', 'zume-coaching' ) ];
         }
         return $tiles;
     }
@@ -78,7 +79,21 @@ class Zume_Coaching_Tile
                 'type' => 'tags',
                 'tile' => 'status',
             ];
-
+            $fields['language_preference'] = [
+                'name' => __( 'Language Preference', 'zume-coaching' ),
+                'type' => 'text',
+                'tile' => 'status',
+            ];
+            $fields['trainee_user_id'] = [
+                'name' => __( 'Trainee User ID', 'zume-coaching' ),
+                'type' => 'text',
+                'tile' => 'status',
+            ];
+            $fields['trainee_contact_id'] = [
+                'name' => __( 'Trainee Contact ID', 'zume-coaching' ),
+                'type' => 'text',
+                'tile' => 'status',
+            ];
         }
         return $fields;
     }
@@ -116,7 +131,7 @@ class Zume_Coaching_Tile
 
     public function modifications( $post_id, $post_type ) {
         $this_post = DT_Posts::get_post( $post_type, $post_id );
-        if ( !isset( $this_post['trainee_user_id'] ) ) {
+        if ( !isset( $this_post['trainee_user_id'] ) || $this_post['type']['key'] === 'user' ) {
             return;
         }
         $trainee_profile = zume_get_user_profile( $this_post['trainee_user_id'] );
