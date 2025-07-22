@@ -267,7 +267,7 @@ if ( ! function_exists( 'zume_get_user_stage' ) ) {
                 if ( 'set_profile_name' == $value['subtype'] ) {
                     $user_state[$value['subtype']] = true;
                 }
-                if ( '26_heard' == $value['subtype'] ) {
+                if ( 'training_26_heard' == $value['log_key'] ) {
                     $user_state['can_create_3_month_plan'] = true;
                 }
                 if ( 'made_post_training_plan' == $value['subtype'] ) {
