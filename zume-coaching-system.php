@@ -104,6 +104,7 @@ class Zume_Coaching {
         require_once( 'contact-tiles/loader.php' );
         require_once( 'appearance/loader.php' );
         require_once( 'shared/loader.php' );
+        require_once( 'hooks/loader.php' );
 
         require_once( 'funnel-charts/loader.php' );
         require_once( 'goals-charts/loader.php' );
@@ -129,11 +130,11 @@ class Zume_Coaching {
             window.CHIPP_APP_URL = "https://zmecopilot-44723.chipp.ai";
             window.CHIPP_APP_ID = 44723;
             </script>
-            
+
             <link rel="stylesheet" href="https://storage.googleapis.com/chipp-chat-widget-assets/build/bundle.css" />
-            
+
             <script defer src="https://storage.googleapis.com/chipp-chat-widget-assets/build/bundle.js"></script>
-            
+
         <?php
     }
 
@@ -147,7 +148,7 @@ class Zume_Coaching {
         $domain = 'zume-coaching';
         load_plugin_textdomain( $domain, false, trailingslashit( dirname( plugin_basename( __FILE__ ) ) ). 'languages' );
     }
-    
+
     public function __toString() {
         return 'zume-coaching';
     }
