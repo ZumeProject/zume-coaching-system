@@ -40,8 +40,10 @@ class Zume_Funnel_Base {
             require_once( '16-full-practitioner.php' );
             require_once( '17-multiplying-practitioner.php' );
 
-            require_once( '20-time-range.php' );
+            require_once( '19-time-range.php' );
+            require_once( '20-time-range-checkins.php' );
             require_once( '21-cumulative.php' );
+            require_once( '22-cumulative-checkins.php' );
 
             // coaching
             if ( user_can( get_current_user_id(), 'manage_options' ) ) :

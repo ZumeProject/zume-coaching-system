@@ -77,25 +77,11 @@ class Zume_Funnel_Events extends Zume_Funnel_Chart_Base
                                 <div class="cell medium-6 registrations"><span class="loading-spinner active"></span></div>
                                 <div class="cell medium-6 coach_requests"><span class="loading-spinner active"></span></div>
                                 <div class="cell medium-6 locations"><span class="loading-spinner active"></span></div>
+                                <div class="cell medium-6 countries"><span class="loading-spinner active"></span></div>
                                 <div class="cell medium-6 languages"><span class="loading-spinner active"></span></div>
                                 <div class="cell medium-6 downloads"><span class="loading-spinner active"></span></div>
                             </div>
-                            <hr>
-                            <div class="grid-x grid-margin-x grid-margin-y">
-                                <div class="cell center"><h2>Checkins</h2></div>
-                            </div>
-                            <div class="grid-x grid-margin-x grid-margin-y">
-                                <div class="cell medium-6 set_a_01"><span class="loading-spinner active"></span></div>
-                                <div class="cell medium-6 set_a_02"><span class="loading-spinner active"></span></div>
-                                <div class="cell medium-6 set_a_03"><span class="loading-spinner active"></span></div>
-                                <div class="cell medium-6 set_a_04"><span class="loading-spinner active"></span></div>
-                                <div class="cell medium-6 set_a_05"><span class="loading-spinner active"></span></div>
-                                <div class="cell medium-6 set_a_06"><span class="loading-spinner active"></span></div>
-                                <div class="cell medium-6 set_a_07"><span class="loading-spinner active"></span></div>
-                                <div class="cell medium-6 set_a_08"><span class="loading-spinner active"></span></div>
-                                <div class="cell medium-6 set_a_09"><span class="loading-spinner active"></span></div>
-                                <div class="cell medium-6 set_a_10"><span class="loading-spinner active"></span></div>
-                            </div>
+                            
                         </div>
                 `)
 
@@ -134,67 +120,14 @@ class Zume_Funnel_Events extends Zume_Funnel_Chart_Base
                         window.click_listener( data )
                         window.spin_remove()
                     })
-
                     window.spin_add()
-                    makeRequest('GET', 'total', { stage: "time_range", key: "set_a_01", range: range  }, window.site_info.rest_root ).done( function( data ) {
+                    makeRequest('GET', 'total', { stage: "time_range", key: "countries", range: range  }, window.site_info.rest_root ).done( function( data ) {
                         jQuery('.'+data.key).html(window.template_single(data))
                         window.click_listener( data )
                         window.spin_remove()
                     })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "time_range", key: "set_a_02", range: range  }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "time_range", key: "set_a_03", range: range  }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "time_range", key: "set_a_04", range: range  }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "time_range", key: "set_a_05", range: range  }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "time_range", key: "set_a_06", range: range  }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "time_range", key: "set_a_07", range: range  }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "time_range", key: "set_a_08", range: range }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "time_range", key: "set_a_09", range: range  }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "time_range", key: "set_a_10", range: range  }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
+                        
+    
 
                 }
                 window.setup_filter()

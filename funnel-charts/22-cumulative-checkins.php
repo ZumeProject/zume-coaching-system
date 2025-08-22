@@ -1,10 +1,10 @@
 <?php
 if ( !defined( 'ABSPATH' ) ) { exit; } // Exit if accessed directly.
 
-class Zume_Funnel_Cumulative extends Zume_Funnel_Chart_Base
+class Zume_Funnel_Cumulative_Checkins extends Zume_Funnel_Chart_Base
 {
     //slug and title of the top menu folder
-    public $base_slug = 'cumulative'; // lowercase
+    public $base_slug = 'checkincummulative'; // lowercase
     public $slug = ''; // lowercase
     public $title;
     public $base_title;
@@ -17,7 +17,7 @@ class Zume_Funnel_Cumulative extends Zume_Funnel_Chart_Base
         if ( !$this->has_permission() ){
             return;
         }
-        $this->base_title = __( 'Cumulative', 'zume_funnels' );
+        $this->base_title = __( 'Cumulative Checkins', 'zume_funnels' );
 
         $url_path = dt_get_url_path( true );
         if ( "zume-funnel/$this->base_slug" === $url_path ) {
@@ -52,15 +52,20 @@ class Zume_Funnel_Cumulative extends Zume_Funnel_Chart_Base
                             </div>
                             <hr>
                             <div class="grid-x grid-margin-x grid-margin-y">
-                                <div class="cell medium-6 registrations"><span class="loading-spinner active"></span></div>
-                                <div class="cell medium-6 coaching_requests"><span class="loading-spinner active"></span></div>
-                                <div class="cell medium-6 locations"><span class="loading-spinner active"></span></div>
-                                <div class="cell medium-6 countries"><span class="loading-spinner active"></span></div>
-                                <div class="cell medium-6 languages"><span class="loading-spinner active"></span></div>
-                                <div class="cell medium-6 checkins"><span class="loading-spinner active"></span></div>
-                                <div class="cell medium-6 downloads"><span class="loading-spinner active"></span></div>
+                                <div class="cell center"><h2>Checkins</h2></div>
                             </div>
-                            
+                            <div class="grid-x grid-margin-x grid-margin-y">
+                                <div class="cell medium-6 set_a_01"><span class="loading-spinner active"></span></div>
+                                <div class="cell medium-6 set_a_02"><span class="loading-spinner active"></span></div>
+                                <div class="cell medium-6 set_a_03"><span class="loading-spinner active"></span></div>
+                                <div class="cell medium-6 set_a_04"><span class="loading-spinner active"></span></div>
+                                <div class="cell medium-6 set_a_05"><span class="loading-spinner active"></span></div>
+                                <div class="cell medium-6 set_a_06"><span class="loading-spinner active"></span></div>
+                                <div class="cell medium-6 set_a_07"><span class="loading-spinner active"></span></div>
+                                <div class="cell medium-6 set_a_08"><span class="loading-spinner active"></span></div>
+                                <div class="cell medium-6 set_a_09"><span class="loading-spinner active"></span></div>
+                                <div class="cell medium-6 set_a_10"><span class="loading-spinner active"></span></div>
+                            </div>
                         </div>
                 `)
 
@@ -68,49 +73,67 @@ class Zume_Funnel_Cumulative extends Zume_Funnel_Chart_Base
                 window.path_load = ( end_date ) => {
                     jQuery('.loading-spinner').addClass('active')
 
-                    // totals
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "cumulative", key: "locations", end_date: end_date  }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "cumulative", key: "countries", end_date: end_date  }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "cumulative", key: "languages", end_date: end_date  }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "cumulative", key: "coaching_requests", end_date: end_date }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "cumulative", key: "registrations", end_date: end_date }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    window.spin_add()
-                    makeRequest('GET', 'total', { stage: "cumulative", key: "checkins", end_date: end_date }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
-                    makeRequest('GET', 'total', { stage: "cumulative", key: "downloads", end_date: end_date }, window.site_info.rest_root ).done( function( data ) {
-                        jQuery('.'+data.key).html(window.template_single(data))
-                        window.click_listener( data )
-                        window.spin_remove()
-                    })
                     
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "cumulative", key: "set_a_01", end_date: end_date }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.key).html(window.template_single(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "cumulative", key: "set_a_02", end_date: end_date }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.key).html(window.template_single(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "cumulative", key: "set_a_03", end_date: end_date }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.key).html(window.template_single(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "cumulative", key: "set_a_04", end_date: end_date }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.key).html(window.template_single(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "cumulative", key: "set_a_05", end_date: end_date }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.key).html(window.template_single(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "cumulative", key: "set_a_06", end_date: end_date }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.key).html(window.template_single(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "cumulative", key: "set_a_07", end_date: end_date }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.key).html(window.template_single(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "cumulative", key: "set_a_08", end_date: end_date }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.key).html(window.template_single(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "cumulative", key: "set_a_09", end_date: end_date }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.key).html(window.template_single(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
+                    window.spin_add()
+                    makeRequest('GET', 'total', { stage: "cumulative", key: "set_a_10", end_date: end_date }, window.site_info.rest_root ).done( function( data ) {
+                        jQuery('.'+data.key).html(window.template_single(data))
+                        window.click_listener( data )
+                        window.spin_remove()
+                    })
 
                 }
 
@@ -141,4 +164,4 @@ class Zume_Funnel_Cumulative extends Zume_Funnel_Chart_Base
         ];
     }
 }
-new Zume_Funnel_Cumulative();
+new Zume_Funnel_Cumulative_Checkins();

@@ -124,18 +124,7 @@ class Zume_Coaching {
      */
     public function insert_head_scripts() {
         // Add your JavaScript code here
-        ?>
-        <!-- Chipp Chat Widget -->
-            <script>
-            window.CHIPP_APP_URL = "https://zmecopilot-44723.chipp.ai";
-            window.CHIPP_APP_ID = 44723;
-            </script>
-
-            <link rel="stylesheet" href="https://storage.googleapis.com/chipp-chat-widget-assets/build/bundle.css" />
-
-            <script defer src="https://storage.googleapis.com/chipp-chat-widget-assets/build/bundle.js"></script>
-
-        <?php
+       
     }
 
     public function plugin_description_links( $links_array, $plugin_file_name, $plugin_data, $status ) {

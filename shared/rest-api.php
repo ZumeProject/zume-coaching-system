@@ -1074,7 +1074,13 @@ class Zume_Charts_API
             case 'locations':
                 $label = 'Locations';
                 $value = Zume_Query_Cumulative::locations( $stages, $end_date );
-                $description = 'Grid locations.';
+                $description = 'Locations out of 44,395 targeted. (States, Counties)';
+                break;
+            case 'countries':
+                $label = 'Countries';
+                $value = Zume_Query_Cumulative::countries( $stages, $end_date );
+                $description = 'Countries served.';
+                $goal = $trend;
                 break;
             case 'languages':
                 $label = 'Languages';
@@ -1161,7 +1167,7 @@ class Zume_Charts_API
                 $label = 'Locations';
                 $value = Zume_Query_Time_Range::locations( $stages, $range );
                 $trend = Zume_Query_Time_Range::locations( $stages, $range, true );
-                $description = 'Grid locations. (Previous period '.zume_format_int($trend).')';
+                $description = 'Locations out of 44,395 targeted. (Previous period '.zume_format_int($trend).')';
                 $goal = $trend;
                 break;
             case 'languages':
@@ -1190,6 +1196,13 @@ class Zume_Charts_API
                 $value = Zume_Query_Time_Range::downloads( $range );
                 $trend = Zume_Query_Time_Range::downloads( $range, true );
                 $description = 'Downloads. (Previous period '.zume_format_int($trend).')';
+                $goal = $trend;
+                break;
+            case 'countries':
+                $label = 'Countries';
+                $value = Zume_Query_Time_Range::countries( $stages, $range );
+                $trend = Zume_Query_Time_Range::countries( $stages, $range, true );
+                $description = 'Countries served. (Previous period '.zume_format_int($trend).')';
                 $goal = $trend;
                 break;
             case 'set_a_01':

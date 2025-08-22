@@ -67,6 +67,70 @@ class Zume_Query_Cumulative extends Zume_Queries_Base {
         return $list;
     }
 
+    public static function countries( $stages = [ 0,1,2,3,4,5,6 ], $end_date = null, $trend = false, $negative = false ) {
+        // transient cache
+        $request_key = hash( 'md5', serialize( __METHOD__ . serialize( $stages ) . $end_date . $trend . $negative ) );
+        $cached = get_transient( $request_key );
+        if ( $cached ) {
+            dt_write_log( __METHOD__ . ' transcient hit' );
+            return $cached;
+        }
+
+        if ( is_null( $end_date ) ) {
+            $end_date = time();
+        }
+
+        $list = self::countries_list_cumulative( $stages, $end_date, $trend, $negative );
+
+        if( empty( $list ) ) {
+            set_transient( $request_key, 0, self::$expiration );
+            return 0;
+        } else {
+            $count = count( $list );
+            set_transient( $request_key, $count, self::$expiration );
+            return $count;
+        }
+    }
+
+    public static function countries_list_cumulative( $stages = [ 0,1,2,3,4,5,6 ], $end_date = null, $trend = false, $negative = false ) {
+        global $wpdb;
+        $world_grid_ids = self::world_grid_id_sql();
+        if ( is_null( $end_date ) ) {
+            $end_date = time();
+        }
+
+        $begin = 0;
+        if ( empty( $end_date ) ) {
+            $end = time();
+        } else {
+            $end = $end_date;
+        }
+
+        $stages_list = dt_array_to_sql( $stages );
+
+        $sql = "
+            SELECT DISTINCT rcn.grid_id, rc.admin0_code, rcn.name
+            FROM zume_dt_reports r
+            JOIN
+            (
+                $world_grid_ids
+            ) as grid_ids ON r.grid_id=grid_ids.grid_id
+            LEFT JOIN zume_dt_location_grid rc ON rc.grid_id=r.grid_id
+            LEFT JOIN zume_dt_location_grid rcn ON rc.admin0_grid_id=rcn.grid_id
+            WHERE r.value IN ( $stages_list )
+              AND r.timestamp > $begin
+              AND r.timestamp < $end
+            ";
+
+        $list = $wpdb->get_results( $sql, ARRAY_A );
+
+        if ( empty( $list ) ) {
+            $list = [];
+        }
+
+        return $list;
+    }
+
     public static function languages( $stages = [ 1,2,3,4,5,6 ], $end_date = null, $trend = false, $negative = false ) {
         if ( is_null( $end_date ) ) {
             $end_date = time();
