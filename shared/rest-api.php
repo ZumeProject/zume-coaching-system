@@ -276,6 +276,14 @@ class Zume_Charts_API
         }
 
         switch ( $params['key'] ) {
+            case 'landing_page_source_users':
+                $label = 'Landing Page Users';
+                $description = 'Total users who have registered from the landing page.';
+                $value = Zume_Query_Funnel::landing_page_source_users( [0,1,2,3,4,5,6], $range );
+                $trend = Zume_Query_Funnel::landing_page_source_users( [0,1,2,3,4,5,6], $range, true );
+                dt_write_log( $value );
+                dt_write_log( $trend );
+                break;
             case 'registrations':
                 $label = 'Registrations';
                 $description = 'Total registrations to the system.';
@@ -995,6 +1003,9 @@ class Zume_Charts_API
             case 'total_full_practitioner':
             case 'total_multiplying_practitioner':
                 $list = Zume_Query_Funnel::stage_total_list( $stage, $range );
+                break;
+            case 'landing_page_source_users':
+                $list = Zume_Query_Funnel::landing_page_source_users_list( [ 1,2,3,4,5,6 ], $range );
                 break;
 
 

@@ -1,10 +1,10 @@
 <?php
 if ( !defined( 'ABSPATH' ) ) { exit; } // Exit if accessed directly.
 
-class Zume_Funnel_Anonymous extends Zume_Funnel_Chart_Base
+class Zume_Funnel_Landing_Page extends Zume_Funnel_Chart_Base
 {
     //slug and title of the top menu folder
-    public $base_slug = 'anonymous'; // lowercase
+    public $base_slug = 'landing-page'; // lowercase
     public $slug = ''; // lowercase
     public $title;
     public $base_title;
@@ -17,7 +17,7 @@ class Zume_Funnel_Anonymous extends Zume_Funnel_Chart_Base
         if ( !$this->has_permission() ){
             return;
         }
-        $this->base_title = __( 'Anonymous', 'zume_funnels' );
+        $this->base_title = __( 'Landing Page', 'zume_funnels' );
 
         $url_path = dt_get_url_path( true );
         if ( "zume-funnel/$this->base_slug" === $url_path ) {
@@ -111,4 +111,4 @@ class Zume_Funnel_Anonymous extends Zume_Funnel_Chart_Base
         ];
     }
 }
-new Zume_Funnel_Anonymous();
+new Zume_Funnel_Landing_Page();

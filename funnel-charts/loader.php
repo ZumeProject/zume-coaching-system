@@ -32,7 +32,8 @@ class Zume_Funnel_Base {
             require_once( '03-location-funnel.php' );
 
             // funnel
-//            require_once( '11-anonymous.php' );
+            require_once( '11.1-landing-page.php' );
+            // require_once( '11-anonymous.php' );
             require_once( '12-registrants.php' );
             require_once( '13-active-training.php' );
             require_once( '14-post-training.php' );

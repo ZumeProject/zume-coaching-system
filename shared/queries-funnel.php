@@ -364,4 +364,57 @@ class Zume_Query_Funnel extends Zume_Queries_Base {
 
         return (float) $count;
     }
+
+    public static function landing_page_source_users( $stages, $range, $trend = false, $negative = false ) {
+        $list = self::landing_page_source_users_list( $stages, $range, $trend, $negative );
+        if( empty( $list ) ) {
+            return 0;
+        } else {
+            return count( $list );
+        }
+    }
+
+    public static function landing_page_source_users_list( $stages, $range, $trend = false, $negative = false ) {
+        global $wpdb;
+        $query_for_user_stage = self::query_for_user_stages( $stages, $range, $trend );
+
+        $sql = "
+            SELECT *
+            FROM
+               (
+                  $query_for_user_stage
+                ) as tb
+            JOIN zume_dt_reports r ON r.user_id=tb.user_id AND r.type = 'system' AND r.subtype LIKE 'registration_source'
+            ";
+
+        $list = $wpdb->get_results( $sql, ARRAY_A );
+        dt_write_log( $sql );
+        dt_write_log( $list );
+
+        $data_list = [
+            'negative' => [],
+            'positive' => [],
+        ];
+        foreach( $list as $row ) {
+            if ( $row['id'] ) {
+                $data_list['positive'][] = $row;
+            } else {
+                $data_list['negative'][] = $row;
+            }
+        }
+
+        if ( $negative ) {
+            if ( empty( $data_list['negative'] ) ) {
+                return [];
+            } else {
+                return $data_list['negative'];
+            }
+        } else {
+            if ( empty( $data_list['positive'] ) ) {
+                return [];
+            } else {
+                return $data_list['positive'];
+            }
+        }
+    }
 }

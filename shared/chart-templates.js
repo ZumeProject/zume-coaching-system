@@ -247,6 +247,12 @@ jQuery(document).ready(function($) {
               jQuery('#zume-goals-list-modal').append( `<tr><td><input type="checkbox" /></td><td>${ v.name }</td><td>${ v.activities }</td></tr>`)
             })
           }
+          if ( 'landing_page_source_users' === data.key ) {
+            jQuery('#zume-goals-list-modal').append( `<tr><td></td><td><strong>Name</strong></td><td><strong>Source</strong></td><td><strong>Location</strong></td></tr>`)
+            jQuery.each(data_list, function(i,v)  {
+              jQuery('#zume-goals-list-modal').append( `<tr><td><input type="checkbox" /></td><td>${ v.name }</td><td>${ v.payload }</td><td>${ v.label }</td></tr>`)
+            })
+          }
           else {
             jQuery('#zume-goals-list-modal').append( `<tr><td></td><td><strong>Name</strong></td><td><strong>Email</strong></td><td><strong>Phone</strong></td></tr>`)
             jQuery.each(data_list, function(i,v)  {

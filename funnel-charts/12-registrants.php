@@ -27,8 +27,7 @@ class Zume_Funnel_Registrant extends Zume_Funnel_Chart_Base
     }
 
     public function base_menu( $content ) {
-        $content .= '<li><hr></li>';
-        $content .= '<li>FUNNEL</li>';
+     
         $content .= '<li><a href="'.site_url( '/zume-funnel/'.$this->base_slug ).'" id="'.$this->base_slug.'-menu">' .  $this->base_title . '</a></li>';
         return $content;
     }
