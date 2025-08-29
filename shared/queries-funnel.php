@@ -379,7 +379,7 @@ class Zume_Query_Funnel extends Zume_Queries_Base {
         $query_for_user_stage = self::query_for_user_stages( $stages, $range, $trend );
 
         $sql = "
-            SELECT *
+            SELECT *, DATE_FORMAT(FROM_UNIXTIME(r.time_end), '%M %d, %Y') AS formatted_date
             FROM
                (
                   $query_for_user_stage
