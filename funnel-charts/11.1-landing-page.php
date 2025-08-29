@@ -44,7 +44,7 @@ class Zume_Funnel_Landing_Page extends Zume_Funnel_Chart_Base
                 chart.empty().html(`
                         <div id="zume-funnel">
                             <div class="grid-x">
-                                <div class="cell small-6"><h1>Anonymous Candidates</h1></div>
+                                <div class="cell small-6"><h1>Landing Pages</h1></div>
                                 <div class="cell small-6 right">Open to: group training, a change in obedience, & multiplicative practices</div>
                             </div>
 
