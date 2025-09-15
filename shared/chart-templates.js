@@ -248,9 +248,10 @@ jQuery(document).ready(function($) {
             })
           }
           if ( 'landing_page_source_users' === data.key ) {
+            console.log(data_list)
             jQuery('#zume-goals-list-modal').append( `<tr><td></td><td><strong>Name</strong></td><td><strong>Source</strong></td><td><strong>Location</strong></td><td><strong>Date</strong></td></tr>`)
             jQuery.each(data_list, function(i,v)  {
-              jQuery('#zume-goals-list-modal').append( `<tr><td><input type="checkbox" /></td><td>${ v.name }</td><td>${ v.payload }</td><td>${ v.label }</td><td>${ v.formatted_date }</td></tr>`)
+              jQuery('#zume-goals-list-modal').append( `<tr><td><input type="checkbox" /></td><td>${ v.name }</td><td><a target="_blank" href="https://pages.zume.training/index.html?source=${ v.payload }">${ v.payload }</a></td><td>${ v.label }</td><td>${ v.formatted_date }</td></tr>`)
             })
           }
           else {

@@ -385,11 +385,12 @@ class Zume_Query_Funnel extends Zume_Queries_Base {
                   $query_for_user_stage
                 ) as tb
             JOIN zume_dt_reports r ON r.user_id=tb.user_id AND r.type = 'system' AND r.subtype LIKE 'registration_source'
+            ORDER BY r.timestamp DESC
             ";
 
         $list = $wpdb->get_results( $sql, ARRAY_A );
-        dt_write_log( $sql );
-        dt_write_log( $list );
+        // dt_write_log( $sql );
+        // dt_write_log( $list );
 
         $data_list = [
             'negative' => [],

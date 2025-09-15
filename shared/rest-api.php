@@ -281,8 +281,8 @@ class Zume_Charts_API
                 $description = 'Total users who have registered from the landing page.';
                 $value = Zume_Query_Funnel::landing_page_source_users( [0,1,2,3,4,5,6], $range );
                 $trend = Zume_Query_Funnel::landing_page_source_users( [0,1,2,3,4,5,6], $range, true );
-                dt_write_log( $value );
-                dt_write_log( $trend );
+                // dt_write_log( $value );
+                // dt_write_log( $trend );
                 break;
             case 'registrations':
                 $label = 'Registrations';
