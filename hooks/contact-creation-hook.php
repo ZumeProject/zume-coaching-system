@@ -16,8 +16,12 @@ add_action( 'dt_post_updated', function ( $post_type, $post_id, $fields, $args )
             global $wpdb;
             if (isset($fields['contact_email'][0]['value'])) {
                 $email = $fields['contact_email'][0]['value'];
-            } else {
+            } else if (isset($fields['contact_email'][1]['value'])) {
                 $email = $fields['contact_email'][1]['value'];
+            } else if (isset($fields['contact_email']['values'][0])) {
+                $email = $fields['contact_email']['values'][0];
+            } else {
+                return;
             }
             $this_post = DT_Posts::get_post( $post_type, $post_id );
             if ( !isset( $this_post['trainee_user_id'] ) ) {
@@ -28,12 +32,19 @@ add_action( 'dt_post_updated', function ( $post_type, $post_id, $fields, $args )
     }
     if ( 'contacts' === $post_type ) {
         if ( isset( $fields['contact_phone'] ) ) {
+            global $wpdb;
+            
             if (isset($fields['contact_phone'][0]['value'])) {
                 $phone = $fields['contact_phone'][0]['value'];
-            } else {
+            } else if (isset($fields['contact_phone'][1]['value'])) {
                 $phone = $fields['contact_phone'][1]['value'];
             }
-            global $wpdb;
+            else if (isset($fields['contact_phone']['values'][0] )) {
+                $phone = $fields['contact_phone']['values'][0];
+            } else {
+                return;
+            }
+            
             $this_post = DT_Posts::get_post( $post_type, $post_id );
             if ( !isset( $this_post['trainee_user_id'] ) ) {
                 return;
