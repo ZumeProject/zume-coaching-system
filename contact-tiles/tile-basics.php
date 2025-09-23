@@ -21,6 +21,7 @@ class Zume_Tile_Basics {
             ?>No Training ID Found<?php
             return;
         }
+        // dt_write_log($this_post);
         $profile = zume_get_user_profile( $this_post['trainee_user_id'] );
         $log = zume_get_user_log( $this_post['trainee_user_id'] );
         $host = zume_get_user_host( $this_post['trainee_user_id'], $log );
@@ -38,29 +39,11 @@ class Zume_Tile_Basics {
 
 
         // email quality check
-        if ( isset( $this_post[0]['value'] ) && $profile['communications_email'] !== $this_post[0]['value'] ) { // no match
-            // update email
-            $fields = [
-                'contact_email' => [
-                    'values' => [
-                        ["key" => $this_post[0]['key'], "delete" => true],
-                        [ 'value' => $profile['communications_email'] ]
-                    ]
-                ]
-            ];
-            DT_Posts::update_post( 'contacts', $this_post['ID'], $fields, false, false );
-        }
-        else if( ! isset( $this_post[0]['value'] ) ) { // not present
-            // add email
-            $fields = [
-                'contact_email' => [
-                    'values' => [
-                        [ 'value' => $profile['communications_email'] ]
-                    ]
-                ]
-            ];
-            DT_Posts::update_post( 'contacts', $this_post['ID'], $fields, false, false );
-        }
+        zume_email_quality_check( $this_post, $profile);
+
+        // phone quality check
+        zume_phone_quality_check( $this_post, $profile);
+
         ?>
         <style>
             .open_host_modal, .open_host_modal progress, .open_host_modal label, .open_mawl_modal, .open_mawl_modal progress, .open_mawl_modal label {
