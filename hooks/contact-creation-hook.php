@@ -23,6 +23,11 @@ add_action( 'dt_post_updated', function ( $post_type, $post_id, $fields, $args )
             } else {
                 return;
             }
+
+            if ( empty( $email ) ) {
+                return;
+            }
+
             $this_post = DT_Posts::get_post( $post_type, $post_id );
             if ( !isset( $this_post['trainee_user_id'] ) ) {
                 return;
@@ -41,6 +46,10 @@ add_action( 'dt_post_updated', function ( $post_type, $post_id, $fields, $args )
             } else if (isset($fields['contact_phone']['values'][0] )) {
                 $phone = $fields['contact_phone']['values'][0];
             } else {
+                return;
+            }
+
+            if ( empty( $phone ) ) {
                 return;
             }
             
