@@ -9,8 +9,8 @@ add_action( 'dt_post_created', function ( $post_type, $post_id, $fields, $args )
 }, 10, 4 );
 
 add_action( 'dt_post_updated', function ( $post_type, $post_id, $fields, $args ) {
-    dt_write_log('fields in update');
-    dt_write_log($fields);
+    // dt_write_log('fields in update');
+    // dt_write_log($fields);
     if ( 'contacts' === $post_type ) {
         if ( isset( $fields['contact_email'] ) ) {
             global $wpdb;
