@@ -55,9 +55,11 @@ class Zume_Tile_System {
             <button class="button expanded" data-open="modal_activity">User Activities <?php echo !empty( $profile['activities'] ) ? '('. $profile['activities'] . ')' : ''; ?></button>
             <button class="button expanded" data-open="modal_plans">Plans <?php echo !empty( $plans ) ? '('. count($plans) . ')' : ''; ?></button>
             <button class="button expanded" id="open_commitments">Commitments <?php echo !empty( $profile['commitments'] ) ? '('. $profile['commitments'] . ')' : ''; ?></button>
+            <button class="button expanded" data-open="modal_localized_vision">Localized Vision</button>
+            <hr>
             <button class="button expanded" data-open="modal_reports" disabled>Reports <?php echo !empty( $profile['reports'] ) ? '('. $profile['reports'] . ')' : ''; ?></button>
             <button class="button expanded" data-open="modal_genmap" disabled>Church GenMap <?php echo !empty( $profile['churches'] ) ? '('. $profile['churches'] . ')' : ''; ?></button>
-            <button class="button expanded" data-open="modal_localized_vision" disabled>Localized Vision</button>
+            
         </div>
         <?php
 
@@ -70,11 +72,17 @@ class Zume_Tile_System {
         self::_modal_plans( $profile, $log, $plans );
     }
     private function _modal_localized_vision( $profile ) {
+        // Check if location data exists before accessing grid_id
+        if ( !isset( $profile['location'] ) || !isset( $profile['location']['grid_id'] ) ) {
+            return;
+        }
+        
+        $parent_grid_id = Disciple_Tools_Mapping_Queries::get_parent_by_grid_id( $profile['location']['grid_id'] );
         ?>
         <div class="reveal full" id="modal_localized_vision" data-v-offset="0" data-reveal>
             <h1>Localized Vision for <?php echo $profile['name'] ?></h1>
             <hr>
-            <iframe src="<?php echo ZUME_TRAINING_URL ?>zume_app/local_vision/?grid_id=<?php echo $profile['location']['grid_id'] ?>" id="local_vision_window" style="border:none;" width="100%" height="600px"></iframe>
+            <iframe src="<?php echo ZUME_TRAINING_URL ?>map/local?parent_grid_id=<?php echo $parent_grid_id ?>&grid_id=<?php echo $profile['location']['grid_id'] ?>" id="local_vision_window" style="border:none;" width="100%" height="600px"></iframe>
 
             <button class="close-button" data-close aria-label="Close modal" type="button">
                 <span aria-hidden="true">&times;</span>
