@@ -56,9 +56,9 @@ class Zume_Tile_System {
             <button class="button expanded" data-open="modal_plans">Plans <?php echo !empty( $plans ) ? '('. count($plans) . ')' : ''; ?></button>
             <button class="button expanded" id="open_commitments">Commitments <?php echo !empty( $profile['commitments'] ) ? '('. $profile['commitments'] . ')' : ''; ?></button>
             <button class="button expanded" data-open="modal_localized_vision">Localized Vision</button>
-            <hr>
-            <button class="button expanded" data-open="modal_reports" disabled>Reports <?php echo !empty( $profile['reports'] ) ? '('. $profile['reports'] . ')' : ''; ?></button>
-            <button class="button expanded" data-open="modal_genmap" disabled>Church GenMap <?php echo !empty( $profile['churches'] ) ? '('. $profile['churches'] . ')' : ''; ?></button>
+            
+            <button class="button expanded " style="display: none;" data-open="modal_reports" disabled>Reports <?php echo !empty( $profile['reports'] ) ? '('. $profile['reports'] . ')' : ''; ?></button>
+            <button class="button expanded" style="display: none;" data-open="modal_genmap" >Church GenMap <?php echo !empty( $profile['churches'] ) ? '('. $profile['churches'] . ')' : ''; ?></button>
             
         </div>
         <?php
@@ -77,12 +77,14 @@ class Zume_Tile_System {
             return;
         }
         
-        $parent_grid_id = Disciple_Tools_Mapping_Queries::get_parent_by_grid_id( $profile['location']['grid_id'] );
+        $parent_grid = Disciple_Tools_Mapping_Queries::get_parent_by_grid_id( $profile['location']['grid_id'] );
+        $parent_grid_id = $parent_grid['grid_id'];
         ?>
         <div class="reveal full" id="modal_localized_vision" data-v-offset="0" data-reveal>
             <h1>Localized Vision for <?php echo $profile['name'] ?></h1>
             <hr>
-            <iframe src="<?php echo ZUME_TRAINING_URL ?>map/local?parent_grid_id=<?php echo $parent_grid_id ?>&grid_id=<?php echo $profile['location']['grid_id'] ?>" id="local_vision_window" style="border:none;" width="100%" height="600px"></iframe>
+
+            <iframe src="" id="local_vision_window" style="border:none;" width="100%" height="600px"></iframe>
 
             <button class="close-button" data-close aria-label="Close modal" type="button">
                 <span aria-hidden="true">&times;</span>
@@ -92,6 +94,17 @@ class Zume_Tile_System {
             jQuery(document).ready(function(){
                 let vision_height = window.innerHeight - 125;
                 jQuery('#local_vision_window').css('height', vision_height + 'px').css('width', '100%' );
+                
+                // Listen for data-open click events and set the iframe src only when opening the modal
+                jQuery(document).on('click', '[data-open="modal_localized_vision"]', function(e){
+                    var modalId = jQuery(this).attr('data-open');
+                    if (modalId) {
+                        let map_url = '<?php echo ZUME_TRAINING_URL ?>map/local?parent_grid_id=<?php echo $parent_grid_id ?>&grid_id=<?php echo $profile['location']['grid_id'] ?>';
+                        jQuery('#local_vision_window').attr('src', map_url);
+                        jQuery('#' + modalId).foundation('open');
+                    }
+                });
+                
             })
         </script>
         <?php

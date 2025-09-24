@@ -37,9 +37,9 @@ class Zume_Coaching_Tile
     public function dt_details_additional_tiles( $tiles, $post_type = '' ) {
         if ( $post_type === 'contacts' ) {
             $tiles['basics'] = [ 'label' => __( 'Basics', 'zume-coaching' ) ]; // Funnel tile is keyed to followup (reduce tile redundancy)
-            $tiles['followup'] = [ 'label' => __( 'Funnel Stage', 'zume-coaching' ) ]; // Funnel tile is keyed to followup (reduce tile redundancy)
             $tiles['faith'] = [ 'label' => __( 'Zúme System', 'zume-coaching' ) ]; // System tile is keyed to faith (reduce tile redundancy)
-            $tiles['communication'] = [ 'label' => __( 'Communication', 'zume-coaching' ) ];
+            $tiles['followup'] = [ 'label' => __( 'Funnel Stage', 'zume-coaching' ) ]; // Funnel tile is keyed to followup (reduce tile redundancy)
+            // $tiles['communication'] = [ 'label' => __( 'Communication', 'zume-coaching' ) ];
         }
         return $tiles;
     }
