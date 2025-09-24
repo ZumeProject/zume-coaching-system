@@ -64,6 +64,7 @@ class Zume_Tile_Basics {
         <div class="cell small-12 medium-4">
             <div>Email : <?php echo $profile['email'] ?></div>
             <div>Phone : <?php echo $profile['phone'] ?></div>
+            <div>Phone Code : +<?php echo zume_get_user_phone_code( $profile['user_id'] ) ?></div>
             <div>Language : <?php echo $profile['language']['name'] ?? '' ?></div>
             <hr>
             <div class="open_host_modal" data-open="open_host_modal">
@@ -80,7 +81,7 @@ class Zume_Tile_Basics {
                 <div><label for="launching">L : <progress id="launching" max="100" value="<?php echo $l ?>"><?php echo $l ?>%</progress></label></div>
             </div>
             <hr>
-            <div>Location : <?php echo $profile['location']['label'] ?? '' ?></div>
+            <div>Location : <?php echo $profile['location']['label'] ?? '' ?> (<?php echo $profile['location']['grid_id'] ?? '' ?>) </div>
             <div id="zume_map" style="width:100%; height: 300px;"><span class="zume_map loading-spinner active"></span></div>
             <script>
                 jQuery(document).ready(function() {

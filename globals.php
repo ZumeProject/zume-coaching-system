@@ -428,6 +428,30 @@ if ( ! function_exists( 'zume_get_user_location' ) ) {
         ];
     }
 }
+if ( ! function_exists( 'zume_get_user_phone_code') ) {
+    function zume_get_user_phone_code( $user_id = null ) {
+        if ( is_null( $user_id ) ) {
+            $user_id = get_current_user_id();
+        }
+        $location = zume_get_user_location( $user_id );
+        if ( !isset( $location['grid_id'] ) || empty( $location['grid_id'] ) ) {
+            return false;
+        }
+        
+        global $wpdb;
+        $grid_id = $location['grid_id'];
+        $location = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT pc.phone_code
+                    FROM zume_dt_location_grid lg
+                    LEFT JOIN zume_location_grid_phone_codes pc ON lg.admin0_grid_id=pc.grid_id
+                    WHERE lg.grid_id = %s",
+            $grid_id )
+        );
+
+        return $location;
+    }
+}
 // =============================================================================
 // #endregion USER LOCATION FUNCTIONS
 // =============================================================================
