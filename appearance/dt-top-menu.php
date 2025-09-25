@@ -11,6 +11,31 @@ add_filter( 'dt_nav', function ( $menu ) {
     if ( isset( $menu['main']['groups'] ) ) {
         unset( $menu['main']['groups'] );
     }
+
+    // Hide "New Contact" and "New Group" links from the menu
+    if ( isset( $menu['admin']['add_new']['submenu'] ) ) {
+        // Hide New Contact (index 0)
+        if ( isset( $menu['admin']['add_new']['submenu'][0] ) ) {
+            $menu['admin']['add_new']['submenu'][0]['hidden'] = 1;
+        }
+        
+        // Hide New Group (index 1)
+        if ( isset( $menu['admin']['add_new']['submenu'][1] ) ) {
+            $menu['admin']['add_new']['submenu'][1]['hidden'] = 1;
+        }
+        
+        // Add New Trainee submenu item
+        $new_trainee = array(
+            'label' => 'New Trainee',
+            'link' => 'https://zume.training/add/trainee',
+            'icon' => 'https://zume.training/coaching/wp-content/themes/disciple-tools-theme/dt-assets/images/circle-add-green.svg',
+            'hidden' => ''
+        );
+        
+        // Add the new trainee item to the submenu
+        $menu['admin']['add_new']['submenu'][] = $new_trainee;
+    }
+
     return $menu;
 }, 1, 99 );
 
