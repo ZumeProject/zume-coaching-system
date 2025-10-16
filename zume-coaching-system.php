@@ -101,6 +101,8 @@ class Zume_Coaching {
         /* end custom table setup */
 
         require_once( 'globals.php' );
+        require_once( 'coach-profile-functions.php' );
+        require_once( 'user-profile-coach-tile.php' );
         require_once( 'contact-tiles/loader.php' );
         require_once( 'appearance/loader.php' );
         require_once( 'shared/loader.php' );

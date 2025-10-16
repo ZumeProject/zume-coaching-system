@@ -12,7 +12,7 @@ class Zume_Coaching_Tile
     }
 
     public function __construct(){
-
+        
         add_filter( 'dt_details_additional_tiles', [ $this, 'dt_details_additional_tiles' ], 99, 2 );
         add_filter( 'dt_custom_fields_settings', [ $this, 'dt_custom_fields_settings' ], 1, 2 );
         add_action( 'dt_details_additional_section', [ $this, 'dt_details_additional_section' ], 30, 2 );

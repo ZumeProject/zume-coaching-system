@@ -402,12 +402,14 @@ if ( ! function_exists( 'zume_get_user_location' ) ) {
 
         if ( empty( $location ) && $ip_lookup ) {
             $result = DT_Ipstack_API::get_location_grid_meta_from_current_visitor();
+            $country_code = zume_get_user_country_code( grid_id: $result['grid_id'] );
             if ( ! empty( $result ) ) {
                 $location = [
                     'lng' => $result['lng'],
                     'lat' => $result['lat'],
                     'level' => $result['level'],
                     'label' => $result['label'],
+                    'country_code' => $country_code,
                     'grid_id' => $result['grid_id'],
                     'source' => $result['source'],
                 ];
@@ -418,17 +420,47 @@ if ( ! function_exists( 'zume_get_user_location' ) ) {
             return false;
         }
 
+        $country_code = zume_get_user_country_code( grid_id: $location['grid_id'] );
         return [
             'lng' => $location['lng'],
             'lat' => $location['lat'],
             'level' => $location['level'],
             'label' => $location['label'],
+            'country_code' => $country_code,
             'grid_id' => $location['grid_id'],
             'source' => $location['source'],
         ];
     }
 }
-if ( ! function_exists( 'zume_get_user_phone_code') ) {
+if ( ! function_exists( 'zume_get_user_country_code' ) ) {
+    function zume_get_user_country_code( $user_id = null, $grid_id = null ) {
+        if ( is_null( $user_id ) ) {
+            $user_id = get_current_user_id();
+        }
+        if ( is_null( $grid_id ) ) {
+            $location = zume_get_user_location( $user_id );
+
+            if ( !isset( $location['grid_id'] ) || empty( $location['grid_id'] ) ) {
+                return false;
+            }
+
+            $grid_id = $location['grid_id'];
+        }
+
+        global $wpdb;
+        $country_code = $wpdb->get_var(
+            $wpdb->prepare(
+                'SELECT pc.country_code
+                    FROM zume_dt_location_grid lg
+                    LEFT JOIN zume_location_grid_phone_codes pc ON lg.admin0_grid_id=pc.grid_id
+                    WHERE lg.grid_id = %s',
+            $grid_id )
+        );
+
+        return $country_code;
+    }
+}
+if ( ! function_exists( 'zume_get_user_phone_code' ) ) {
     function zume_get_user_phone_code( $user_id = null ) {
         if ( is_null( $user_id ) ) {
             $user_id = get_current_user_id();
@@ -437,15 +469,15 @@ if ( ! function_exists( 'zume_get_user_phone_code') ) {
         if ( !isset( $location['grid_id'] ) || empty( $location['grid_id'] ) ) {
             return false;
         }
-        
+
         global $wpdb;
         $grid_id = $location['grid_id'];
         $location = $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT pc.phone_code
+                'SELECT pc.phone_code
                     FROM zume_dt_location_grid lg
                     LEFT JOIN zume_location_grid_phone_codes pc ON lg.admin0_grid_id=pc.grid_id
-                    WHERE lg.grid_id = %s",
+                    WHERE lg.grid_id = %s',
             $grid_id )
         );
 
@@ -1584,6 +1616,26 @@ if ( ! function_exists( 'zume_languages' ) ) {
                     'version_4_available' => true,
                     'translator_enabled' => true,
                     'version_5_ready' => true,
+                    'pieces_pages' => false,
+                    'course_slides_download' => false,
+                    '3_circles' => false,
+                ],
+            ),
+            'ky' => array(
+                'name' => 'Kyrgyz',
+                'enDisplayName' => 'Kyrgyz',
+                'code' => 'ky',
+                'displayCode' => 'ky',
+                'locale' => 'ky',
+                'weblate' => 'ky',
+                'nativeName' => 'Кыргызча',
+                'rtl' => false,
+                'flag' => '🇰🇬',
+                'population' => 6500000,
+                'enable_flags' => [
+                    'version_4_available' => false,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                     '3_circles' => false,
@@ -8547,6 +8599,7 @@ if ( !function_exists( 'zume_get_subscribers_in_online_trainings' ) ) {
 // =============================================================================
 // #endregion API & LOGGING CLASSES
 // =============================================================================
+
 
 // must be last for initialization
 zume_get_user_profile();
