@@ -122,6 +122,38 @@ class Zume_Coach_Profile_API
         $errors = [];
         $updated_fields = [];
         
+        // Handle coach profile photo upload
+        if ( isset( $_FILES['coach_profile_photo'] ) && !empty( $_FILES['coach_profile_photo']['tmp_name'] ) ) {
+            
+            // Check if DT_Storage_API is available
+            if ( !DT_Storage_API::is_enabled() ) {
+                $errors[] = 'Photo storage is not available. Please contact your administrator.';
+            } else {
+                // Get existing photo key to reuse (prevents stale keys)
+                $existing_photo_key = get_user_meta( $user_id, 'coach_profile_photo', true );
+                
+                // Upload to CloudJet storage
+                $uploaded = DT_Storage_API::upload_file( 'coach-photos', dt_recursive_sanitize_array( $_FILES['coach_profile_photo'] ), $existing_photo_key );
+                
+                // Handle upload errors
+                if ( is_wp_error( $uploaded ) ) {
+                    dt_write_log( 'Coach profile photo upload failed for user ' . $user_id . ': ' . $uploaded->get_error_message() );
+                    $errors[] = 'Failed to upload profile photo. Please try again.';
+                } elseif ( $uploaded['uploaded'] === true && !empty( $uploaded['uploaded_key'] ) ) {
+                    // Generate the full URL from the uploaded key
+                    $full_photo_url = DT_Storage_API::get_file_url( $uploaded['uploaded_key'] );
+                    if ( !empty( $full_photo_url ) ) {
+                        // Store the complete, fully qualified URL in user meta
+                        update_user_meta( $user_id, 'coach_profile_photo', $full_photo_url );
+                        $updated_fields[] = 'coach_profile_photo';
+                        $photo_updated = true;
+                    } else {
+                        $errors[] = 'Failed to generate photo URL. Please try again.';
+                    }
+                }
+            }
+        }
+        
         // Handle public profile enabled
         if ( isset( $params['public_profile_enabled'] ) ) {
             $enabled = $params['public_profile_enabled'] === '1' ? '1' : '';
@@ -203,11 +235,13 @@ class Zume_Coach_Profile_API
             return new WP_Error( 'validation_error', implode( '; ', $errors ), array( 'status' => 400 ) );
         }
         
-        return [
+        $response = [
             'success' => true,
             'message' => 'Coach profile updated successfully.',
             'updated_fields' => $updated_fields,
+            'photo_updated' => isset( $photo_updated ) && $photo_updated,
         ];
+        return $response;
     }
     
     /**

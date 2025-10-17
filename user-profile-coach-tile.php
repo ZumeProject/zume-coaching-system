@@ -110,6 +110,19 @@ class Zume_User_Profile_Coach_Tile {
                             <p class="description"><?php esc_html_e( 'This will be your public profile URL. Use only lowercase letters, numbers, and hyphens.', 'zume-coaching' ); ?></p>
                         </div>
                         
+                        <!-- Coach Profile Photo -->
+                        <div class="form-group">
+                            <label for="coach_profile_photo"><?php esc_html_e( 'Profile Photo', 'zume-coaching' ); ?></label>
+                            <?php
+                            $coach_photo_url = get_user_meta( $user_id, 'coach_profile_photo', true );
+                            if ( !empty( $coach_photo_url ) ) {
+                                echo '<div style="margin-bottom: 1rem;"><img src="' . esc_url( $coach_photo_url ) . '" alt="' . esc_attr__( 'Coach Profile Photo', 'zume-coaching' ) . '" style="width: 200px; height: 200px; object-fit: cover; border-radius: 8px;"></div>';
+                            }
+                            ?>
+                            <input type="file" id="coach_profile_photo" name="coach_profile_photo" accept=".gif,.jpg,.jpeg,.png" style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
+                            <p class="description"><?php esc_html_e( 'Upload a profile photo for your public coach profile (recommended: square image, at least 400x400px).', 'zume-coaching' ); ?></p>
+                        </div>
+                        
                         <!-- Bio -->
                         <div class="form-group">
                             <label for="bio"><?php esc_html_e( 'Biography', 'zume-coaching' ); ?></label>
@@ -207,29 +220,6 @@ class Zume_User_Profile_Coach_Tile {
             e.preventDefault();
             
             const formData = new FormData(this);
-            const data = {};
-            
-            // Convert FormData to object
-            for (let [key, value] of formData.entries()) {
-                if (key.startsWith('testimonials[')) {
-                    // Handle testimonials array
-                    const match = key.match(/testimonials\[(\d+)\]\[(\w+)\]/);
-                    if (match) {
-                        const index = match[1];
-                        const field = match[2];
-                        if (!data.testimonials) data.testimonials = {};
-                        if (!data.testimonials[index]) data.testimonials[index] = {};
-                        data.testimonials[index][field] = value;
-                    }
-                } else {
-                    data[key] = value;
-                }
-            }
-            
-            // Convert testimonials object to array
-            if (data.testimonials) {
-                data.testimonials = Object.values(data.testimonials).filter(t => t.name || t.quote);
-            }
             
             // Show loading state
             const submitButton = this.querySelector('.save-button');
@@ -237,14 +227,13 @@ class Zume_User_Profile_Coach_Tile {
             submitButton.textContent = '<?php esc_html_e( 'Saving...', 'zume-coaching' ); ?>';
             submitButton.disabled = true;
             
-            // Make API request
+            // Make API request with multipart/form-data
             fetch('<?php echo rest_url( 'zume_coaching/v1/coach-profile' ); ?>', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
                     'X-WP-Nonce': '<?php echo wp_create_nonce( 'wp_rest' ); ?>'
                 },
-                body: JSON.stringify(data)
+                body: formData
             })
             .then(response => response.json())
             .then(result => {
@@ -252,6 +241,10 @@ class Zume_User_Profile_Coach_Tile {
                     document.getElementById('success-message').textContent = '<?php esc_html_e( 'Profile settings saved successfully!', 'zume-coaching' ); ?>';
                     document.getElementById('success-message').style.display = 'block';
                     document.getElementById('error-message').style.display = 'none';
+                    // Reload page to show new photo
+                    if (result.photo_updated) {
+                        setTimeout(() => location.reload(), 1000);
+                    }
                 } else {
                     document.getElementById('error-message').textContent = result.message || '<?php esc_html_e( 'Error saving profile settings.', 'zume-coaching' ); ?>';
                     document.getElementById('error-message').style.display = 'block';

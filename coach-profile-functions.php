@@ -73,6 +73,12 @@ if ( ! function_exists( 'zume_get_coach_public_profile' ) ) {
             'avatar' => get_avatar_url( $user_id, [ 'scheme' => 'https' ] ),
         ];
         
+        // Get coach profile photo URL if available
+        $coach_photo_url = get_user_meta( $user_id, 'coach_profile_photo', true );
+        if ( !empty( $coach_photo_url ) ) {
+            $profile['avatar'] = $coach_photo_url;
+        }
+        
         // Get custom coach profile fields
         $profile['public_profile_enabled'] = get_user_meta( $user_id, 'coach_public_profile_enabled', true );
         $profile['public_slug'] = get_user_meta( $user_id, 'coach_public_slug', true );
