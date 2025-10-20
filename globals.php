@@ -1521,6 +1521,26 @@ if ( ! function_exists( 'zume_languages' ) ) {
                     '3_circles' => false,
                 ],
             ),
+            'hu' => array(
+                'name' => 'Hungarian',
+                'enDisplayName' => 'Hungarian',
+                'code' => 'hu',
+                'displayCode' => 'hu',
+                'locale' => 'hu_HU',
+                'weblate' => 'hu_HU',
+                'nativeName' => 'Magyar',
+                'rtl' => false,
+                'flag' => '🇭🇺',
+                'population' => 13000000,
+                'enable_flags' => [
+                    'version_4_available' => false,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
+                    'pieces_pages' => false,
+                    'course_slides_download' => false,
+                    '3_circles' => false,
+                ],
+            ),
             'id' => array(
                 'name' => 'Indonesian',
                 'enDisplayName' => 'Indonesian',
@@ -1836,6 +1856,26 @@ if ( ! function_exists( 'zume_languages' ) ) {
                     'version_4_available' => true,
                     'translator_enabled' => true,
                     'version_5_ready' => true,
+                    'pieces_pages' => false,
+                    'course_slides_download' => false,
+                    '3_circles' => false,
+                ],
+            ),
+            'om' => array(
+                'name' => 'Oromifa',
+                'enDisplayName' => 'Oromifa',
+                'code' => 'om',
+                'displayCode' => 'om',
+                'locale' => 'om_ET',
+                'weblate' => 'om_ET',
+                'nativeName' => 'Afaan Oromoo',
+                'rtl' => false,
+                'flag' => '🇪🇹',
+                'population' => 37000000,
+                'enable_flags' => [
+                    'version_4_available' => false,
+                    'translator_enabled' => true,
+                    'version_5_ready' => false,
                     'pieces_pages' => false,
                     'course_slides_download' => false,
                     '3_circles' => false,
@@ -2241,6 +2281,8 @@ if ( ! function_exists( 'zume_languages' ) ) {
                     '3_circles' => false,
                 ],
             ),
+            
+            
         );
         foreach ( $list as $lang ) {
             if ( $lang['enable_flags']['version_5_ready'] || $lang['enable_flags']['version_4_available'] ) {
@@ -8599,7 +8641,6 @@ if ( !function_exists( 'zume_get_subscribers_in_online_trainings' ) ) {
 // =============================================================================
 // #endregion API & LOGGING CLASSES
 // =============================================================================
-
 
 // must be last for initialization
 zume_get_user_profile();
