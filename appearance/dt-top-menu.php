@@ -27,12 +27,10 @@ add_filter( 'dt_nav', function ( $menu ) {
         // Add New Trainee submenu item
         $new_trainee = array(
             'label' => 'New Trainee',
-            'link' => 'https://zume.training/add/trainee',
+            'link' => 'https://zume.training/add/trainee?coach_user_id=' . get_current_user_id(),
             'icon' => 'https://zume.training/coaching/wp-content/themes/disciple-tools-theme/dt-assets/images/circle-add-green.svg',
-            'hidden' => ''
+            'hidden' => '',
         );
-        
-        // Add the new trainee item to the submenu
         $menu['admin']['add_new']['submenu'][] = $new_trainee;
     }
 
