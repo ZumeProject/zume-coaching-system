@@ -28,6 +28,71 @@ class Zume_User_Profile_Coach_Tile {
         
         // Add section content to user profile settings
         add_action( 'dt_profile_settings_page_sections', [ $this, 'add_profile_section' ], 10, 4 );
+        
+        // Enqueue scripts for coach profile modal
+        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ], 99 );
+    }
+    
+    /**
+     * Enqueue scripts for coach profile photo upload modal
+     */
+    public function enqueue_scripts() {
+        // Only enqueue if user is logged in
+        if ( !is_user_logged_in() ) {
+            return;
+        }
+        
+        $script_path = plugin_dir_path( __FILE__ ) . 'contact-tiles/coach-profile-modal.js';
+        $script_url = plugin_dir_url( __FILE__ ) . 'contact-tiles/coach-profile-modal.js';
+        
+        if ( !file_exists( $script_path ) ) {
+            return;
+        }
+        
+        // Check if Foundation is already enqueued, if not, try to enqueue it
+        // Foundation is typically loaded by the theme, but we'll add it as a dependency
+        $dependencies = [ 'jquery' ];
+        
+        // Try to detect if Foundation is available
+        if ( !wp_script_is( 'foundation', 'enqueued' ) && !wp_script_is( 'foundation', 'registered' ) ) {
+            // Foundation might be loaded by theme, so we'll just depend on jQuery
+            // The script will handle Foundation availability check
+        } else {
+            $dependencies[] = 'foundation';
+        }
+        
+        wp_enqueue_script(
+            'coach-profile-modal',
+            $script_url,
+            $dependencies,
+            filemtime( $script_path ),
+            true
+        );
+        
+        // Localize script with REST API URL and nonce
+        wp_localize_script(
+            'coach-profile-modal',
+            'coachProfileModalSettings',
+            [
+                'rest_url' => esc_url_raw( rest_url() ),
+                'nonce' => wp_create_nonce( 'wp_rest' ),
+                'translations' => [
+                    'title' => __( 'File Upload', 'zume-coaching' ),
+                    'choose_file' => __( 'Choose a file', 'zume-coaching' ),
+                    'or_drag_it' => __( 'or drag it here', 'zume-coaching' ),
+                    'success' => __( 'Successfully Uploaded!', 'zume-coaching' ),
+                    'error' => __( 'Error!', 'zume-coaching' ),
+                    'error_msg' => __( 'Unable to upload, please try again', 'zume-coaching' ),
+                    'but_upload' => __( 'Upload', 'zume-coaching' ),
+                    'but_delete' => __( 'Delete Existing File', 'zume-coaching' ),
+                    'but_replace' => __( 'Replace Existing Image', 'zume-coaching' ),
+                    'delete_msg' => __( 'Are you sure you wish to delete existing file?', 'zume-coaching' ),
+                    'delete_success_msg' => __( 'Successfully Deleted!', 'zume-coaching' ),
+                    'delete_error_msg' => __( 'Delete failed, please try again', 'zume-coaching' ),
+                    'but_close' => __( 'Close', 'zume-coaching' ),
+                ],
+            ]
+        );
     }
     
     /**
@@ -119,7 +184,14 @@ class Zume_User_Profile_Coach_Tile {
                                 echo '<div style="margin-bottom: 1rem;"><img src="' . esc_url( $coach_photo_url ) . '" alt="' . esc_attr__( 'Coach Profile Photo', 'zume-coaching' ) . '" style="width: 200px; height: 200px; object-fit: cover; border-radius: 8px;"></div>';
                             }
                             ?>
-                            <input type="file" id="coach_profile_photo" name="coach_profile_photo" accept=".gif,.jpg,.jpeg,.png" style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
+                            <button type="button" class="button coach-profile-upload-button" 
+                                    data-coach-upload-user-id="<?php echo esc_attr( $user_id ); ?>"
+                                    data-coach-upload-meta-key="coach_profile_photo"
+                                    data-coach-upload-key-prefix="users"
+                                    data-coach-upload-delete-enabled="1"
+                                    style="background: #007cba; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">
+                                <?php echo !empty( $coach_photo_url ) ? esc_html__( 'Replace Photo', 'zume-coaching' ) : esc_html__( 'Upload Photo', 'zume-coaching' ); ?>
+                            </button>
                             <p class="description"><?php esc_html_e( 'Upload a profile photo for your public coach profile (recommended: square image, at least 400x400px).', 'zume-coaching' ); ?></p>
                         </div>
                         
